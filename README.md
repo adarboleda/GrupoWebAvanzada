@@ -1,9 +1,1 @@
 # GrupoWebAvanzada
-Hola Mundo 
-
-Actividad 1 MVC 
-Pasos 
-1. MKDIR MVC (TERMINAL)
-CREAR PROYETCO
-2.CREARLA ESTRUCTURA  DEL PROYETO 
-
