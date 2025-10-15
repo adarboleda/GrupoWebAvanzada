@@ -43,7 +43,7 @@ export function vistaIndividualProducto(producto) {
     `;
 }
 
-// nueva vista: formulario de edición
+// Forrmulario de edición
 export function vistaEditarProducto(producto) {
   if (!producto) {
     return `<h1>Producto no encontrado</h1><a href="/productos">Volver</a>`;

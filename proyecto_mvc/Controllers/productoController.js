@@ -34,32 +34,6 @@ export const mostrarFormularioEdicion = (req, res) => {
   res.type("html").send(vistaEditarProducto(producto));
 };
 
-//procesar actualización del producto
-export const actualizarProducto = (req, res) => {
-  const { id } = req.params;
-  const { nombre, precio, categoria } = req.body;
-
-  if (!nombre || !precio || !categoria) {
-    return res.status(400).send("Faltan datos");
-  } else if (isNaN(precio) || precio <= 0) {
-    return res.status(400).send("Precio inválido");
-  } else if (typeof nombre !== "string" || typeof categoria !== "string") {
-    return res.status(400).send("Nombre o categoría inválidos");
-  }
-
-  const actualizado = ProductoModel.actualizar(
-    id,
-    nombre,
-    parseFloat(precio),
-    categoria
-  );
-  if (!actualizado) {
-    return res.status(404).send("<h1>Producto no encontrado</h1>");
-  }
-
-  res.redirect("/productos");
-};
-
 //controlador: agregar nuevo producto
 export const agregarProducto = (req, res) => {
   const { nombre, precio, categoria } = req.body; //datos del formulario
@@ -86,5 +60,31 @@ export const eliminarProducto = (req, res) => {
   if (!eliminado) {
     return res.status(404).send("<h1>Producto no encontrado</h1>");
   }
+  res.redirect("/productos");
+};
+
+//procesar actualización del producto
+export const actualizarProducto = (req, res) => {
+  const { id } = req.params;
+  const { nombre, precio, categoria } = req.body;
+
+  if (!nombre || !precio || !categoria) {
+    return res.status(400).send("Faltan datos");
+  } else if (isNaN(precio) || precio <= 0) {
+    return res.status(400).send("Precio inválido");
+  } else if (typeof nombre !== "string" || typeof categoria !== "string") {
+    return res.status(400).send("Nombre o categoría inválidos");
+  }
+
+  const actualizado = ProductoModel.actualizar(
+    id,
+    nombre,
+    parseFloat(precio),
+    categoria
+  );
+  if (!actualizado) {
+    return res.status(404).send("<h1>Producto no encontrado</h1>");
+  }
+
   res.redirect("/productos");
 };
