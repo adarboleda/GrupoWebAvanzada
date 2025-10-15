@@ -1,39 +1,90 @@
-import ProductoModel from "../Models/productoModel";
-import { vistaProductos, vistaDetalleProducto } from "../Views/productoView";
+import ProductoModel from "../Models/productoModel.js";
+import {
+  vistaProductos,
+  vistaIndividualProducto,
+  vistaEditarProducto, // nuevo
+} from "../Views/productoView.js";
 
-//Controlador para mostrar lista de productos
-export function listarProductos(req, res) {
+//controlador: mostrar lista de productos
+export const listarProductos = (req, res) => {
+  //obtener los datos del modelo
   const productos = ProductoModel.obtenerTodos();
-  //generar vista
+  //generar la vista
   res.type("html").send(vistaProductos(productos));
-}
+};
 
-//Controlador para mostrar detalle de un producto
-export function mostrarDetalleProducto(req, res) {
-  const { id } = req.params; //obtener id de la url
-  const producto = ProductoModel.obtenerPorId(id); //buscar producto por id
+//mostrar producto especifico
+export const mostrarProductoIndividual = (req, res) => {
+  const { id } = req.params; //obtener el id de la url
+  const producto = ProductoModel.obtenerPorId(id); //buscar el producto en el modelo
+  //si no lo encuentra, mostrar mensaje de error
   if (!producto) {
-    res.status(404).send("Producto no encontrado");
-    return;
+    return res.status(404).send("<h1>Producto no encontrado</h1>");
   }
-  //generar vista
-  res.type("html").send(vistaDetalleProducto(producto));
-}
+  res.type("html").send(vistaIndividualProducto(producto));
+};
 
-//Controlador para agregar un nuevo producto
-export function agregarProducto(req, res) {
-  const { nombre, precio, categoria } = req.body; //obtener datos del formulario
-  //validacion basica de datos
-  if (!nombre || !precio || !categoria) {
-    res.status(400).send("Faltan datos del producto");
-    return;
+//mostrar formulario de edición
+export const mostrarFormularioEdicion = (req, res) => {
+  const { id } = req.params;
+  const producto = ProductoModel.obtenerPorId(id);
+  if (!producto) {
+    return res.status(404).send("<h1>Producto no encontrado</h1>");
   }
-  //guardar el producto
-  const nuevoProducto = ProductoModel.agregarProducto(
+  res.type("html").send(vistaEditarProducto(producto));
+};
+
+//procesar actualización del producto
+export const actualizarProducto = (req, res) => {
+  const { id } = req.params;
+  const { nombre, precio, categoria } = req.body;
+
+  if (!nombre || !precio || !categoria) {
+    return res.status(400).send("Faltan datos");
+  } else if (isNaN(precio) || precio <= 0) {
+    return res.status(400).send("Precio inválido");
+  } else if (typeof nombre !== "string" || typeof categoria !== "string") {
+    return res.status(400).send("Nombre o categoría inválidos");
+  }
+
+  const actualizado = ProductoModel.actualizar(
+    id,
     nombre,
     parseFloat(precio),
     categoria
   );
-  //redireccionar a la lista de productos
+  if (!actualizado) {
+    return res.status(404).send("<h1>Producto no encontrado</h1>");
+  }
+
   res.redirect("/productos");
-}
+};
+
+//controlador: agregar nuevo producto
+export const agregarProducto = (req, res) => {
+  const { nombre, precio, categoria } = req.body; //datos del formulario
+  //validar basicade datos con error 400
+  if (!nombre || !precio || !categoria) {
+    return res.status(400).send("Faltan datos");
+  } else if (isNaN(precio) || precio <= 0) {
+    return res.status(400).send("Precio inválido");
+  } else if (typeof nombre !== "string" || typeof categoria !== "string") {
+    return res.status(400).send("Nombre o categoría inválidos");
+  }
+
+  // guardar el producto
+  ProductoModel.agregarProducto(nombre, parseFloat(precio), categoria);
+
+  //volver al listado principal
+  res.redirect("/productos");
+};
+
+//eliminar producto
+export const eliminarProducto = (req, res) => {
+  const { id } = req.params;
+  const eliminado = ProductoModel.eliminarPorId(id); //eliminar el producto
+  if (!eliminado) {
+    return res.status(404).send("<h1>Producto no encontrado</h1>");
+  }
+  res.redirect("/productos");
+};

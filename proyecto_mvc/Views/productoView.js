@@ -1,36 +1,61 @@
-//crear un html para listrar los productos
+//crear html para listar los productos
 export function vistaProductos(productos) {
   //cabecera
   let html = `
-    <h1>Lista de Productos</h1>
-    <a href="/productos/nuevo">Agregar Nuevo Producto</a>
-    <ul>`;
+    <h1>Listado de Productos</h1>
+    <a href="/nuevo">Agregar Producto</a>
+    <ul>
+  
+    `;
 
   //recorrer los productos
   productos.forEach((p) => {
-    html += `
-        <li>
-        <a href="/productos/${p.id}">${p.nombre}</a> - $${p.precio} - ${p.categoria}
-        </li>
-        `;
+    html += `<li>
+        <a href="/productos/${p.id}">${p.nombre} </a>
+        - $${p.precio} - ${p.categoria}
+        </li>`;
   });
 
-  //cierre de la lista
+  //cierre de lista
   html += `</ul>`;
   return html;
 }
 
-//Generar html del detalle del producto
-export function vistaDetalleProducto(producto) {
+//genrear html del detalle del producto
+export function vistaIndividualProducto(producto) {
   if (!producto) {
-    return `<h1>Producto no encontrado</h1><a href="/productos">Volver a la lista</a>`;
+    return `<h1>El producto no se encontró</h1>
+        <a href="/"> <-Volver</a>`;
   }
 
   return `
     <h1>Detalle del Producto</h1>
-    <p><strong>Nombre:</strong> ${producto.nombre}</p>
-    <p><strong>Precio:</strong> $${producto.precio}</p>
-    <p><strong>Categoría:</strong> ${producto.categoria}</p>
+    <p><b>ID: </b>${producto.id}</p>
+    <p><b>Nombre: </b>${producto.nombre}</p>
+    <p><b>Precio: </b>$${producto.precio}</p>
+    <p><b>Categoria: </b>${producto.categoria}</p>
+    <a href="/productos/${producto.id}/editar">Editar</a><br><br>
+    <form style="display:inline" method="POST" action="/productos/${producto.id}/eliminar">
+            <button type="submit" onclick="return confirm('Eliminar este producto?')">Eliminar</button>
+          </form><br>
+    <br><a href="/productos"> <-Volver</a>
+    
+    `;
+}
+
+// nueva vista: formulario de edición
+export function vistaEditarProducto(producto) {
+  if (!producto) {
+    return `<h1>Producto no encontrado</h1><a href="/productos">Volver</a>`;
+  }
+  return `
+    <h1>Editar Producto</h1>
+    <form method="POST" action="/productos/${producto.id}/editar">
+      <label>Nombre: <input type="text" name="nombre" value="${producto.nombre}" required></label><br>
+      <label>Precio: <input type="number" step="0.01" name="precio" value="${producto.precio}" required></label><br>
+      <label>Categoría: <input type="text" name="categoria" value="${producto.categoria}" required></label><br>
+      <button type="submit">Guardar cambios</button>
+    </form>
     <a href="/productos">Volver a la lista</a>
     `;
 }
