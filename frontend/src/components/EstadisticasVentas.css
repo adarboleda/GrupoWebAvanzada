@@ -1,0 +1,149 @@
+/* Estilos de estadísticas - Minimalista */
+
+.estadisticas-container h2 {
+  color: #1A1A1A; /* Negro */
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  padding: 30px 25px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1.5px solid #E8E8E3; /* Beige borde */
+  background: #FFFFFF; /* Blanco */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6B4F4F; /* Café */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 10px 0;
+  color: #1A1A1A; /* Negro */
+}
+
+.stat-label {
+  color: #8E7F7F; /* Café claro */
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.stat-amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2C5F8D; /* Azul */
+}
+
+/* Colores por tipo - Minimalista */
+.stat-card.total {
+  background: #2C5F8D; /* Azul */
+  color: #FFFFFF; /* Blanco */
+  border-color: #2C5F8D;
+}
+
+.stat-card.total h3,
+.stat-card.total .stat-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.stat-card.total .stat-number,
+.stat-card.total .stat-amount {
+  color: #FFFFFF;
+}
+
+.stat-card.tipo-a {
+  background: #F5F5F0; /* Beige */
+  border-left: 4px solid #2C5F8D; /* Azul */
+}
+
+.stat-card.tipo-b {
+  background: #FAFAF8; /* Beige muy claro */
+  border-left: 4px solid #6B4F4F; /* Café */
+}
+
+.stat-card.tipo-c {
+  background: #FFFFFF; /* Blanco */
+  border-left: 4px solid #8E7F7F; /* Café claro */
+}
+
+/* Flujo de datos */
+.flujo-datos {
+  background: #F5F5F0; /* Beige */
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 30px;
+  border: 1px solid #E8E8E3; /* Beige borde */
+}
+
+.flujo-datos h3 {
+  color: #1A1A1A; /* Negro */
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.flujo-steps {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.step {
+  background: #FFFFFF; /* Blanco */
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  color: #2C5F8D; /* Azul */
+  border: 1.5px solid #2C5F8D; /* Azul */
+  min-width: 150px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.step:hover {
+  background: #2C5F8D; /* Azul */
+  color: #FFFFFF; /* Blanco */
+}
+
+@media (max-width: 768px) {
+  .estadisticas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+  }
+
+  .flujo-steps {
+    flex-direction: column;
+  }
+}

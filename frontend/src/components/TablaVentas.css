@@ -1,0 +1,263 @@
+/* Estilos de la tabla de ventas */
+
+.tabla-container h2 {
+  color: #1A1A1A; /* Negro */
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.tabla-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.btn-eliminar {
+  padding: 12px 25px;
+  background: #1A1A1A; /* Negro */
+  color: #FFFFFF; /* Blanco */
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(26, 26, 26, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  background: #000000; /* Negro puro */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(26, 26, 26, 0.3);
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla-ventas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background: #FFFFFF; /* Blanco */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #E8E8E3; /* Beige borde */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.tabla-ventas thead {
+  background: #2C5F8D; /* Azul */
+  color: #FFFFFF; /* Blanco */
+}
+
+.tabla-ventas th {
+  padding: 16px 15px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.8px;
+}
+
+.tabla-ventas tbody tr {
+  border-bottom: 1px solid #E8E8E3; /* Beige borde */
+  transition: background-color 0.2s ease;
+}
+
+.tabla-ventas tbody tr:hover {
+  background-color: #FAFAF8; /* Beige muy claro */
+}
+
+.tabla-ventas tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-ventas td {
+  padding: 15px;
+  color: #1A1A1A; /* Negro */
+  font-size: 0.95rem;
+}
+
+.tabla-ventas .monto {
+  font-weight: 600;
+  color: #2C5F8D; /* Azul */
+}
+
+.tabla-ventas .fecha {
+  color: #6B4F4F; /* Café */
+  font-size: 0.9rem;
+}
+
+/* Badges de tipo - Minimalista */
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.tipo-a {
+  background-color: #2C5F8D; /* Azul */
+  color: #FFFFFF; /* Blanco */
+}
+
+.badge.tipo-b {
+  background-color: #6B4F4F; /* Café */
+  color: #FFFFFF; /* Blanco */
+}
+
+.badge.tipo-c {
+  background-color: #8E7F7F; /* Café claro */
+  color: #FFFFFF; /* Blanco */
+}
+
+/* Sin datos */
+.no-datos {
+  text-align: center;
+  padding: 60px 20px;
+  color: #8E7F7F; /* Café claro */
+}
+
+.no-datos p:first-child {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.no-datos p:last-child {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* Columna de acciones */
+.acciones {
+  white-space: nowrap;
+}
+
+.botones-accion,
+.botones-edicion {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Botones de acción */
+.btn-editar,
+.btn-eliminar-fila,
+.btn-guardar,
+.btn-cancelar {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-editar {
+  background-color: #2C5F8D; /* Azul */
+  color: #FFFFFF;
+}
+
+.btn-editar:hover:not(:disabled) {
+  background-color: #234B6E;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar-fila {
+  background-color: #C62828; /* Rojo */
+  color: #FFFFFF;
+}
+
+.btn-eliminar-fila:hover:not(:disabled) {
+  background-color: #A52020;
+  transform: translateY(-1px);
+}
+
+.btn-guardar {
+  background-color: #2E7D32; /* Verde */
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  padding: 6px 14px;
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background-color: #1B5E20;
+  transform: translateY(-1px);
+}
+
+.btn-cancelar {
+  background-color: #757575; /* Gris */
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  padding: 6px 14px;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #616161;
+  transform: translateY(-1px);
+}
+
+.btn-editar:disabled,
+.btn-eliminar-fila:disabled,
+.btn-guardar:disabled,
+.btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Input de edición */
+.input-edicion {
+  width: 120px;
+  padding: 6px 10px;
+  border: 1.5px solid #2C5F8D; /* Azul */
+  border-radius: 4px;
+  font-size: 0.95rem;
+  background: #FAFAF8; /* Beige muy claro */
+  color: #1A1A1A; /* Negro */
+}
+
+.input-edicion:focus {
+  outline: none;
+  border-color: #234B6E;
+  box-shadow: 0 0 0 3px rgba(44, 95, 141, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabla-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tabla-ventas {
+    font-size: 0.9rem;
+  }
+
+  .tabla-ventas th,
+  .tabla-ventas td {
+    padding: 10px 8px;
+  }
+
+  .botones-accion,
+  .botones-edicion {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .input-edicion {
+    width: 100px;
+    font-size: 0.85rem;
+  }
+}
