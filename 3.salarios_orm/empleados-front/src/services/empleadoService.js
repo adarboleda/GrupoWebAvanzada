@@ -8,7 +8,7 @@ const API_URL = "http://localhost:3000/api/obreros";
  */
 export const obtenerTodosLosEmpleados = async () => {
   try {
-    const response = await fetch(API_URL); // Llamada a la API
+    const response = await fetch(API_URL); // Llamada a la API para obtener empleados
     if (!response.ok) {
       throw new Error("Error al obtener empleados");
     }
