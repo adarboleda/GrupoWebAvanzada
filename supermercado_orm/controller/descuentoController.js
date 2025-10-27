@@ -3,24 +3,24 @@ import Descuento from "../model/descuentoModel.js";
 // Crear un nuevo descuento
 export const crearDescuento = async (req, res) => {
   try {
-    const { numeroEscogido } = req.body;
+    const { monto, numeroEscogido } = req.body;
 
-    // Validación de datos obligatorios
-    if (numeroEscogido == null) {
+    if (!monto || numeroEscogido == null) {
       return res.status(400).json({
-        error: "Falta dato obligatorio: numeroEscogido es requerido",
+        error:
+          "Faltan datos obligatorios: monto y numeroEscogido son requeridos",
       });
     }
 
-    // Validación de valores positivos
-    if (numeroEscogido <= 0) {
+    if (monto <= 0 || numeroEscogido <= 0) {
       return res.status(400).json({
-        error: "El número escogido debe ser un valor positivo",
+        error: "El monto y el número escogido deben ser valores positivos",
       });
     }
 
     // Crear el registro en la base de datos
     const nuevoDescuento = await Descuento.create({
+      monto,
       numeroEscogido,
     });
 
@@ -69,7 +69,7 @@ export const obtenerDescuentoPorId = async (req, res) => {
 export const actualizarDescuento = async (req, res) => {
   try {
     const { id } = req.params;
-    const { numeroEscogido } = req.body;
+    const { monto, numeroEscogido } = req.body;
 
     const descuento = await Descuento.findByPk(id);
 
@@ -78,6 +78,12 @@ export const actualizarDescuento = async (req, res) => {
     }
 
     // Validación de valores positivos
+    if (monto !== undefined && monto <= 0) {
+      return res.status(400).json({
+        error: "El monto debe ser un valor positivo",
+      });
+    }
+
     if (numeroEscogido !== undefined && numeroEscogido <= 0) {
       return res.status(400).json({
         error: "El número escogido debe ser un valor positivo",
@@ -85,7 +91,7 @@ export const actualizarDescuento = async (req, res) => {
     }
 
     // Actualizar el descuento
-    await descuento.update({ numeroEscogido });
+    await descuento.update({ monto, numeroEscogido });
     res.json(descuento);
   } catch (error) {
     res.status(500).json({

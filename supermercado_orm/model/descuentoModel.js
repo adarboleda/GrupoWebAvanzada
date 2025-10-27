@@ -3,21 +3,29 @@ import sequelize from "../config/database.js";
 
 // Crear una clase para el modelo de Descuento
 class Descuento extends Model {
-  //Método para calcular el porcentaje de descuento según el número escogido al azar
+  //Método para calcular el descuento según el número escogido al azar
   calcularDescuento() {
     const numero = this.numeroEscogido;
+    const monto = this.monto;
     let porcentajeDescuento = 0;
 
     // Determinar el porcentaje de descuento según el número escogido
     if (numero < 74) {
-      porcentajeDescuento = 15;
+      porcentajeDescuento = 15; // 15% de descuento
     } else {
-      porcentajeDescuento = 20;
+      porcentajeDescuento = 20; // 20% de descuento
     }
+
+    // Calcular cuánto dinero se le descuenta
+    const montoDescuento = monto * (porcentajeDescuento / 100);
+    const totalAPagar = monto - montoDescuento;
 
     return {
       numeroEscogido: numero,
+      monto: monto,
       porcentajeDescuento: porcentajeDescuento,
+      montoDescuento: montoDescuento,
+      totalAPagar: totalAPagar,
     };
   }
 }
@@ -30,6 +38,13 @@ Descuento.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    monto: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        min: 0,
+      },
+    },
     numeroEscogido: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -39,10 +54,10 @@ Descuento.init(
     },
   },
   {
-    sequelize, // Conexión a la base de datos
-    modelName: "Descuento", // Nombre del modelo
-    tableName: "descuentos", // Nombre de la tabla en la BD
-    timestamps: true, // Para que Sequelize maneje createdAt y updatedAt
+    sequelize,
+    modelName: "Descuento",
+    tableName: "descuentos",
+    timestamps: true,
   }
 );
 

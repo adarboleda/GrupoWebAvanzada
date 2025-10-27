@@ -26,12 +26,16 @@ const iniciarServidor = async () => {
   try {
     // Verificar conexión a la base de datos
     await sequelize.authenticate();
-    // Sincronizar modelos con la base de datos (crear tablas si no existen)
-    await sequelize.sync();
+    console.log("Conexión a la base de datos establecida correctamente");
+
+    await sequelize.sync({ force: true });
+    console.log("Modelos sincronizados con la base de datos");
+
     // Iniciar el servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+      console.log(`URL: http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error("Error al conectar con la base de datos:", error.message);
