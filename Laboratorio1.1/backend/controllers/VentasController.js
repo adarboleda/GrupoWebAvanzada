@@ -3,42 +3,50 @@
  * Gestiona el flujo de datos entre el Modelo y la Vista (API REST)
  */
 
-const VentasModel = require('../models/VentasModel');
+const VentasModel = require("../models/VentasModel");
 
 class VentasController {
-  
   /**
    * Crea una nueva venta
    * POST /api/ventas
    */
   static async crearVenta(req, res) {
     try {
-      const { monto } = req.body;
+      // Aceptar tanto `monto` como `monto_vendido` desde el cliente
+      const { monto, monto_vendido } = req.body;
 
-      // Validación de entrada
-      if (!monto || isNaN(monto) || monto <= 0) {
+      // Determinar el valor recibido (prioriza `monto` si existe)
+      const rawMonto = monto !== undefined ? monto : monto_vendido;
+
+      // Parsear y validar
+      const parsedMonto = parseFloat(rawMonto);
+      if (
+        rawMonto === undefined ||
+        rawMonto === null ||
+        Number.isNaN(parsedMonto) ||
+        parsedMonto <= 0
+      ) {
         return res.status(400).json({
           success: false,
-          message: 'El monto debe ser un número positivo válido'
+          message: "El monto debe ser un número positivo válido",
         });
       }
 
       // Llamar al modelo para crear la venta
-      const resultado = await VentasModel.crearVenta(parseFloat(monto));
+      const resultado = await VentasModel.crearVenta(parsedMonto);
 
       // Retornar respuesta exitosa
       res.status(201).json({
         success: true,
-        message: 'Venta registrada exitosamente',
-        data: resultado
+        message: "Venta registrada exitosamente",
+        data: resultado,
       });
-
     } catch (error) {
-      console.error('Error en crearVenta:', error);
+      console.error("Error en crearVenta:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al registrar la venta',
-        error: error.message
+        message: "Error al registrar la venta",
+        error: error.message,
       });
     }
   }
@@ -50,18 +58,17 @@ class VentasController {
   static async obtenerVentas(req, res) {
     try {
       const ventas = await VentasModel.obtenerTodasVentas();
-      
+
       res.status(200).json({
         success: true,
-        data: ventas
+        data: ventas,
       });
-
     } catch (error) {
-      console.error('Error en obtenerVentas:', error);
+      console.error("Error en obtenerVentas:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener las ventas',
-        error: error.message
+        message: "Error al obtener las ventas",
+        error: error.message,
       });
     }
   }
@@ -73,18 +80,17 @@ class VentasController {
   static async obtenerEstadisticas(req, res) {
     try {
       const estadisticas = await VentasModel.obtenerEstadisticas();
-      
+
       res.status(200).json({
         success: true,
-        data: estadisticas
+        data: estadisticas,
       });
-
     } catch (error) {
-      console.error('Error en obtenerEstadisticas:', error);
+      console.error("Error en obtenerEstadisticas:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener estadísticas',
-        error: error.message
+        message: "Error al obtener estadísticas",
+        error: error.message,
       });
     }
   }
@@ -96,18 +102,17 @@ class VentasController {
   static async eliminarVentas(req, res) {
     try {
       await VentasModel.eliminarTodasVentas();
-      
+
       res.status(200).json({
         success: true,
-        message: 'Todas las ventas han sido eliminadas'
+        message: "Todas las ventas han sido eliminadas",
       });
-
     } catch (error) {
-      console.error('Error en eliminarVentas:', error);
+      console.error("Error en eliminarVentas:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al eliminar las ventas',
-        error: error.message
+        message: "Error al eliminar las ventas",
+        error: error.message,
       });
     }
   }
@@ -121,26 +126,25 @@ class VentasController {
       const { tipo } = req.params;
 
       // Validar tipo
-      if (!['A', 'B', 'C'].includes(tipo.toUpperCase())) {
+      if (!["A", "B", "C"].includes(tipo.toUpperCase())) {
         return res.status(400).json({
           success: false,
-          message: 'Tipo de venta inválido. Use A, B o C'
+          message: "Tipo de venta inválido. Use A, B o C",
         });
       }
 
       const ventas = await VentasModel.obtenerVentasPorTipo(tipo.toUpperCase());
-      
+
       res.status(200).json({
         success: true,
-        data: ventas
+        data: ventas,
       });
-
     } catch (error) {
-      console.error('Error en obtenerVentasPorTipo:', error);
+      console.error("Error en obtenerVentasPorTipo:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener ventas por tipo',
-        error: error.message
+        message: "Error al obtener ventas por tipo",
+        error: error.message,
       });
     }
   }
@@ -154,25 +158,24 @@ class VentasController {
       const { id } = req.params;
 
       const venta = await VentasModel.obtenerVentaPorId(id);
-      
+
       if (!venta) {
         return res.status(404).json({
           success: false,
-          message: 'Venta no encontrada'
+          message: "Venta no encontrada",
         });
       }
 
       res.status(200).json({
         success: true,
-        data: venta
+        data: venta,
       });
-
     } catch (error) {
-      console.error('Error en obtenerVentaPorId:', error);
+      console.error("Error en obtenerVentaPorId:", error);
       res.status(500).json({
         success: false,
-        message: 'Error al obtener la venta',
-        error: error.message
+        message: "Error al obtener la venta",
+        error: error.message,
       });
     }
   }
@@ -184,40 +187,46 @@ class VentasController {
   static async actualizarVenta(req, res) {
     try {
       const { id } = req.params;
-      const { monto } = req.body;
+      const { monto, monto_vendido } = req.body;
 
+      const rawMonto = monto !== undefined ? monto : monto_vendido;
+      const parsedMonto = parseFloat(rawMonto);
       // Validación de entrada
-      if (!monto || isNaN(monto) || monto <= 0) {
+      if (
+        rawMonto === undefined ||
+        rawMonto === null ||
+        Number.isNaN(parsedMonto) ||
+        parsedMonto <= 0
+      ) {
         return res.status(400).json({
           success: false,
-          message: 'El monto debe ser un número positivo válido'
+          message: "El monto debe ser un número positivo válido",
         });
       }
 
       // Llamar al modelo para actualizar la venta
-      const resultado = await VentasModel.actualizarVenta(id, parseFloat(monto));
+      const resultado = await VentasModel.actualizarVenta(id, parsedMonto);
 
       // Retornar respuesta exitosa
       res.status(200).json({
         success: true,
-        message: 'Venta actualizada exitosamente',
-        data: resultado
+        message: "Venta actualizada exitosamente",
+        data: resultado,
       });
-
     } catch (error) {
-      console.error('Error en actualizarVenta:', error);
-      
-      if (error.message === 'Venta no encontrada') {
+      console.error("Error en actualizarVenta:", error);
+
+      if (error.message === "Venta no encontrada") {
         return res.status(404).json({
           success: false,
-          message: 'Venta no encontrada'
+          message: "Venta no encontrada",
         });
       }
 
       res.status(500).json({
         success: false,
-        message: 'Error al actualizar la venta',
-        error: error.message
+        message: "Error al actualizar la venta",
+        error: error.message,
       });
     }
   }
@@ -231,26 +240,25 @@ class VentasController {
       const { id } = req.params;
 
       await VentasModel.eliminarVenta(id);
-      
+
       res.status(200).json({
         success: true,
-        message: 'Venta eliminada exitosamente'
+        message: "Venta eliminada exitosamente",
       });
-
     } catch (error) {
-      console.error('Error en eliminarVenta:', error);
-      
-      if (error.message === 'Venta no encontrada') {
+      console.error("Error en eliminarVenta:", error);
+
+      if (error.message === "Venta no encontrada") {
         return res.status(404).json({
           success: false,
-          message: 'Venta no encontrada'
+          message: "Venta no encontrada",
         });
       }
 
       res.status(500).json({
         success: false,
-        message: 'Error al eliminar la venta',
-        error: error.message
+        message: "Error al eliminar la venta",
+        error: error.message,
       });
     }
   }
