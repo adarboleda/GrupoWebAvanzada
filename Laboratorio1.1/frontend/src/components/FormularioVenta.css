@@ -1,0 +1,120 @@
+/* Estilos del formulario de ventas */
+
+.formulario-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.formulario-container h2 {
+  color: #1A1A1A; /* Negro */
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.formulario {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #6B4F4F; /* Café */
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid #D4D4CE; /* Beige borde */
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #FFFFFF; /* Blanco */
+  color: #1A1A1A; /* Negro */
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2C5F8D; /* Azul */
+  background: #FAFAF8; /* Beige muy claro */
+  box-shadow: 0 0 0 3px rgba(44, 95, 141, 0.08);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px 30px;
+  background: #2C5F8D; /* Azul */
+  color: #FFFFFF; /* Blanco */
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(44, 95, 141, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #234B6E; /* Azul oscuro */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(44, 95, 141, 0.25);
+}
+
+.mensaje {
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.mensaje.success {
+  background-color: #E8F5E9; /* Verde muy claro */
+  color: #2E7D32; /* Verde oscuro */
+  border: 1px solid #A5D6A7; /* Verde claro */
+}
+
+.mensaje.error {
+  background-color: #FFEBEE; /* Rojo muy claro */
+  color: #C62828; /* Rojo oscuro */
+  border: 1px solid #EF9A9A; /* Rojo claro */
+}
+
+.info-clasificacion {
+  background: #FAFAF8; /* Beige muy claro */
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #2C5F8D; /* Azul */
+  border: 1px solid #E8E8E3; /* Beige borde */
+}
+
+.info-clasificacion h3 {
+  color: #1A1A1A; /* Negro */
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.info-clasificacion ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-clasificacion li {
+  padding: 8px 0;
+  color: #6B4F4F; /* Café */
+}
+
+.info-clasificacion strong {
+  color: #2C5F8D; /* Azul */
+  font-weight: 600;
+}
