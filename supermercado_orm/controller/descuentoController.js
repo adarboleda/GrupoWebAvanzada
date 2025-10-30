@@ -8,7 +8,7 @@ export const crearDescuento = async (req, res) => {
     if (!monto || numeroEscogido == null) {
       return res.status(400).json({
         error:
-          "Faltan datos obligatorios: monto y numeroEscogido son requeridos",
+          "Faltan datos obligatorios el monto y numero escogido son requeridos",
       });
     }
 
