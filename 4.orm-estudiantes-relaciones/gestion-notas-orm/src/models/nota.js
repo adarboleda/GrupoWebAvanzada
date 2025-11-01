@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 import { Estudiante } from "./estudiante.js";
+import { Asignatura } from "./asignatura.js";
 
 export const Nota = sequelize.define(
   "Nota",
@@ -10,23 +11,55 @@ export const Nota = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    materia: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    calificacion: {
-      type: DataTypes.DECIMAL(5, 2),
+    nota1: {
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
         min: 0,
-        max: 100,
+        max: 20,
       },
+    },
+    nota2: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 20,
+      },
+    },
+    nota3: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 20,
+      },
+    },
+    promedio: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 20,
+      },
+    },
+    categoria: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     estudianteId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: Estudiante,
+        key: "id",
+      },
+    },
+    asignaturaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: Asignatura,
         key: "id",
       },
     },
@@ -37,6 +70,9 @@ export const Nota = sequelize.define(
   }
 );
 
-// Definir la relación
-Estudiante.hasMany(Nota, { foreignKey: "estudianteId" });
+// Definir relaciones
+Estudiante.hasMany(Nota, { foreignKey: "estudianteId", onDelete: "CASCADE" });
 Nota.belongsTo(Estudiante, { foreignKey: "estudianteId" });
+
+Asignatura.hasMany(Nota, { foreignKey: "asignaturaId", onDelete: "CASCADE" });
+Nota.belongsTo(Asignatura, { foreignKey: "asignaturaId" });
