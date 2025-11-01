@@ -67,6 +67,13 @@ export const Nota = sequelize.define(
   {
     tableName: "notas",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["estudianteId", "asignaturaId"],
+        name: "unique_estudiante_asignatura",
+      },
+    ],
   }
 );
 

@@ -59,6 +59,18 @@ export const crearNota = async (req, res) => {
     const promedio = calcularPromedio(nota1, nota2, nota3);
     const categoria = categoriaPromedio(promedio);
 
+    // Verificar si ya existe una nota para este estudiante en esta asignatura
+    const notaExistente = await Nota.findOne({
+      where: { estudianteId, asignaturaId },
+    });
+
+    if (notaExistente) {
+      return res.status(400).json({
+        error:
+          "Este estudiante ya tiene una nota registrada en esta asignatura. Use PUT para actualizar.",
+      });
+    }
+
     // Crear el registro en la base de datos
     const nuevaNota = await Nota.create({
       asignaturaId,
@@ -72,6 +84,14 @@ export const crearNota = async (req, res) => {
 
     res.status(201).json(nuevaNota);
   } catch (error) {
+    // Manejar error de clave única duplicada
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        error:
+          "Este estudiante ya tiene una nota registrada en esta asignatura",
+      });
+    }
+
     res.status(500).json({
       mensaje: "Error al crear la nota",
       error: error.message,
