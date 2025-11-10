@@ -71,7 +71,7 @@ export const CompraDetalle = sequelize.define(
     iva_monto: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      comment: 'Monto del IVA (19%)',
+      comment: 'Monto del IVA (15%)',
     },
     total_final: {
       type: DataTypes.DECIMAL(10, 2),

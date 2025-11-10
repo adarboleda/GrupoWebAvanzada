@@ -2,7 +2,7 @@ import { Compra, CompraDetalle } from '../models/compra.js';
 import { Arbol } from '../models/arbol.js';
 import { sequelize } from '../config/database.js';
 
-const IVA_PORCENTAJE = 19;
+const IVA_PORCENTAJE = 15;
 
 // Función para calcular el descuento según la cantidad total de árboles
 const calcularDescuentoPorTipo = (arbol, cantidadTotal) => {
