@@ -7,7 +7,7 @@ const preciosBase = {
     'Chirimoyos': { precio: 980, rebaja100_300: 0.145, rebaja300plus: 0.19 }
 };
 
-const IVA_PORCENTAJE = 0.19;
+const IVA_PORCENTAJE = 0.15;
 const REBAJA_ADICIONAL_1000 = 0.15;
 
 // Función auxiliar para calcular la rebaja según cantidad
@@ -83,19 +83,7 @@ export const crearCompra = async (req, res) => {
             totalPagar
         });
 
-        // Respuesta detallada
-        res.status(201).json({
-            compra: nuevaCompra,
-            detalles: {
-                subtotalSinIVA: subtotal,
-                porcentajeRebajaPorCantidad: (porcentajeRebaja * 100).toFixed(2) + '%',
-                rebajaAdicionalMas1000: cantidad > 1000 ? '15%' : 'No aplica',
-                rebajaTotal: rebaja.toFixed(2),
-                subtotalConRebaja: subtotalConRebaja.toFixed(2),
-                ivaAplicado: iva.toFixed(2),
-                totalAPagar: totalPagar.toFixed(2)
-            }
-        });
+        res.status(201).json({nuevaCompra});
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -195,17 +183,7 @@ export const actualizarCompra = async (req, res) => {
         );
 
         // Respuesta detallada
-        res.json({
-            compra: compraActualizada,
-            detalles: {
-                subtotalSinIVA: subtotal,
-                porcentajeRebajaPorCantidad: (porcentajeRebaja * 100).toFixed(2) + '%',
-                rebajaAdicionalMas1000: cantidad > 1000 ? '15%' : 'No aplica',
-                rebajaTotal: rebaja.toFixed(2),
-                subtotalConRebaja: subtotalConRebaja.toFixed(2),
-                ivaAplicado: iva.toFixed(2),
-                totalAPagar: totalPagar.toFixed(2)
-            }
+        res.status(200).json({ compraActualizada
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
