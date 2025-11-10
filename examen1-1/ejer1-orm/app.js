@@ -48,7 +48,7 @@ const iniciarServidor = async () => {
       console.log(`URL: http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Error al iniciar el servidor:', error);
+    console.error('Error al iniciar el servidor:', error);
     process.exit(1);
   }
 };
