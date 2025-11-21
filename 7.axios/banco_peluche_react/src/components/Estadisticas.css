@@ -1,0 +1,276 @@
+.estadisticas-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.estadisticas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.estadisticas-header h1 {
+  font-size: 32px;
+  font-weight: 400;
+  color: #1a1a1a;
+  flex: 1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.total {
+  border-left: 4px solid #003d82;
+}
+
+.stat-card.morosos {
+  border-left: 4px solid #ff4444;
+}
+
+.stat-card.no-morosos {
+  border-left: 4px solid #4caf50;
+}
+
+.stat-icon {
+  font-size: 48px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h3 {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.stat-description {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 12px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.progress-fill.moroso {
+  background-color: #ff4444;
+}
+
+.progress-fill.aldia {
+  background-color: #4caf50;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.chart-container h2 {
+  font-size: 24px;
+  margin: 0 0 30px 0;
+  color: #1a1a1a;
+}
+
+.chart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.pie-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.pie {
+  width: 100%;
+  height: 100%;
+}
+
+.pie-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.pie-total {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.pie-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.legend-color.aldia {
+  background-color: #4caf50;
+}
+
+.legend-color.moroso {
+  background-color: #ff4444;
+}
+
+.legend-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.legend-text strong {
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.legend-text span {
+  font-size: 14px;
+  color: #666;
+}
+
+.insights-container {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insights-container h2 {
+  font-size: 24px;
+  margin: 0 0 24px 0;
+  color: #1a1a1a;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.insight-card {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #ffdd00;
+}
+
+.insight-card h4 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+  color: #1a1a1a;
+}
+
+.insight-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  color: #ff4444;
+}
+
+@media (max-width: 768px) {
+  .estadisticas-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+}
