@@ -1,0 +1,212 @@
+/* Contenedor principal de la calculadora */
+.App {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.App:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Título principal */
+.App h1 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Estilos para el formulario */
+.operacion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.operacion-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.operacion-form input:focus {
+  outline: none;
+  border-color: #6a11cb;
+}
+
+/* Contenedor de botones */
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.button-group button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+/* Colores de los botones */
+.button-group button:nth-child(1) {
+  background: #2575fc;
+} /* Sumar */
+.button-group button:nth-child(2) {
+  background: #ff416c;
+} /* Restar */
+.button-group button:nth-child(3) {
+  background: #38ef7d;
+} /* Multiplicar */
+.button-group button:nth-child(4) {
+  background: #f7b733;
+} /* Dividir */
+
+.button-group button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+}
+
+/* Estilos para el resultado */
+.resultado-container {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 5px solid #6a11cb;
+}
+
+.resultado-container h2 {
+  color: #555;
+  margin: 0 0 10px 0;
+  font-size: 20px;
+}
+
+.resultado-container p {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  min-height: 30px;
+}
+
+/* Estilos para el historial */
+.historial-container {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 5px solid #ff416c;
+}
+
+.historial-container h2 {
+  color: #555;
+  margin: 0 0 15px 0;
+  font-size: 20px;
+}
+
+.historial-vacio {
+  color: #999;
+  font-style: italic;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.historial-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.historial-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.historial-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.operacion-numero {
+  background: #6a11cb;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+}
+
+.operacion-detalle {
+  color: #333;
+  flex: 1;
+  font-family: 'Courier New', monospace;
+}
+
+.btn-limpiar {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #ff416c;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-limpiar:hover {
+  background: #e63956;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 65, 108, 0.3);
+}
+
+/* Scrollbar personalizado para el historial */
+.historial-lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.historial-lista::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.historial-lista::-webkit-scrollbar-thumb {
+  background: #6a11cb;
+  border-radius: 10px;
+}
+
+.historial-lista::-webkit-scrollbar-thumb:hover {
+  background: #5a0db9;
+}
