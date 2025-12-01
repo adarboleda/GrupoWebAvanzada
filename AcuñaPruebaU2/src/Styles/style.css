@@ -1,0 +1,476 @@
+/* ============================================
+   ESTILOS GENERALES Y RESET
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* ============================================
+   WRAPPER PRINCIPAL
+   ============================================ */
+.app-wrapper {
+  background: linear-gradient(135deg, #9a5bd8 0%, #333347 100%);
+  min-height: 100vh;
+  padding: 40px 0;
+  position: relative;
+}
+
+.app-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)" /></svg>');
+  pointer-events: none;
+}
+
+/* ============================================
+   ENCABEZADO
+   ============================================ */
+.header-container {
+  position: relative;
+  z-index: 2;
+  animation: slideDown 0.8s ease-out;
+}
+
+.header-content {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 50px 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.badge-header {
+  display: inline-block;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
+.header-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  margin: 20px 0 25px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ffffff, #e0e7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-divider {
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #9a5bd8, #2563eb);
+  margin: 25px auto;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(154, 91, 216, 0.4);
+}
+
+.header-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin: 0;
+  font-style: italic;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   ENCABEZADO (versión anterior - mantener compatible)
+   ============================================ */
+.text-center h1 {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.text-center p.lead {
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+}
+
+/* ============================================
+   TARJETAS DE USUARIO
+   ============================================ */
+.user-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  border: none;
+  position: relative;
+}
+
+.user-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #9a5bd8, #2563eb);
+  z-index: 1;
+}
+
+.user-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(154, 91, 216, 0.4) !important;
+}
+
+.user-card .card-img-top {
+  height: 250px;
+  object-fit: cover;
+  border-bottom: 4px solid #9a5bd8;
+  transition: transform 0.4s ease;
+}
+
+.user-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.user-card .card-body {
+  background: white;
+  padding: 20px;
+}
+
+.user-card .badge {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #9a5bd8, #7a3fa8) !important;
+  box-shadow: 0 2px 8px rgba(154, 91, 216, 0.3);
+}
+
+.user-card .card-title {
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  color: #1a1a1a;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.user-card .card-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-break: break-word;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.user-card .card-text strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.user-card .card-text.text-primary {
+  color: #2563eb !important;
+}
+
+.user-card .card-text.text-muted {
+  color: #6b7280 !important;
+}
+
+/* ============================================
+   LOADING - SPINNER
+   ============================================ */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: white;
+}
+
+.loading .spinner-border {
+  width: 60px;
+  height: 60px;
+  border-width: 4px;
+  animation: spin 1s linear infinite;
+}
+
+.loading p {
+  font-size: 1.1rem;
+  margin-top: 20px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   ALERTAS Y ERRORES
+   ============================================ */
+.alert-danger {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #991b1b;
+  border: 2px solid #fca5a5;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 20px 0;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+/* ============================================
+   FORMULARIO (si se agrega búsqueda)
+   ============================================ */
+.search-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: none;
+  margin-bottom: 30px;
+  border-top: 4px solid #9a5bd8;
+}
+
+.search-card .card-body {
+  padding: 25px;
+}
+
+.search-card .card-title {
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.search-card .form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.search-card .form-control,
+.search-card .form-select {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.search-card .form-control:focus,
+.search-card .form-select:focus {
+  border-color: #9a5bd8;
+  box-shadow: 0 0 0 4px rgba(154, 91, 216, 0.1);
+  outline: none;
+}
+
+.search-card .btn-primary {
+  background: linear-gradient(135deg, #9a5bd8, #7a3fa8);
+  border: none;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.search-card .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(154, 91, 216, 0.3);
+}
+
+.search-card .btn-secondary {
+  background-color: #6b7280;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.search-card .btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+/* ============================================
+   GRID DE TARJETAS
+   ============================================ */
+.row {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .app-wrapper {
+    padding: 30px 0;
+  }
+  
+  .user-card .card-img-top {
+    height: 220px;
+  }
+
+  .header-title {
+    font-size: 2.8rem;
+  }
+
+  .header-content {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-wrapper {
+    padding: 20px 0;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .user-card .card-img-top {
+    height: 200px;
+  }
+
+  .user-card:hover {
+    transform: translateY(-8px) scale(1);
+  }
+
+  h1.display-4 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+
+  .text-center p.lead {
+    font-size: 1rem;
+  }
+
+  .header-title {
+    font-size: 2.2rem;
+  }
+
+  .header-content {
+    padding: 30px 15px;
+  }
+
+  .header-subtitle {
+    font-size: 1rem;
+  }
+
+  .badge-header {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+
+  .search-card .card-body {
+    padding: 15px;
+  }
+
+  .search-card .form-control,
+  .search-card .form-select {
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+}
+
+@media (max-width: 576px) {
+  .container.py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .header-title {
+    font-size: 1.8rem;
+    margin: 15px 0 20px;
+  }
+
+  .header-content {
+    padding: 25px 10px;
+    border-radius: 15px;
+  }
+
+  .header-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .header-divider {
+    width: 80px;
+  }
+
+  h1.display-4 {
+    font-size: 1.5rem;
+  }
+
+  .user-card .card-title {
+    font-size: 1.1rem;
+  }
+
+  .user-card .card-text {
+    font-size: 0.85rem;
+  }
+
+  .loading {
+    padding: 40px 15px;
+  }
+
+  .loading .spinner-border {
+    width: 50px;
+    height: 50px;
+    border-width: 3px;
+  }
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-card {
+  animation: fadeIn 0.6s ease-out;
+}
