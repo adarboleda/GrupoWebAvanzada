@@ -1,0 +1,387 @@
+# =============================================
+# API DE COTIZACIÓN DE SEGUROS VEHICULARES
+# Colección de peticiones HTTP para pruebas
+# =============================================
+
+### ========== CONDUCTORES ==========
+
+### 1. Crear Conductor (Riesgo Estándar - Sin accidentes)
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "1717171717",
+  "nombre_completo": "Abner Arboleda",
+  "fecha_nacimiento": "1995-05-15",
+  "email": "abner@ejemplo.com",
+  "numero_accidentes": 0
+}
+
+### 2. Crear Conductor Joven (18-24 años)
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "0987654321",
+  "nombre_completo": "María González",
+  "fecha_nacimiento": "2001-08-20",
+  "email": "maria@ejemplo.com",
+  "numero_accidentes": 1
+}
+
+### 3. Crear Conductor Mayor de 65 años
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "1122334455",
+  "nombre_completo": "Carlos Ramírez",
+  "fecha_nacimiento": "1957-11-25",
+  "email": "carlos@ejemplo.com",
+  "numero_accidentes": 2
+}
+
+### 4. Intentar crear conductor menor de 18 años (Debe RECHAZAR)
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "9999999999",
+  "nombre_completo": "Pedro Menor",
+  "fecha_nacimiento": "2008-01-01",
+  "email": "pedro@ejemplo.com",
+  "numero_accidentes": 0
+}
+
+### 5. Intentar crear conductor mayor de 75 años (Debe RECHAZAR)
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "8888888888",
+  "nombre_completo": "Rosa Mayor",
+  "fecha_nacimiento": "1945-07-15",
+  "email": "rosa@ejemplo.com",
+  "numero_accidentes": 0
+}
+
+### 6. Listar todos los conductores
+GET http://localhost:3000/api/conductores
+
+### 7. Obtener conductor por ID
+GET http://localhost:3000/api/conductores/1
+
+### 8. Actualizar conductor
+PUT http://localhost:3000/api/conductores/1
+Content-Type: application/json
+
+{
+  "numero_accidentes": 1
+}
+
+### 9. Eliminar conductor
+DELETE http://localhost:3000/api/conductores/10
+
+
+### ========== VEHÍCULOS ==========
+
+### 10. Crear Vehículo SUV (Uso Personal)
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Toyota",
+  "modelo": "Fortuner",
+  "anio_fabricacion": 2022,
+  "placa": "PBA-1234",
+  "valor_mercado": 45000.00,
+  "tipo_vehiculo": "SUV",
+  "uso_vehiculo": "PERSONAL"
+}
+
+### 11. Crear Vehículo Sedán (Uso Personal)
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Chevrolet",
+  "modelo": "Sail",
+  "anio_fabricacion": 2020,
+  "placa": "PIC-5678",
+  "valor_mercado": 15000.00,
+  "tipo_vehiculo": "SEDAN",
+  "uso_vehiculo": "PERSONAL"
+}
+
+### 12. Crear Vehículo Camioneta (Uso Comercial)
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Nissan",
+  "modelo": "Navara",
+  "anio_fabricacion": 2019,
+  "placa": "GUA-9012",
+  "valor_mercado": 35000.00,
+  "tipo_vehiculo": "CAMIONETA",
+  "uso_vehiculo": "COMERCIAL"
+}
+
+### 13. Intentar crear vehículo con más de 20 años (Debe RECHAZAR)
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Chevrolet",
+  "modelo": "Aveo",
+  "anio_fabricacion": 2000,
+  "placa": "OLD-0001",
+  "valor_mercado": 3000.00,
+  "tipo_vehiculo": "SEDAN",
+  "uso_vehiculo": "PERSONAL"
+}
+
+### 14. Listar todos los vehículos
+GET http://localhost:3000/api/vehiculos
+
+### 15. Obtener vehículo por ID
+GET http://localhost:3000/api/vehiculos/1
+
+### 16. Actualizar vehículo
+PUT http://localhost:3000/api/vehiculos/1
+Content-Type: application/json
+
+{
+  "valor_mercado": 43000.00
+}
+
+### 17. Eliminar vehículo
+DELETE http://localhost:3000/api/vehiculos/10
+
+
+### ========== COTIZACIONES ==========
+
+### 18. Calcular Cotización IDEAL (Sin accidentes, SUV personal, riesgo estándar)
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 1,
+  "id_vehiculo": 1,
+  "acepta_terminos": true
+}
+
+### 19. Calcular Cotización con Conductor Joven (Recargo 25%)
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 2,
+  "id_vehiculo": 2,
+  "acepta_terminos": true
+}
+
+### 20. Calcular Cotización con Uso Comercial (Recargo 20%)
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 1,
+  "id_vehiculo": 3,
+  "acepta_terminos": true
+}
+
+### 21. Calcular Cotización con Mayor de 65 años y 2 accidentes
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 3,
+  "id_vehiculo": 1,
+  "acepta_terminos": true
+}
+
+### 22. Intentar cotizar sin aceptar términos (Debe RECHAZAR)
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 1,
+  "id_vehiculo": 1,
+  "acepta_terminos": false
+}
+
+### 23. Listar todas las cotizaciones
+GET http://localhost:3000/api/cotizaciones
+
+### 24. Obtener cotización por ID
+GET http://localhost:3000/api/cotizaciones/1
+
+### 25. Obtener cotizaciones por conductor
+GET http://localhost:3000/api/cotizaciones/conductor/1
+
+### 26. Actualizar estado de cotización
+PUT http://localhost:3000/api/cotizaciones/1/estado
+Content-Type: application/json
+
+{
+  "estado": "APROBADA"
+}
+
+### 27. Eliminar cotización
+DELETE http://localhost:3000/api/cotizaciones/10
+
+
+### ========== PAGOS ==========
+
+### 28. Procesar Pago con Tarjeta de Crédito - Contado (Descuento 5%)
+POST http://localhost:3000/api/pagos/procesar
+Content-Type: application/json
+
+{
+  "id_cotizacion": 1,
+  "tipo_tarjeta": "CREDITO",
+  "modalidad_pago": "CONTADO",
+  "numero_cuotas": 1,
+  "codigo_referencia_pasarela": "ABC123XYZ"
+}
+
+### 29. Procesar Pago con Tarjeta de Débito - Contado
+POST http://localhost:3000/api/pagos/procesar
+Content-Type: application/json
+
+{
+  "id_cotizacion": 2,
+  "tipo_tarjeta": "DEBITO",
+  "modalidad_pago": "CONTADO",
+  "numero_cuotas": 1,
+  "codigo_referencia_pasarela": "DEF456ABC"
+}
+
+### 30. Procesar Pago en 6 Cuotas (Incremento 3% por cuota)
+POST http://localhost:3000/api/pagos/procesar
+Content-Type: application/json
+
+{
+  "id_cotizacion": 3,
+  "tipo_tarjeta": "CREDITO",
+  "modalidad_pago": "DIFERIDO",
+  "numero_cuotas": 6,
+  "codigo_referencia_pasarela": "GHI789DEF"
+}
+
+### 31. Procesar Pago en 12 Cuotas
+POST http://localhost:3000/api/pagos/procesar
+Content-Type: application/json
+
+{
+  "id_cotizacion": 4,
+  "tipo_tarjeta": "CREDITO",
+  "modalidad_pago": "DIFERIDO",
+  "numero_cuotas": 12,
+  "codigo_referencia_pasarela": "JKL012GHI"
+}
+
+### 32. Listar todos los pagos
+GET http://localhost:3000/api/pagos
+
+### 33. Obtener pago por ID
+GET http://localhost:3000/api/pagos/1
+
+### 34. Obtener pagos por cotización
+GET http://localhost:3000/api/pagos/cotizacion/1
+
+### 35. Reintentar pago fallido
+POST http://localhost:3000/api/pagos/reintentar/2
+
+### 36. Eliminar pago
+DELETE http://localhost:3000/api/pagos/10
+
+
+### ========== CASOS DE PRUEBA COMPLETOS ==========
+
+### ESCENARIO 1: Flujo completo exitoso
+### Paso 1: Crear conductor
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "1234567890",
+  "nombre_completo": "Test Usuario",
+  "fecha_nacimiento": "1990-01-15",
+  "email": "test@ejemplo.com",
+  "numero_accidentes": 0
+}
+
+### Paso 2: Crear vehículo
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Honda",
+  "modelo": "Civic",
+  "anio_fabricacion": 2023,
+  "placa": "TEST-001",
+  "valor_mercado": 25000.00,
+  "tipo_vehiculo": "SEDAN",
+  "uso_vehiculo": "PERSONAL"
+}
+
+### Paso 3: Calcular cotización
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 1,
+  "id_vehiculo": 1,
+  "acepta_terminos": true
+}
+
+### Paso 4: Procesar pago
+POST http://localhost:3000/api/pagos/procesar
+Content-Type: application/json
+
+{
+  "id_cotizacion": 1,
+  "tipo_tarjeta": "CREDITO",
+  "modalidad_pago": "CONTADO",
+  "numero_cuotas": 1
+}
+
+
+### ESCENARIO 2: Alto Riesgo
+### Conductor con 4 accidentes, uso comercial
+POST http://localhost:3000/api/conductores
+Content-Type: application/json
+
+{
+  "identificacion": "5555555555",
+  "nombre_completo": "Alto Riesgo",
+  "fecha_nacimiento": "1985-06-30",
+  "email": "riesgo@ejemplo.com",
+  "numero_accidentes": 4
+}
+
+### Vehículo comercial
+POST http://localhost:3000/api/vehiculos
+Content-Type: application/json
+
+{
+  "marca": "Chevrolet",
+  "modelo": "N300",
+  "anio_fabricacion": 2021,
+  "placa": "COM-999",
+  "valor_mercado": 20000.00,
+  "tipo_vehiculo": "CAMIONETA",
+  "uso_vehiculo": "COMERCIAL"
+}
+
+### Cotización alto riesgo
+POST http://localhost:3000/api/cotizaciones/calcular
+Content-Type: application/json
+
+{
+  "id_conductor": 2,
+  "id_vehiculo": 2,
+  "acepta_terminos": true
+}
