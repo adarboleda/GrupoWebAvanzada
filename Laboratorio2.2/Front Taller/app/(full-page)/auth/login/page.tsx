@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/navigation';
@@ -10,41 +10,47 @@ import { Page } from '../../../../types/layout';
 
 const Login: Page = () => {
     const router = useRouter();
-    const { login: authLogin } = useAuth();
+    const { login: authLogin, isAuthenticated, cargando } = useAuth();
     const toastRef = useRef<Toast>(null);
-    const [email, setEmail] = useState('cliente@seguros.com');
-    const [password, setPassword] = useState('abcd');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (isAuthenticated && !cargando) {
+            router.push('/');
+        }
+    }, [isAuthenticated, cargando, router]);
+
     const handleLogin = async () => {
-        if (!email || !password) {
+        if (!username || !password) {
             toastRef.current?.show({
                 severity: 'warn',
                 summary: 'Validación',
-                detail: 'Por favor completa todos los campos',
+                detail: 'Por favor completa todos los campos'
             });
             return;
         }
 
         try {
             setLoading(true);
-            const response = await authLogin(email, password);
+            const response = await authLogin(username, password);
 
-            if (response.success) {
+            if (response.ok) {
                 toastRef.current?.show({
                     severity: 'success',
                     summary: 'Éxito',
-                    detail: 'Iniciando sesión...',
+                    detail: 'Iniciando sesión...'
                 });
-                
+
                 setTimeout(() => {
-                    router.push('/seguros/historial');
+                    router.push('/');
                 }, 1000);
             } else {
                 toastRef.current?.show({
                     severity: 'error',
                     summary: 'Error',
-                    detail: response.error || 'Error al iniciar sesión',
+                    detail: response.error || 'Usuario o contraseña incorrectos'
                 });
             }
         } catch (error) {
@@ -52,7 +58,7 @@ const Login: Page = () => {
             toastRef.current?.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: mensaje,
+                detail: mensaje
             });
         } finally {
             setLoading(false);
@@ -64,6 +70,14 @@ const Login: Page = () => {
             handleLogin();
         }
     };
+
+    if (cargando) {
+        return (
+            <div className="flex align-items-center justify-content-center h-screen">
+                <i className="pi pi-spin pi-spinner" style={{ fontSize: '3rem' }}></i>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -81,43 +95,19 @@ const Login: Page = () => {
                                 <span className="text-500 text-sm">Cotización de Seguros Vehiculares</span>
                             </div>
                             <div className="col-12 text-left">
-                                <label className="text-400 mb-1">Email</label>
+                                <label className="text-400 mb-1">Usuario</label>
                                 <div className="mt-1">
-                                    <InputText 
-                                        type="email" 
-                                        placeholder="Correo" 
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        onKeyPress={handleKeyPress}
-                                        disabled={loading}
-                                    />
+                                    <InputText type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} onKeyPress={handleKeyPress} disabled={loading} />
                                 </div>
                             </div>
                             <div className="col-12 text-left">
                                 <label className="text-400 mb-1">Contraseña</label>
                                 <div className="mt-1">
-                                    <InputText 
-                                        type="password" 
-                                        placeholder="Contraseña" 
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        onKeyPress={handleKeyPress}
-                                        disabled={loading}
-                                    />
+                                    <InputText type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} onKeyPress={handleKeyPress} disabled={loading} />
                                 </div>
                             </div>
-                            <div className="col-12 md:col-6">
-                                <Button 
-                                    onClick={handleLogin} 
-                                    label="Iniciar Sesión"
-                                    loading={loading}
-                                    disabled={loading}
-                                ></Button>
-                            </div>
-                            <div className="col-12 md:col-6">
-                                <Button text className="text-gray-300 flex justify-content-center">
-                                    Prueba: cliente@seguros.com / abcd
-                                </Button>
+                            <div className="col-12">
+                                <Button onClick={handleLogin} label="Iniciar Sesión" loading={loading} disabled={loading} className="w-full"></Button>
                             </div>
                         </div>
                     </div>

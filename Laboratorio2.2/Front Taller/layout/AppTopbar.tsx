@@ -4,9 +4,13 @@ import type { AppTopbarRef } from '@/types';
 import Link from 'next/link';
 import { StyleClass } from 'primereact/styleclass';
 import { Ripple } from 'primereact/ripple';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { onMenuToggle, onTopbarMenuToggle } = useContext(LayoutContext);
+    const { usuario, logout } = useAuth();
+    const router = useRouter();
     const menubuttonRef = useRef(null);
 
     const mobileButtonRef = useRef(null);
@@ -21,6 +25,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
 
     const onMobileTopbarMenuButtonClick = () => {
         onTopbarMenuToggle();
+    };
+
+    const handleLogout = () => {
+        logout();
+        router.push('/auth/login');
     };
 
     useImperativeHandle(ref, () => ({
@@ -142,33 +151,33 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                         <li>
                             <StyleClass nodeRef={avatarRef} selector="@next" enterClassName="hidden" enterActiveClassName="px-scalein" leaveToClassName="hidden" leaveActiveClassName="px-fadeout" hideOnOutsideClick>
                                 <a className="p-ripple" ref={avatarRef}>
-                                    <i className="pi pi-cog"></i> <Ripple />
+                                    <i className="pi pi-user"></i> <Ripple />
                                 </a>
                             </StyleClass>
                             <div className="hidden">
                                 <ul className="list-none p-0 m-0">
+                                    <li className="px-3 py-2 border-bottom-1 surface-border">
+                                        <div className="flex flex-column">
+                                            <span className="font-semibold">{usuario?.nombre_completo}</span>
+                                            <span className="text-sm text-500">{usuario?.rol}</span>
+                                        </div>
+                                    </li>
                                     <li>
                                         <a className="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
-                                            <i className="pi pi-fw pi-palette text-lg"></i>
-                                            <span>Change Theme</span>
+                                            <i className="pi pi-fw pi-user text-lg"></i>
+                                            <span>Perfil</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a className="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
-                                            <i className="pi pi-fw pi-star text-lg"></i>
-                                            <span>Favorites</span>
+                                            <i className="pi pi-fw pi-cog text-lg"></i>
+                                            <span>Configuración</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a className="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
-                                            <i className="pi pi-fw pi-lock text-lg"></i>
-                                            <span>Lock Screen</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
-                                            <i className="pi pi-fw pi-image text-lg"></i>
-                                            <span>Wallpaper</span>
+                                        <a onClick={handleLogout} className="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
+                                            <i className="pi pi-fw pi-sign-out text-lg"></i>
+                                            <span>Cerrar Sesión</span>
                                         </a>
                                     </li>
                                 </ul>

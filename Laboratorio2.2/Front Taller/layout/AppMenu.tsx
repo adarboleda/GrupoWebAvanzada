@@ -1,7 +1,10 @@
 import AppSubMenu from './AppSubMenu';
 import type { MenuModel } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 const AppMenu = () => {
+    const { usuario } = useAuth();
+
     const model: MenuModel[] = [
         {
             label: 'Sistema de Seguros',
@@ -58,6 +61,21 @@ const AppMenu = () => {
             ]
         }
     ];
+
+    // Solo agregar Administración si el usuario es ADMIN
+    if (usuario?.rol === 'ADMIN') {
+        model.push({
+            label: 'Administración',
+            icon: 'pi pi-fw pi-lock',
+            items: [
+                {
+                    label: 'Usuarios',
+                    icon: 'pi pi-fw pi-users',
+                    to: '/seguros/usuarios'
+                }
+            ]
+        });
+    }
 
     return <AppSubMenu model={model} />;
 };

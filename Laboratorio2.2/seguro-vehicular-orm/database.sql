@@ -74,6 +74,20 @@ CREATE TABLE IF NOT EXISTS Pago (
     FOREIGN KEY (id_cotizacion) REFERENCES Cotizacion(id_cotizacion) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
+-- 6. Tabla USUARIO
+-- Maneja la autenticación y autorización del sistema
+CREATE TABLE IF NOT EXISTS Usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE COMMENT 'Nombre de usuario para login',
+    password VARCHAR(255) NOT NULL COMMENT 'Contraseña hasheada con bcrypt',
+    nombre_completo VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    rol ENUM('ADMIN', 'OPERADOR') NOT NULL DEFAULT 'OPERADOR' COMMENT 'ADMIN = Control total, OPERADOR = Solo operaciones',
+    activo TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1 = Activo, 0 = Inactivo',
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
 -- =============================================
 -- DATOS DE PRUEBA
 -- =============================================

@@ -3,6 +3,127 @@ import axios from 'axios';
 // Backend URL - seguro-vehicular-orm runs on port 3000
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
+// Configurar axios para incluir el token en cada petición
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Auth Service
+export const authService = {
+    login: async (username: string, password: string) => {
+        try {
+            const response = await axios.post(`${API_URL}/auth/login`, { username, password });
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al iniciar sesión'
+            };
+        }
+    },
+
+    verificarToken: async () => {
+        try {
+            const response = await axios.post(`${API_URL}/auth/verificar`);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Token inválido'
+            };
+        }
+    },
+
+    obtenerPerfil: async () => {
+        try {
+            const response = await axios.get(`${API_URL}/auth/perfil`);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al obtener perfil'
+            };
+        }
+    },
+
+    logout: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+    }
+};
+
+// Usuarios Service (solo para admin)
+export const usuarioService = {
+    obtenerTodos: async () => {
+        try {
+            const response = await axios.get(`${API_URL}/auth/usuarios`);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al obtener usuarios'
+            };
+        }
+    },
+
+    obtenerPorId: async (id: number) => {
+        try {
+            const response = await axios.get(`${API_URL}/auth/usuarios/${id}`);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al obtener usuario'
+            };
+        }
+    },
+
+    crear: async (datos: any) => {
+        try {
+            const response = await axios.post(`${API_URL}/auth/usuarios`, datos);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al crear usuario'
+            };
+        }
+    },
+
+    actualizar: async (id: number, datos: any) => {
+        try {
+            const response = await axios.put(`${API_URL}/auth/usuarios/${id}`, datos);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al actualizar usuario'
+            };
+        }
+    },
+
+    eliminar: async (id: number) => {
+        try {
+            const response = await axios.delete(`${API_URL}/auth/usuarios/${id}`);
+            return { ok: true, data: response.data };
+        } catch (error: any) {
+            return {
+                ok: false,
+                error: error.response?.data?.error || 'Error al eliminar usuario'
+            };
+        }
+    }
+};
+
 // Conductores Service
 export const conductorService = {
     crear: async (datos: any) => {
@@ -273,46 +394,6 @@ export const pagoService = {
             return {
                 ok: false,
                 error: error.response?.data?.error || 'Error al eliminar pago'
-            };
-        }
-    }
-};
-
-export const authService = {
-    login: async (email: string, password: string) => {
-        try {
-            const response = await axios.post(`${API_URL}/auth/login`, { email, password });
-            return response.data;
-        } catch (error: any) {
-            return {
-                ok: false,
-                error: error.response?.data?.error || 'Error en la autenticación'
-            };
-        }
-    },
-
-    register: async (datosUsuario: any) => {
-        try {
-            const response = await axios.post(`${API_URL}/auth/register`, datosUsuario);
-            return response.data;
-        } catch (error: any) {
-            return {
-                ok: false,
-                error: error.response?.data?.error || 'Error en el registro'
-            };
-        }
-    },
-
-    verificarToken: async (token: string) => {
-        try {
-            const response = await axios.get(`${API_URL}/auth/verify`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            return response.data;
-        } catch (error: any) {
-            return {
-                ok: false,
-                error: 'Token inválido'
             };
         }
     }

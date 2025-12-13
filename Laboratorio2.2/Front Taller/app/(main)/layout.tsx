@@ -1,7 +1,6 @@
 'use client';
-import { Metadata } from 'next';
 import Layout from '../../layout/layout';
-import { AuthProvider } from '../../context/AuthContext';
+import { PrivateRoute } from '@/components/PrivateRoute';
 
 interface MainLayoutProps {
     children: React.ReactNode;
@@ -9,8 +8,8 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
     return (
-        <AuthProvider>
+        <PrivateRoute>
             <Layout>{children}</Layout>
-        </AuthProvider>
+        </PrivateRoute>
     );
 }

@@ -8,12 +8,14 @@ import { Conductor } from './src/models/conductor.js';
 import { Vehiculo } from './src/models/vehiculo.js';
 import { Cotizacion } from './src/models/cotizacion.js';
 import { Pago } from './src/models/pago.js';
+import { Usuario } from './src/models/usuario.js';
 
 // Importar rutas
 import conductorRoutes from './src/routes/conductorRoutes.js';
 import vehiculoRoutes from './src/routes/vehiculoRoutes.js';
 import cotizacionRoutes from './src/routes/cotizacionRoutes.js';
 import pagoRoutes from './src/routes/pagoRoutes.js';
+import authRoutes from './src/routes/authRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -28,6 +30,7 @@ app.get('/', (_req, res) =>
 );
 
 // Registrar rutas
+app.use('/api/auth', authRoutes);
 app.use('/api/conductores', conductorRoutes);
 app.use('/api/vehiculos', vehiculoRoutes);
 app.use('/api/cotizaciones', cotizacionRoutes);
