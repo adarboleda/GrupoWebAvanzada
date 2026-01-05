@@ -1,0 +1,421 @@
+{
+  "info": {
+    "name": "Soft&Hard - API Pedidos - Estados HTTP",
+    "description": "Colección completa para probar todos los estados HTTP de la API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "2XX - Respuestas Exitosas",
+      "item": [
+        {
+          "name": "200 OK - Listar Pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos"]
+            }
+          }
+        },
+        {
+          "name": "200 OK - Obtener Pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "1"]
+            }
+          }
+        },
+        {
+          "name": "201 Created - Crear Pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": \"Ana García\",\n  \"producto\": \"Teclado Mecánico\",\n  \"cantidad\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos"]
+            }
+          }
+        },
+        {
+          "name": "204 No Content - Eliminar Pedido",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "2"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3XX - Redirecciones",
+      "item": [
+        {
+          "name": "301 Moved Permanently",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/pedidos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["pedidos"]
+            }
+          }
+        },
+        {
+          "name": "302 Found - Redirección Temporal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/orden/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "orden", "1"]
+            }
+          }
+        },
+        {
+          "name": "304 Not Modified",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "If-None-Match",
+                "value": "12345-version1"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/cache/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "cache", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4XX - Errores del Cliente",
+      "item": [
+        {
+          "name": "400 Bad Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cantidad\": -5\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/validar",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "validar"]
+            }
+          }
+        },
+        {
+          "name": "401 Unauthorized - Sin Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/admin",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "admin"]
+            }
+          }
+        },
+        {
+          "name": "401 Unauthorized - Token Inválido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token-incorrecto"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/admin",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "admin"]
+            }
+          }
+        },
+        {
+          "name": "200 OK - Token Válido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token-secreto-123"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/admin",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "admin"]
+            }
+          }
+        },
+        {
+          "name": "403 Forbidden - Sin Permisos",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "user-role",
+                "value": "usuario"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/admin/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "admin", "1"]
+            }
+          }
+        },
+        {
+          "name": "200 OK - Con Permisos Admin",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "user-role",
+                "value": "admin"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/admin/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "admin", "1"]
+            }
+          }
+        },
+        {
+          "name": "404 Not Found",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/999",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "999"]
+            }
+          }
+        },
+        {
+          "name": "405 Method Not Allowed",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos"]
+            }
+          }
+        },
+        {
+          "name": "409 Conflict",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/duplicado",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "duplicado"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5XX - Errores del Servidor",
+      "item": [
+        {
+          "name": "500 Internal Server Error",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/error",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "error"]
+            }
+          }
+        },
+        {
+          "name": "502 Bad Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/external",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "external"]
+            }
+          }
+        },
+        {
+          "name": "Activar Mantenimiento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activar\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/mantenimiento",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "mantenimiento"]
+            }
+          }
+        },
+        {
+          "name": "503 Service Unavailable",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/servicio",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "servicio"]
+            }
+          }
+        },
+        {
+          "name": "Desactivar Mantenimiento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activar\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/mantenimiento",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "mantenimiento"]
+            }
+          }
+        },
+        {
+          "name": "504 Gateway Timeout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/pedidos/timeout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "pedidos", "timeout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ruta Principal",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": [""]
+        }
+      }
+    }
+  ]
+}

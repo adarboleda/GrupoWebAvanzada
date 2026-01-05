@@ -1,0 +1,155 @@
+/* Tema UEFA Champions League */
+:root {
+    --ucl-dark-blue: #00205B;
+    --ucl-light-blue: #0082C9;
+    --ucl-white: #FFFFFF;
+    --ucl-gold: #FFD700;
+    --ucl-silver: #C0C0C0;
+}
+
+/* Sidebar con colores Champions League */
+.layout-sidebar {
+    background: linear-gradient(180deg, var(--ucl-dark-blue) 0%, #001540 100%) !important;
+}
+
+.layout-sidebar .menu-separator {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Menú items */
+.layout-menu li a {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.layout-menu li a:hover {
+    background-color: rgba(0, 130, 201, 0.2) !important;
+    color: var(--ucl-white) !important;
+}
+
+.layout-menu li a.active-route {
+    background-color: var(--ucl-light-blue) !important;
+    color: var(--ucl-white) !important;
+}
+
+.layout-menu .menu-label {
+    color: var(--ucl-gold) !important;
+    font-weight: 600 !important;
+}
+
+/* Topbar con estilo Champions */
+.layout-topbar {
+    background: linear-gradient(90deg, var(--ucl-dark-blue) 0%, var(--ucl-light-blue) 100%) !important;
+    box-shadow: 0 2px 8px rgba(0, 32, 91, 0.3) !important;
+}
+
+.layout-topbar .layout-topbar-logo {
+    color: var(--ucl-white) !important;
+    font-weight: bold !important;
+}
+
+.layout-topbar .layout-topbar-button {
+    color: var(--ucl-white) !important;
+}
+
+.layout-topbar .layout-topbar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Botones principales */
+.p-button {
+    background: var(--ucl-light-blue) !important;
+    border-color: var(--ucl-light-blue) !important;
+}
+
+.p-button:hover {
+    background: var(--ucl-dark-blue) !important;
+    border-color: var(--ucl-dark-blue) !important;
+}
+
+.p-button.p-button-success {
+    background: #198754 !important;
+    border-color: #198754 !important;
+}
+
+/* Cards con estilo Champions */
+.p-card {
+    border: 1px solid rgba(0, 130, 201, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 32, 91, 0.1) !important;
+}
+
+.p-card .p-card-title {
+    color: var(--ucl-dark-blue) !important;
+}
+
+/* Tags con colores Champions */
+.p-tag.p-tag-success {
+    background: var(--ucl-light-blue) !important;
+}
+
+.p-tag.p-tag-info {
+    background: var(--ucl-dark-blue) !important;
+}
+
+.p-tag.p-tag-warning {
+    background: var(--ucl-gold) !important;
+    color: var(--ucl-dark-blue) !important;
+}
+
+/* DataTable */
+.p-datatable .p-datatable-thead > tr > th {
+    background: var(--ucl-dark-blue) !important;
+    color: var(--ucl-white) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+    background: rgba(0, 130, 201, 0.1) !important;
+}
+
+/* Dashboard stats */
+.bg-blue-100 {
+    background: rgba(0, 130, 201, 0.1) !important;
+}
+
+.text-blue-500 {
+    color: var(--ucl-light-blue) !important;
+}
+
+.bg-green-100 {
+    background: rgba(25, 135, 84, 0.1) !important;
+}
+
+.text-green-500 {
+    color: #198754 !important;
+}
+
+/* Breadcrumb */
+.layout-breadcrumb {
+    background: rgba(0, 32, 91, 0.05) !important;
+    border-bottom: 2px solid var(--ucl-light-blue) !important;
+}
+
+/* Dialog/Modal */
+.p-dialog .p-dialog-header {
+    background: var(--ucl-dark-blue) !important;
+    color: var(--ucl-white) !important;
+}
+
+.p-dialog .p-dialog-header .p-dialog-title {
+    color: var(--ucl-white) !important;
+}
+
+/* Input focus */
+.p-inputtext:enabled:focus {
+    border-color: var(--ucl-light-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 130, 201, 0.25) !important;
+}
+
+/* Dropdown */
+.p-dropdown:not(.p-disabled):hover {
+    border-color: var(--ucl-light-blue) !important;
+}
+
+.p-dropdown:not(.p-disabled).p-focus {
+    border-color: var(--ucl-light-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 130, 201, 0.25) !important;
+}

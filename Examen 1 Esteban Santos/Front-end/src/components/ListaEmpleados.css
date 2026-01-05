@@ -1,0 +1,184 @@
+/* Contenedor de la Lista */
+.lista-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 30px;
+  margin-top: 30px;
+  animation: slideUp 0.3s ease-in;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header de la Lista */
+.lista-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #1e40af;
+}
+
+.lista-header h2 {
+  color: #000000;
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-refresh {
+  background: #1e40af;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.btn-refresh:hover {
+  background: #1e3a8a;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* Estado Vacío */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.empty-subtitle {
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+/* Tabla */
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+.tabla-empleados {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.tabla-empleados thead {
+  background: #1e40af;
+  color: #ffffff;
+}
+
+.tabla-empleados th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-empleados tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.tabla-empleados tbody tr:hover {
+  background: #f9fafb;
+}
+
+.tabla-empleados td {
+  padding: 12px;
+  color: #000000;
+}
+
+.nombre-empleado {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.sueldo {
+  font-weight: 600;
+  color: #10b981;
+  font-family: 'Courier New', monospace;
+}
+
+.fecha {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Botón Eliminar */
+.btn-eliminar {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.btn-eliminar:hover {
+  background: #b91c1c;
+}
+
+/* Footer de la Tabla */
+.tabla-footer {
+  text-align: right;
+  padding: 15px;
+  background: #f9fafb;
+  border-radius: 4px;
+  color: #000000;
+}
+
+.tabla-footer strong {
+  color: #1e40af;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lista-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .tabla-empleados {
+    font-size: 0.85rem;
+  }
+
+  .tabla-empleados th,
+  .tabla-empleados td {
+    padding: 10px 8px;
+  }
+
+  .fecha {
+    font-size: 0.75rem;
+  }
+}

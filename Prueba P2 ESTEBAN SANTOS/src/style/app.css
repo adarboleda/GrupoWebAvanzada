@@ -1,0 +1,232 @@
+/* ===== ESTILOS GENERALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e8f4f8 0%, #b8d4e0 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== HEADER ===== */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #2563eb;
+}
+
+.header h1 {
+    color: #1e40af;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.info-badge {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ===== GRID DE PRODUCTOS ===== */
+.product-grid {
+    display: grid;
+    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    margin-top: 30px;
+}
+
+/* ===== COVID CARD ===== */
+.covid-card {
+    background: white;
+    border-radius: 15px;
+    padding: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 2px solid #d1d5db;
+}
+
+.covid-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3);
+    border-color: #2563eb;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    padding: 15px 20px;
+}
+
+.date-title {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+/* ===== ESTADÍSTICAS ===== */
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+    transform: translateX(5px);
+}
+
+.stat-item.positive {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+}
+
+.stat-item.deaths {
+    background: #f3f4f6;
+    border-left: 4px solid #6b7280;
+}
+
+.stat-item.hospitalized {
+    background: #dbeafe;
+    border-left: 4px solid #2563eb;
+}
+
+.stat-item.recovered {
+    background: #f9fafb;
+    border-left: 4px solid #9ca3af;
+}
+
+.stat-item.tests {
+    background: #eff6ff;
+    border-left: 4px solid #60a5fa;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* ===== CARD FOOTER ===== */
+.card-footer {
+    background: #f9fafb;
+    padding: 15px 20px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.death-rate {
+    color: #374151;
+    font-size: 1rem;
+}
+
+.death-rate strong {
+    color: #2563eb;
+    font-size: 1.2rem;
+}
+
+/* ===== LOADING ===== */
+.loading-container {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.loading-spinner {
+    border: 6px solid #e5e7eb;
+    border-top: 6px solid #2563eb;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 1.4rem;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.loading-subtext {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* ===== ERROR MESSAGE ===== */
+.error-message {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border: 2px solid #9ca3af;
+    margin: 20px 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+}

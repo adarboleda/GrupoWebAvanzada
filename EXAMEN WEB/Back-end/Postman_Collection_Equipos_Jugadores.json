@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "Gestión de Equipos y Jugadores",
+    "description": "API REST para la gestión de equipos deportivos y sus jugadores",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Equipos",
+      "item": [
+        {
+          "name": "Obtener todos los equipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/equipos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "equipos"]
+            }
+          }
+        },
+        {
+          "name": "Obtener equipo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/equipos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "equipos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Crear equipo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Real Madrid\",\n  \"ciudad\": \"Madrid\",\n  \"estadio\": \"Santiago Bernabéu\",\n  \"fundacion\": 1902,\n  \"entrenador\": \"Carlo Ancelotti\",\n  \"escudo\": \"https://ejemplo.com/escudo-real-madrid.png\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/equipos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "equipos"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar equipo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Real Madrid CF\",\n  \"ciudad\": \"Madrid\",\n  \"estadio\": \"Santiago Bernabéu\",\n  \"fundacion\": 1902,\n  \"entrenador\": \"Carlo Ancelotti\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/equipos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "equipos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar equipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/equipos/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "equipos", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jugadores",
+      "item": [
+        {
+          "name": "Obtener todos los jugadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores"]
+            }
+          }
+        },
+        {
+          "name": "Obtener jugadores por equipo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores/equipo/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores", "equipo", "1"]
+            }
+          }
+        },
+        {
+          "name": "Obtener jugador por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores", "1"]
+            }
+          }
+        },
+        {
+          "name": "Crear jugador",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Luka\",\n  \"apellido\": \"Modrić\",\n  \"fechaNacimiento\": \"1985-09-09\",\n  \"nacionalidad\": \"Croacia\",\n  \"posicion\": \"mediocampista\",\n  \"numeroCamiseta\": 10,\n  \"equipoId\": 1,\n  \"foto\": \"https://ejemplo.com/modric.jpg\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar jugador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Luka\",\n  \"apellido\": \"Modrić\",\n  \"fechaNacimiento\": \"1985-09-09\",\n  \"nacionalidad\": \"Croacia\",\n  \"posicion\": \"mediocampista\",\n  \"numeroCamiseta\": 10,\n  \"equipoId\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores", "1"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar jugador",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/jugadores/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "jugadores", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

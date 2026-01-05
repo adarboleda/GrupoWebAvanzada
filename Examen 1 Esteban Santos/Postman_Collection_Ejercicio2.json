@@ -1,0 +1,406 @@
+{
+	"info": {
+		"_postman_id": "ejercicio2-reajuste-sueldos",
+		"name": "Ejercicio 2 - Reajuste de Sueldos",
+		"description": "Colección de Postman para probar el Ejercicio 2: Reajuste de Sueldos según Antigüedad\n\nAutor: Esteban Santos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Verificar API",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": [""]
+				},
+				"description": "Verifica que el servidor esté activo y muestra información general de la API"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Listar todos los empleados",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Lista todos los empleados registrados en la base de datos"
+			},
+			"response": []
+		},
+		{
+			"name": "3. Crear empleado - Caso 1 (<=10 años, <=300k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Juan Pérez\",\n  \"antiguedad\": 5,\n  \"sueldoActual\": 250000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 5 años de antigüedad y $250,000\nEsperado: 12% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "4. Crear empleado - Caso 2 (<=10 años, 300-500k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Ana López\",\n  \"antiguedad\": 8,\n  \"sueldoActual\": 350000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 8 años de antigüedad y $350,000\nEsperado: 10% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "5. Crear empleado - Caso 3 (<=10 años, >500k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Laura Sánchez\",\n  \"antiguedad\": 3,\n  \"sueldoActual\": 520000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 3 años de antigüedad y $520,000\nEsperado: 8% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "6. Crear empleado - Caso 4 (10-20 años, <=300k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Carlos Gómez\",\n  \"antiguedad\": 12,\n  \"sueldoActual\": 280000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 12 años de antigüedad y $280,000\nEsperado: 14% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "7. Crear empleado - Caso 5 (10-20 años, 300-500k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"María Rodríguez\",\n  \"antiguedad\": 15,\n  \"sueldoActual\": 450000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 15 años de antigüedad y $450,000\nEsperado: 12% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "8. Crear empleado - Caso 6 (10-20 años, >500k)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Diego Fernández\",\n  \"antiguedad\": 18,\n  \"sueldoActual\": 550000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 18 años de antigüedad y $550,000\nEsperado: 10% de reajuste"
+			},
+			"response": []
+		},
+		{
+			"name": "9. Crear empleado - Caso 7 (>=20 años)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Pedro Martínez\",\n  \"antiguedad\": 22,\n  \"sueldoActual\": 600000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Crea un empleado con 22 años de antigüedad y $600,000\nEsperado: 15% de reajuste (sin importar el sueldo)"
+			},
+			"response": []
+		},
+		{
+			"name": "10. Obtener empleado por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "1"]
+				},
+				"description": "Obtiene los datos de un empleado específico por su ID"
+			},
+			"response": []
+		},
+		{
+			"name": "11. Actualizar empleado",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Juan Pérez García\",\n  \"antiguedad\": 6,\n  \"sueldoActual\": 270000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "1"]
+				},
+				"description": "Actualiza los datos de un empleado existente"
+			},
+			"response": []
+		},
+		{
+			"name": "12. Calcular reajuste (empleado guardado)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/1/calcular",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "1", "calcular"]
+				},
+				"description": "Calcula el reajuste de sueldo para un empleado ya guardado en la BD"
+			},
+			"response": []
+		},
+		{
+			"name": "13. Calcular reajuste DIRECTO (sin guardar)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Empleado de Prueba\",\n  \"antiguedad\": 25,\n  \"sueldoActual\": 800000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/calcular",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "calcular"]
+				},
+				"description": "Calcula el reajuste SIN guardar el empleado en la BD. Útil para cálculos rápidos.\n\nEste endpoint es ideal para hacer pruebas sin llenar la base de datos."
+			},
+			"response": []
+		},
+		{
+			"name": "14. Eliminar empleado",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "1"]
+				},
+				"description": "Elimina un empleado de la base de datos"
+			},
+			"response": []
+		},
+		{
+			"name": "15. VALIDACIÓN - Antigüedad negativa",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Validación 1\",\n  \"antiguedad\": -5,\n  \"sueldoActual\": 300000\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Prueba la validación de antigüedad negativa.\nEsperado: Error 400"
+			},
+			"response": []
+		},
+		{
+			"name": "16. VALIDACIÓN - Sueldo cero o negativo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Validación 2\",\n  \"antiguedad\": 5,\n  \"sueldoActual\": 0\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Prueba la validación de sueldo <= 0.\nEsperado: Error 400"
+			},
+			"response": []
+		},
+		{
+			"name": "17. VALIDACIÓN - Datos faltantes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombreEmpleado\": \"Validación 3\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/empleados",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados"]
+				},
+				"description": "Prueba la validación de campos obligatorios faltantes.\nEsperado: Error 400"
+			},
+			"response": []
+		},
+		{
+			"name": "18. VALIDACIÓN - ID no existente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/empleados/9999",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3001",
+					"path": ["api", "empleados", "9999"]
+				},
+				"description": "Prueba el manejo de registros no encontrados.\nEsperado: Error 404"
+			},
+			"response": []
+		}
+	]
+}
