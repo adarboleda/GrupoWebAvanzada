@@ -1,0 +1,191 @@
+'use client';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button } from 'primereact/button';
+import { Chart } from 'primereact/chart';
+import { ChartData, ChartOptions } from 'chart.js';
+import { Card } from 'primereact/card';
+import { LayoutContext } from '../../layout/context/layoutcontext';
+import { equipoService } from '@/services/equipoService';
+import { jugadorService } from '@/services/jugadorService';
+import { useRouter } from 'next/navigation';
+
+function Dashboard() {
+    const [equipos, setEquipos] = useState<any[]>([]);
+    const [jugadores, setJugadores] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [chartData, setChartData] = useState<ChartData<'bar'>>({});
+    const [chartOptions, setChartOptions] = useState<ChartOptions<'bar'>>({});
+    const router = useRouter();
+
+    const { layoutConfig } = useContext(LayoutContext);
+
+    useEffect(() => {
+        cargarDatos();
+    }, []);
+
+    useEffect(() => {
+        if (equipos.length > 0) {
+            const data = getChartData();
+            const options = getChartOptions();
+            setChartData(data);
+            setChartOptions(options);
+        }
+    }, [equipos, layoutConfig]);
+
+    const cargarDatos = async () => {
+        setLoading(true);
+
+        const [equiposResp, jugadoresResp] = await Promise.all([
+            equipoService.listar(),
+            jugadorService.listar()
+        ]);
+
+        if (equiposResp.ok) setEquipos(equiposResp.data);
+        if (jugadoresResp.ok) setJugadores(jugadoresResp.data);
+
+        setLoading(false);
+    };
+
+    const getChartData = (): ChartData<'bar'> => {
+        const labels = equipos.map(e => e.nombre);
+        const jugadoresPorEquipo = equipos.map(e => 
+            jugadores.filter(j => j.id_equipo === e.id_equipo).length
+        );
+
+        return {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Jugadores por Equipo',
+                    data: jugadoresPorEquipo,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }
+            ]
+        };
+    };
+
+    const getChartOptions = (): ChartOptions<'bar'> => {
+        const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || '#212529';
+        const surface300 = getComputedStyle(document.body).getPropertyValue('--surface-300') || '#dee2e6';
+        
+        return {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        color: textColor
+                    },
+                    grid: {
+                        color: surface300
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: textColor
+                    },
+                    grid: {
+                        color: surface300
+                    }
+                }
+            }
+        };
+    };
+
+    return (
+        <>
+            <div className="grid">
+                <div className="col-12">
+                    <Card>
+                        <h1 className="text-4xl font-bold mb-2">Sistema de Gestión de Fútbol</h1>
+                        <p className="text-xl text-600">Bienvenido al sistema de gestión de equipos y jugadores</p>
+                    </Card>
+                </div>
+
+                <div className="col-12 md:col-6 lg:col-6">
+                    <div className="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-blue-400" style={{ backgroundImage: 'url(/demo/images/dashboard/effect-1.svg)' }}>
+                        <div className="font-bold w-full mb-3">
+                            <span>Total Equipos</span>
+                        </div>
+                        <div className="text-white text-2xl font-bold w-full flex align-items-center py-1">
+                            {equipos.length} <i className="pi pi-flag ml-2 font-bold"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="col-12 md:col-6 lg:col-6">
+                    <div className="p-3 text-white h-6rem border-round m-0 bg-center bg-cover bg-no-repeat bg-green-400" style={{ backgroundImage: 'url(/demo/images/dashboard/effect-2.svg)' }}>
+                        <div className="font-bold w-full mb-3">
+                            <span>Total Jugadores</span>
+                        </div>
+                        <div className="text-white text-2xl font-bold w-full flex align-items-center py-1">
+                            {jugadores.length} <i className="pi pi-users ml-2 font-bold"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-12 lg:col-8">
+                    <Card title="Jugadores por Equipo">
+                        {equipos.length > 0 ? (
+                            <Chart type="bar" data={chartData} options={chartOptions} style={{ height: '400px' }} />
+                        ) : (
+                            <p className="text-center text-600">No hay equipos registrados</p>
+                        )}
+                    </Card>
+                </div>
+
+                <div className="col-12 lg:col-4">
+                    <Card title="Acciones Rápidas">
+                        <div className="flex flex-column gap-3">
+                            <Button 
+                                label="Gestionar Equipos" 
+                                icon="pi pi-flag" 
+                                className="p-button-primary w-full"
+                                onClick={() => router.push('/gestion/equipos')}
+                            />
+                            <Button 
+                                label="Gestionar Jugadores" 
+                                icon="pi pi-users" 
+                                className="p-button-success w-full"
+                                onClick={() => router.push('/gestion/jugadores')}
+                            />
+                        </div>
+                    </Card>
+
+                    <Card title="Estadísticas" className="mt-3">
+                        <div className="flex flex-column gap-2">
+                            <div className="flex justify-content-between align-items-center p-2 border-round bg-blue-50">
+                                <span className="font-semibold">Equipos</span>
+                                <span className="text-2xl font-bold text-blue-600">{equipos.length}</span>
+                            </div>
+                            <div className="flex justify-content-between align-items-center p-2 border-round bg-green-50">
+                                <span className="font-semibold">Jugadores</span>
+                                <span className="text-2xl font-bold text-green-600">{jugadores.length}</span>
+                            </div>
+                            <div className="flex justify-content-between align-items-center p-2 border-round bg-orange-50">
+                                <span className="font-semibold">Promedio/Equipo</span>
+                                <span className="text-2xl font-bold text-orange-600">
+                                    {equipos.length > 0 ? (jugadores.length / equipos.length).toFixed(1) : '0'}
+                                </span>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default Dashboard;
