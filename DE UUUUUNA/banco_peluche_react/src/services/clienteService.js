@@ -70,7 +70,7 @@ const clienteService = {
   // Obtener transacciones de un cliente
   obtenerTransacciones: async (id) => {
     const response = await axios.get(`${API_URL}/${id}/transacciones`);
-    return response.data;
+    return response.data.data || [];
   },
 
   // Regenerar código DEUNA
