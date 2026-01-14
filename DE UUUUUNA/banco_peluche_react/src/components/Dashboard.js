@@ -21,15 +21,18 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
   const cargarTransacciones = async () => {
     try {
       const data = await clienteService.obtenerTransacciones(cliente._id);
-      setTransacciones(data);
+      setTransacciones(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error cargando transacciones:', error);
+      setTransacciones([]);
     }
   };
 
   const actualizarSaldo = async () => {
     try {
-      const clienteActualizado = await clienteService.obtenerClientePorId(cliente._id);
+      const clienteActualizado = await clienteService.obtenerClientePorId(
+        cliente._id
+      );
       onClienteUpdate(clienteActualizado);
       cargarTransacciones();
     } catch (error) {
@@ -49,7 +52,9 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
   const regenerarCodigo = async () => {
     try {
-      const clienteActualizado = await clienteService.regenerarCodigo(cliente._id);
+      const clienteActualizado = await clienteService.regenerarCodigo(
+        cliente._id
+      );
       onClienteUpdate(clienteActualizado);
     } catch (error) {
       console.error('Error regenerando código:', error);
@@ -86,7 +91,10 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
     try {
       setLoading(true);
-      const clienteActualizado = await clienteService.depositar(cliente._id, monto);
+      const clienteActualizado = await clienteService.depositar(
+        cliente._id,
+        monto
+      );
       onClienteUpdate(clienteActualizado);
       cargarTransacciones();
       setModalDeposito(false);
@@ -105,7 +113,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
     try {
       setLoading(true);
-      const clienteActualizado = await clienteService.transferir(cliente._id, codigoDestino, monto);
+      const clienteActualizado = await clienteService.transferir(
+        cliente._id,
+        codigoDestino,
+        monto
+      );
       onClienteUpdate(clienteActualizado);
       cargarTransacciones();
       setModalTransferencia(false);
@@ -121,22 +133,34 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
   };
 
   const formatearMonto = (monto) => {
-    return monto.toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return monto.toLocaleString('es-EC', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
   const formatearFecha = (fecha) => {
     return new Date(fecha).toLocaleDateString('es-EC', {
-      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
   const getIniciales = (nombre) => {
-    return nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    return nombre
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase();
   };
 
   const renderTransaccion = (tx) => {
     let icon, tipo, monto, esPositivo;
-    
+
     switch (tx.tipo) {
       case 'DEPOSITO':
         icon = '💰';
@@ -174,7 +198,9 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
           <div className={`tx-monto ${esPositivo ? 'positivo' : 'negativo'}`}>
             {esPositivo ? '+' : '-'}${formatearMonto(monto)}
           </div>
-          <div className="tx-saldo">Saldo: ${formatearMonto(tx.saldoResultante)}</div>
+          <div className="tx-saldo">
+            Saldo: ${formatearMonto(tx.saldoResultante)}
+          </div>
         </div>
       </div>
     );
@@ -188,7 +214,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
           <div className="sidebar-logo">d!</div>
           <div className="sidebar-title">d!una</div>
         </div>
-        
+
         <nav className="sidebar-nav">
           <div className="nav-section">
             <div className="nav-section-title">Menú principal</div>
@@ -204,11 +230,17 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
           <div className="nav-section">
             <div className="nav-section-title">Operaciones</div>
-            <button className="sidebar-btn" onClick={() => setModalDeposito(true)}>
+            <button
+              className="sidebar-btn"
+              onClick={() => setModalDeposito(true)}
+            >
               <span className="icon">💰</span>
               <span>Depositar</span>
             </button>
-            <button className="sidebar-btn" onClick={() => setModalTransferencia(true)}>
+            <button
+              className="sidebar-btn"
+              onClick={() => setModalTransferencia(true)}
+            >
               <span className="icon">📤</span>
               <span>Transferir</span>
             </button>
@@ -245,11 +277,18 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
       <main className="desktop-view">
         <header className="desktop-header">
           <div className="page-info">
-            <h1 className="page-title">¡Hola, {cliente.nombre.split(' ')[0]}!</h1>
-            <p className="page-subtitle">Bienvenido a tu billetera digital d!una</p>
+            <h1 className="page-title">
+              ¡Hola, {cliente.nombre.split(' ')[0]}!
+            </h1>
+            <p className="page-subtitle">
+              Bienvenido a tu billetera digital d!una
+            </p>
           </div>
           <div className="header-actions">
-            <button className="btn-actualizar-desktop" onClick={actualizarSaldo}>
+            <button
+              className="btn-actualizar-desktop"
+              onClick={actualizarSaldo}
+            >
               <span>🔄</span>
               <span>Actualizar</span>
             </button>
@@ -264,21 +303,33 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                 <div className="saldo-header">
                   <div>
                     <div className="label">Saldo disponible</div>
-                    <div className="monto">${formatearMonto(cliente.saldo)}</div>
+                    <div className="monto">
+                      ${formatearMonto(cliente.saldo)}
+                    </div>
                   </div>
                 </div>
                 <div className="codigo-deuna">
                   <div className="codigo-row">
                     <div className="codigo-info-desktop">
-                      <span className="codigo-label">Tu código d!una para recibir</span>
-                      <span className="codigo-valor-desktop">{cliente.codigoDeuna}</span>
+                      <span className="codigo-label">
+                        Tu código d!una para recibir
+                      </span>
+                      <span className="codigo-valor-desktop">
+                        {cliente.codigoDeuna}
+                      </span>
                     </div>
                     <div className="codigo-actions">
-                      <button className="btn-codigo-desktop copiar" onClick={copiarCodigo}>
+                      <button
+                        className="btn-codigo-desktop copiar"
+                        onClick={copiarCodigo}
+                      >
                         <span>{codigoCopied ? '✓' : '📋'}</span>
                         <span>{codigoCopied ? 'Copiado' : 'Copiar'}</span>
                       </button>
-                      <button className="btn-codigo-desktop nuevo" onClick={regenerarCodigo}>
+                      <button
+                        className="btn-codigo-desktop nuevo"
+                        onClick={regenerarCodigo}
+                      >
                         <span>🔄</span>
                         <span>Nuevo código</span>
                       </button>
@@ -289,12 +340,18 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
               {/* Acciones */}
               <div className="acciones-desktop">
-                <div className="accion-card" onClick={() => setModalDeposito(true)}>
+                <div
+                  className="accion-card"
+                  onClick={() => setModalDeposito(true)}
+                >
                   <div className="icon">💰</div>
                   <div className="title">Depositar</div>
                   <div className="desc">Añade saldo a tu cuenta</div>
                 </div>
-                <div className="accion-card" onClick={() => setModalTransferencia(true)}>
+                <div
+                  className="accion-card"
+                  onClick={() => setModalTransferencia(true)}
+                >
                   <div className="icon">📤</div>
                   <div className="title">Transferir</div>
                   <div className="desc">Envía dinero al instante</div>
@@ -334,7 +391,9 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
             <div className="panel-lateral">
               <div className="section-header">
                 <h3 className="section-title">Últimos movimientos</h3>
-                <button className="btn-refresh" onClick={cargarTransacciones}>🔄</button>
+                <button className="btn-refresh" onClick={cargarTransacciones}>
+                  🔄
+                </button>
               </div>
               <div className="transacciones-lista">
                 {transacciones.length === 0 ? (
@@ -343,7 +402,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                     <p>Sin movimientos aún</p>
                   </div>
                 ) : (
-                  transacciones.slice(0, 8).map(tx => renderTransaccion(tx))
+                  transacciones.slice(0, 8).map((tx) => renderTransaccion(tx))
                 )}
               </div>
             </div>
@@ -360,7 +419,9 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
           </div>
           <div className="header-right">
             <div className="user-avatar">{getIniciales(cliente.nombre)}</div>
-            <button className="btn-logout" onClick={onLogout}>Salir</button>
+            <button className="btn-logout" onClick={onLogout}>
+              Salir
+            </button>
           </div>
         </header>
 
@@ -373,9 +434,12 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
           <div className="saldo-label">Saldo disponible</div>
           <div className="saldo-row">
             <div className="saldo-monto">
-              <span className="currency">$</span>{formatearMonto(cliente.saldo)}
+              <span className="currency">$</span>
+              {formatearMonto(cliente.saldo)}
             </div>
-            <button className="btn-actualizar" onClick={actualizarSaldo}>🔄</button>
+            <button className="btn-actualizar" onClick={actualizarSaldo}>
+              🔄
+            </button>
           </div>
         </div>
 
@@ -384,7 +448,10 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
             <div className="accion-icon">💰</div>
             <span className="accion-label">Depositar</span>
           </button>
-          <button className="accion-btn" onClick={() => setModalTransferencia(true)}>
+          <button
+            className="accion-btn"
+            onClick={() => setModalTransferencia(true)}
+          >
             <div className="accion-icon">📤</div>
             <span className="accion-label">Transferir</span>
           </button>
@@ -409,12 +476,17 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                 <span>{codigoCopied ? '✓' : '📋'}</span>
                 <span>{codigoCopied ? 'Copiado' : 'Copiar'}</span>
               </button>
-              <button className="btn-codigo btn-regenerar" onClick={regenerarCodigo}>
+              <button
+                className="btn-codigo btn-regenerar"
+                onClick={regenerarCodigo}
+              >
                 <span>🔄</span>
                 <span>Nuevo</span>
               </button>
             </div>
-            <div className="codigo-info">Comparte este código para recibir dinero</div>
+            <div className="codigo-info">
+              Comparte este código para recibir dinero
+            </div>
           </div>
         </div>
 
@@ -429,7 +501,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                 <p>Sin movimientos aún</p>
               </div>
             ) : (
-              transacciones.slice(0, 5).map(tx => renderTransaccion(tx))
+              transacciones.slice(0, 5).map((tx) => renderTransaccion(tx))
             )}
           </div>
         </div>
@@ -443,7 +515,10 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
             <span className="nav-icon">📊</span>
             <span className="nav-label">Historial</span>
           </button>
-          <button className="nav-item center-btn" onClick={() => setModalTransferencia(true)}>
+          <button
+            className="nav-item center-btn"
+            onClick={() => setModalTransferencia(true)}
+          >
             <span className="nav-icon">📤</span>
             <span className="nav-label">Enviar</span>
           </button>
@@ -461,10 +536,15 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
       {/* ============ MODAL DEPOSITO ============ */}
       {modalDeposito && (
         <div className="modal-overlay" onClick={() => setModalDeposito(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>💰 Depositar</h3>
-              <button className="btn-cerrar" onClick={() => setModalDeposito(false)}>✕</button>
+              <button
+                className="btn-cerrar"
+                onClick={() => setModalDeposito(false)}
+              >
+                ✕
+              </button>
             </div>
             <form className="operacion-form" onSubmit={realizarDeposito}>
               <div className="form-group">
@@ -474,13 +554,17 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                   className="input-monto"
                   placeholder="0.00"
                   value={montoDeposito}
-                  onChange={e => setMontoDeposito(e.target.value)}
+                  onChange={(e) => setMontoDeposito(e.target.value)}
                   min="0.01"
                   step="0.01"
                   required
                 />
               </div>
-              <button type="submit" className="btn-operacion btn-depositar" disabled={loading}>
+              <button
+                type="submit"
+                className="btn-operacion btn-depositar"
+                disabled={loading}
+              >
                 {loading ? 'Procesando...' : 'Depositar'}
               </button>
             </form>
@@ -490,21 +574,29 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
 
       {/* ============ MODAL TRANSFERENCIA ============ */}
       {modalTransferencia && (
-        <div className="modal-overlay" onClick={() => {
-          setModalTransferencia(false);
-          setDestinatario(null);
-          setCodigoDestino('');
-          setErrorDestino('');
-        }}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => {
+            setModalTransferencia(false);
+            setDestinatario(null);
+            setCodigoDestino('');
+            setErrorDestino('');
+          }}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>📤 Transferir</h3>
-              <button className="btn-cerrar" onClick={() => {
-                setModalTransferencia(false);
-                setDestinatario(null);
-                setCodigoDestino('');
-                setErrorDestino('');
-              }}>✕</button>
+              <button
+                className="btn-cerrar"
+                onClick={() => {
+                  setModalTransferencia(false);
+                  setDestinatario(null);
+                  setCodigoDestino('');
+                  setErrorDestino('');
+                }}
+              >
+                ✕
+              </button>
             </div>
             <form className="operacion-form" onSubmit={realizarTransferencia}>
               <div className="form-group">
@@ -514,15 +606,15 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                     type="text"
                     placeholder="Ej: A1B2C3D4"
                     value={codigoDestino}
-                    onChange={e => {
+                    onChange={(e) => {
                       setCodigoDestino(e.target.value.toUpperCase());
                       setDestinatario(null);
                       setErrorDestino('');
                     }}
                     maxLength={8}
                   />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn-buscar"
                     onClick={buscarDestinatario}
                     disabled={codigoDestino.length !== 8 || loading}
@@ -532,16 +624,24 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                 </div>
                 {destinatario && (
                   <div className="destinatario-info">
-                    <div className="avatar">{getIniciales(destinatario.nombre)}</div>
+                    <div className="avatar">
+                      {getIniciales(destinatario.nombre)}
+                    </div>
                     <div>
-                      <div style={{fontWeight: 600}}>{destinatario.nombre}</div>
-                      <div style={{fontSize: 12, color: '#666'}}>@{destinatario.usuario}</div>
+                      <div style={{ fontWeight: 600 }}>
+                        {destinatario.nombre}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#666' }}>
+                        @{destinatario.usuario}
+                      </div>
                     </div>
                   </div>
                 )}
-                {errorDestino && <div className="destinatario-error">{errorDestino}</div>}
+                {errorDestino && (
+                  <div className="destinatario-error">{errorDestino}</div>
+                )}
               </div>
-              
+
               {destinatario && (
                 <div className="form-group">
                   <label>
@@ -555,7 +655,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                     className="input-monto"
                     placeholder="0.00"
                     value={montoTransferencia}
-                    onChange={e => setMontoTransferencia(e.target.value)}
+                    onChange={(e) => setMontoTransferencia(e.target.value)}
                     min="0.01"
                     max={cliente.saldo}
                     step="0.01"
@@ -564,9 +664,9 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }) {
                 </div>
               )}
 
-              <button 
-                type="submit" 
-                className="btn-operacion btn-transferir" 
+              <button
+                type="submit"
+                className="btn-operacion btn-transferir"
                 disabled={!destinatario || loading || !montoTransferencia}
               >
                 {loading ? 'Procesando...' : 'Transferir'}
