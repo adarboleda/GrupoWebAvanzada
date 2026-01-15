@@ -300,13 +300,23 @@
   font-size: 11px;
   font-weight: 600;
   transition: all 0.3s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
+  min-height: 36px;
+  position: relative;
+  z-index: 1;
 }
 
 .btn-codigo > * {
   pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-codigo:active {
+  transform: scale(0.95);
 }
 
 .btn-copiar {
@@ -593,6 +603,21 @@
   color: var(--deuna-red);
   border-radius: 10px;
   font-size: 12px;
+}
+
+.error-monto {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #FFEBEE;
+  color: var(--deuna-red);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.input-monto.input-error {
+  border-color: var(--deuna-red) !important;
 }
 
 .saldo-disponible {
@@ -954,13 +979,23 @@
     font-size: 13px;
     font-weight: 600;
     transition: all 0.3s;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    min-height: 44px;
+    position: relative;
+    z-index: 1;
   }
 
   .btn-codigo-desktop > * {
     pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .btn-codigo-desktop:hover {
+    transform: scale(1.02);
   }
 
   .btn-codigo-desktop.copiar {

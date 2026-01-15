@@ -37,6 +37,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
   const [errorDestino, setErrorDestino] = useState('');
   const [loading, setLoading] = useState(false);
   const [codigoCopied, setCodigoCopied] = useState(false);
+  const [errorMonto, setErrorMonto] = useState('');
 
   useEffect(() => {
     cargarTransacciones();
@@ -590,22 +591,33 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
                   </label>
                   <input
                     type="number"
-                    className="input-monto"
+                    className={`input-monto ${errorMonto ? 'input-error' : ''}`}
                     placeholder="0.00"
                     value={montoTransferencia}
-                    onChange={e => setMontoTransferencia(e.target.value)}
+                    onChange={e => {
+                      const valor = e.target.value;
+                      setMontoTransferencia(valor);
+                      const monto = parseFloat(valor);
+                      if (!isNaN(monto) && monto > cliente.saldo) {
+                        setErrorMonto('Saldo insuficiente');
+                      } else if (!isNaN(monto) && monto <= 0) {
+                        setErrorMonto('El monto debe ser mayor a 0');
+                      } else {
+                        setErrorMonto('');
+                      }
+                    }}
                     min="0.01"
-                    max={cliente.saldo}
                     step="0.01"
                     required
                   />
+                  {errorMonto && <div className="error-monto">{errorMonto}</div>}
                 </div>
               )}
 
               <button 
                 type="submit" 
                 className="btn-operacion btn-transferir" 
-                disabled={!destinatario || loading || !montoTransferencia}
+                disabled={!destinatario || loading || !montoTransferencia || !!errorMonto}
               >
                 {loading ? 'Procesando...' : 'Transferir'}
               </button>
