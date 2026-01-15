@@ -8,6 +8,8 @@ interface RegistroData {
   cedula: string;
   email: string;
   telefono?: string;
+  usuario: string;
+  password: string;
 }
 
 const clienteService = {

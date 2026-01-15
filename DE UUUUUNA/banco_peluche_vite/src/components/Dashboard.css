@@ -305,6 +305,10 @@
   gap: 4px;
 }
 
+.btn-codigo > * {
+  pointer-events: none;
+}
+
 .btn-copiar {
   background: white;
   color: var(--deuna-purple);
@@ -953,6 +957,10 @@
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+
+  .btn-codigo-desktop > * {
+    pointer-events: none;
   }
 
   .btn-codigo-desktop.copiar {

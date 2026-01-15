@@ -32,12 +32,28 @@ class ClienteController {
   // Crear un nuevo cliente (registro)
   static async crear(req, res) {
     try {
-      const { nombre, cedula, email, telefono } = req.body;
+      const { nombre, cedula, email, telefono, usuario, password } = req.body;
 
-      if (!nombre || !cedula || !email) {
+      if (!nombre || !cedula || !email || !usuario || !password) {
         return res.status(400).json({
           ok: false,
-          msg: 'Nombre, cédula y email son requeridos',
+          msg: 'Nombre, cédula, email, usuario y contraseña son requeridos',
+        });
+      }
+
+      // Validar longitud mínima de usuario
+      if (usuario.length < 4) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El usuario debe tener al menos 4 caracteres',
+        });
+      }
+
+      // Validar longitud mínima de contraseña
+      if (password.length < 6) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'La contraseña debe tener al menos 6 caracteres',
         });
       }
 
@@ -46,19 +62,38 @@ class ClienteController {
         cedula,
         email,
         telefono,
+        usuario,
+        password,
       });
 
       res.status(201).json({
         ok: true,
         data: cliente,
-        msg: `¡Cuenta creada! Tu usuario es: ${cliente.usuario} y tu contraseña: contraseña1`,
+        msg: `¡Cuenta creada exitosamente! Ya puedes iniciar sesión con tu usuario: ${cliente.usuario}`,
       });
     } catch (err) {
       console.error('Error crear cliente:', err);
-      if (err.code === 11000) {
+      
+      // Error de validación de Mongoose (incluye cédula inválida)
+      if (err.name === 'ValidationError') {
+        const mensajes = Object.values(err.errors).map(e => e.message);
         return res.status(400).json({
           ok: false,
-          msg: 'La cédula, email o usuario ya están registrados',
+          msg: mensajes.join('. '),
+        });
+      }
+      
+      if (err.code === 11000) {
+        // Determinar qué campo está duplicado
+        const campo = Object.keys(err.keyPattern)[0];
+        const mensajes = {
+          cedula: 'La cédula ya está registrada',
+          email: 'El email ya está registrado',
+          usuario: 'El usuario ya existe, elige otro',
+        };
+        return res.status(400).json({
+          ok: false,
+          msg: mensajes[campo] || 'Ya existe un registro con esos datos',
         });
       }
       res.status(500).json({
