@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { Pin, Lightbulb } from 'lucide-react';
 import clienteService from '../services/clienteService';
 import type { Cliente } from '../types';
 import './Login.css';
@@ -160,13 +161,13 @@ const Login = ({ onLogin }: LoginProps) => {
               {loading ? 'Registrando...' : 'Crear Cuenta'}
             </button>
             <p className="info-password">
-              📌 Tu contraseña será: <strong>contraseña1</strong>
+              <Pin size={16} /> Tu contraseña será: <strong>contraseña1</strong>
             </p>
           </form>
         )}
 
         <div className="login-footer">
-          <p>💡 Abre múltiples ventanas del navegador para simular diferentes usuarios</p>
+          <p><Lightbulb size={16} /> Abre múltiples ventanas del navegador para simular diferentes usuarios</p>
         </div>
       </div>
     </div>

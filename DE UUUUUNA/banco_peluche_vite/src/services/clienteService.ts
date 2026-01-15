@@ -37,14 +37,14 @@ const clienteService = {
 
   // Obtener un cliente por ID
   obtenerClientePorId: async (id: string): Promise<Cliente> => {
-    const response = await axios.get<Cliente>(`${API_URL}/${id}`);
-    return response.data;
+    const response = await axios.get<{ ok: boolean; data: Cliente }>(`${API_URL}/${id}`);
+    return response.data.data;
   },
 
   // Buscar cliente por código DEUNA
   buscarPorCodigo: async (codigo: string): Promise<Cliente> => {
-    const response = await axios.get<Cliente>(`${API_URL}/codigo/${codigo}`);
-    return response.data;
+    const response = await axios.get<{ ok: boolean; data: { nombre: string; codigoDeuna: string; _id?: string; usuario?: string } }>(`${API_URL}/codigo/${codigo}`);
+    return response.data.data as Cliente;
   },
 
   // Actualizar un cliente
@@ -60,18 +60,18 @@ const clienteService = {
 
   // Depositar saldo
   depositar: async (id: string, monto: number, descripcion: string = ''): Promise<Cliente> => {
-    const response = await axios.post<Cliente>(`${API_URL}/${id}/depositar`, { monto, descripcion });
-    return response.data;
+    const response = await axios.post<{ ok: boolean; data: { cliente: Cliente; transaccion: unknown }; msg: string }>(`${API_URL}/${id}/depositar`, { monto, descripcion });
+    return response.data.data.cliente;
   },
 
   // Transferir por código DEUNA
   transferir: async (id: string, codigoDestino: string, monto: number, descripcion: string = ''): Promise<Cliente> => {
-    const response = await axios.post<Cliente>(`${API_URL}/${id}/transferir`, {
+    const response = await axios.post<{ ok: boolean; data: { exito: boolean; clienteOrigen: Cliente; clienteDestino: Cliente }; msg: string }>(`${API_URL}/${id}/transferir`, {
       codigoDestino,
       monto,
       descripcion,
     });
-    return response.data;
+    return response.data.data.clienteOrigen;
   },
 
   // Obtener transacciones de un cliente
@@ -82,8 +82,8 @@ const clienteService = {
 
   // Regenerar código DEUNA
   regenerarCodigo: async (id: string): Promise<Cliente> => {
-    const response = await axios.post<Cliente>(`${API_URL}/${id}/regenerar-codigo`);
-    return response.data;
+    const response = await axios.post<{ ok: boolean; data: Cliente; msg: string }>(`${API_URL}/${id}/regenerar-codigo`);
+    return response.data.data;
   },
 
   // Obtener estadísticas

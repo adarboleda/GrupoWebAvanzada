@@ -129,7 +129,9 @@ class ClienteController {
       res.json({
         ok: true,
         data: {
+          _id: cliente._id,
           nombre: cliente.nombre,
+          usuario: cliente.usuario,
           codigoDeuna: cliente.codigoDeuna,
         },
       });

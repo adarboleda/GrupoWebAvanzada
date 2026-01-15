@@ -1,4 +1,21 @@
 import { useState, useEffect, type FormEvent, type MouseEvent } from 'react';
+import {
+  Home,
+  User,
+  PiggyBank,
+  Send,
+  Settings,
+  Lock,
+  RefreshCw,
+  Copy,
+  Check,
+  BarChart3,
+  ArrowUpRight,
+  ArrowDownLeft,
+  FileText,
+  Inbox,
+  X
+} from 'lucide-react';
 import clienteService from '../services/clienteService';
 import type { Cliente, Transaccion } from '../types';
 import './Dashboard.css';
@@ -143,29 +160,32 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
   };
 
   const renderTransaccion = (tx: Transaccion) => {
-    let icon: string, tipo: string, monto: number, esPositivo: boolean;
+    let IconComponent: typeof PiggyBank;
+    let tipo: string;
+    let monto: number;
+    let esPositivo: boolean;
     
     switch (tx.tipo) {
       case 'DEPOSITO':
-        icon = '💰';
+        IconComponent = PiggyBank;
         tipo = 'deposito';
         monto = tx.monto;
         esPositivo = true;
         break;
       case 'TRANSFERENCIA_ENVIADA':
-        icon = '↗️';
+        IconComponent = ArrowUpRight;
         tipo = 'enviado';
         monto = tx.monto;
         esPositivo = false;
         break;
       case 'TRANSFERENCIA_RECIBIDA':
-        icon = '↙️';
+        IconComponent = ArrowDownLeft;
         tipo = 'recibido';
         monto = tx.monto;
         esPositivo = true;
         break;
       default:
-        icon = '📝';
+        IconComponent = FileText;
         tipo = '';
         monto = tx.monto;
         esPositivo = true;
@@ -173,7 +193,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
 
     return (
       <div className="transaccion-item" key={tx._id}>
-        <div className={`tx-avatar ${tipo}`}>{icon}</div>
+        <div className={`tx-avatar ${tipo}`}><IconComponent size={20} /></div>
         <div className="tx-info">
           <div className="tx-nombre">{tx.descripcion}</div>
           <div className="tx-fecha">{formatearFecha(tx.fecha)}</div>
@@ -212,11 +232,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
           <div className="nav-section">
             <div className="nav-section-title">Menú principal</div>
             <button className="sidebar-btn active">
-              <span className="icon">🏠</span>
+              <span className="icon"><Home size={20} /></span>
               <span>Inicio</span>
             </button>
             <button className="sidebar-btn">
-              <span className="icon">👤</span>
+              <span className="icon"><User size={20} /></span>
               <span>Mi perfil</span>
             </button>
           </div>
@@ -224,11 +244,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
           <div className="nav-section">
             <div className="nav-section-title">Operaciones</div>
             <button className="sidebar-btn" onClick={() => setModalDeposito(true)}>
-              <span className="icon">💰</span>
+              <span className="icon"><PiggyBank size={20} /></span>
               <span>Depositar</span>
             </button>
             <button className="sidebar-btn" onClick={() => setModalTransferencia(true)}>
-              <span className="icon">📤</span>
+              <span className="icon"><Send size={20} /></span>
               <span>Transferir</span>
             </button>
           </div>
@@ -236,11 +256,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
           <div className="nav-section">
             <div className="nav-section-title">Configuración</div>
             <button className="sidebar-btn">
-              <span className="icon">⚙️</span>
+              <span className="icon"><Settings size={20} /></span>
               <span>Ajustes</span>
             </button>
             <button className="sidebar-btn">
-              <span className="icon">🔒</span>
+              <span className="icon"><Lock size={20} /></span>
               <span>Seguridad</span>
             </button>
           </div>
@@ -269,7 +289,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
           </div>
           <div className="header-actions">
             <button className="btn-actualizar-desktop" onClick={actualizarSaldo}>
-              <span>🔄</span>
+              <span><RefreshCw size={16} /></span>
               <span>Actualizar</span>
             </button>
           </div>
@@ -294,11 +314,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
                     </div>
                     <div className="codigo-actions">
                       <button className="btn-codigo-desktop copiar" onClick={copiarCodigo}>
-                        <span>{codigoCopied ? '✓' : '📋'}</span>
+                        <span>{codigoCopied ? <Check size={16} /> : <Copy size={16} />}</span>
                         <span>{codigoCopied ? 'Copiado' : 'Copiar'}</span>
                       </button>
                       <button className="btn-codigo-desktop nuevo" onClick={regenerarCodigo}>
-                        <span>🔄</span>
+                        <span><RefreshCw size={16} /></span>
                         <span>Nuevo código</span>
                       </button>
                     </div>
@@ -309,17 +329,17 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
               {/* Acciones */}
               <div className="acciones-desktop">
                 <div className="accion-card" onClick={() => setModalDeposito(true)}>
-                  <div className="icon">💰</div>
+                  <div className="icon"><PiggyBank size={32} /></div>
                   <div className="title">Depositar</div>
                   <div className="desc">Añade saldo a tu cuenta</div>
                 </div>
                 <div className="accion-card" onClick={() => setModalTransferencia(true)}>
-                  <div className="icon">📤</div>
+                  <div className="icon"><Send size={32} /></div>
                   <div className="title">Transferir</div>
                   <div className="desc">Envía dinero al instante</div>
                 </div>
                 <div className="accion-card">
-                  <div className="icon">📊</div>
+                  <div className="icon"><BarChart3 size={32} /></div>
                   <div className="title">Historial</div>
                   <div className="desc">Ver todos los movimientos</div>
                 </div>
@@ -353,12 +373,12 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
             <div className="panel-lateral">
               <div className="section-header">
                 <h3 className="section-title">Últimos movimientos</h3>
-                <button className="btn-refresh" onClick={cargarTransacciones}>🔄</button>
+                <button className="btn-refresh" onClick={cargarTransacciones}><RefreshCw size={18} /></button>
               </div>
               <div className="transacciones-lista">
                 {transacciones.length === 0 ? (
                   <div className="sin-transacciones">
-                    <span className="icon">📭</span>
+                    <span className="icon"><Inbox size={40} /></span>
                     <p>Sin movimientos aún</p>
                   </div>
                 ) : (
@@ -394,25 +414,25 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
             <div className="saldo-monto">
               <span className="currency">$</span>{formatearMonto(cliente.saldo)}
             </div>
-            <button className="btn-actualizar" onClick={actualizarSaldo}>🔄</button>
+            <button className="btn-actualizar" onClick={actualizarSaldo}><RefreshCw size={16} /></button>
           </div>
         </div>
 
         <div className="acciones-rapidas">
           <button className="accion-btn" onClick={() => setModalDeposito(true)}>
-            <div className="accion-icon">💰</div>
+            <div className="accion-icon"><PiggyBank size={20} /></div>
             <span className="accion-label">Depositar</span>
           </button>
           <button className="accion-btn" onClick={() => setModalTransferencia(true)}>
-            <div className="accion-icon">📤</div>
+            <div className="accion-icon"><Send size={20} /></div>
             <span className="accion-label">Transferir</span>
           </button>
           <button className="accion-btn">
-            <div className="accion-icon">📊</div>
+            <div className="accion-icon"><BarChart3 size={20} /></div>
             <span className="accion-label">Historial</span>
           </button>
           <button className="accion-btn">
-            <div className="accion-icon">👤</div>
+            <div className="accion-icon"><User size={20} /></div>
             <span className="accion-label">Perfil</span>
           </button>
         </div>
@@ -425,11 +445,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
             <div className="codigo-valor">{cliente.codigoDeuna}</div>
             <div className="codigo-botones">
               <button className="btn-codigo btn-copiar" onClick={copiarCodigo}>
-                <span>{codigoCopied ? '✓' : '📋'}</span>
+                <span>{codigoCopied ? <Check size={14} /> : <Copy size={14} />}</span>
                 <span>{codigoCopied ? 'Copiado' : 'Copiar'}</span>
               </button>
               <button className="btn-codigo btn-regenerar" onClick={regenerarCodigo}>
-                <span>🔄</span>
+                <span><RefreshCw size={14} /></span>
                 <span>Nuevo</span>
               </button>
             </div>
@@ -444,7 +464,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
           <div className="transacciones-lista">
             {transacciones.length === 0 ? (
               <div className="sin-transacciones">
-                <span className="icon">📭</span>
+                <span className="icon"><Inbox size={40} /></span>
                 <p>Sin movimientos aún</p>
               </div>
             ) : (
@@ -455,23 +475,23 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
 
         <nav className="bottom-nav">
           <button className="nav-item active">
-            <span className="nav-icon">🏠</span>
+            <span className="nav-icon"><Home size={18} /></span>
             <span className="nav-label">Inicio</span>
           </button>
           <button className="nav-item">
-            <span className="nav-icon">📊</span>
+            <span className="nav-icon"><BarChart3 size={18} /></span>
             <span className="nav-label">Historial</span>
           </button>
           <button className="nav-item center-btn" onClick={() => setModalTransferencia(true)}>
-            <span className="nav-icon">📤</span>
+            <span className="nav-icon"><Send size={18} /></span>
             <span className="nav-label">Enviar</span>
           </button>
           <button className="nav-item" onClick={() => setModalDeposito(true)}>
-            <span className="nav-icon">💰</span>
+            <span className="nav-icon"><PiggyBank size={18} /></span>
             <span className="nav-label">Depositar</span>
           </button>
           <button className="nav-item">
-            <span className="nav-icon">👤</span>
+            <span className="nav-icon"><User size={18} /></span>
             <span className="nav-label">Perfil</span>
           </button>
         </nav>
@@ -482,8 +502,8 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
         <div className="modal-overlay" onClick={handleModalOverlayClick(setModalDeposito)}>
           <div className="modal-content" onClick={handleModalContentClick}>
             <div className="modal-header">
-              <h3>💰 Depositar</h3>
-              <button className="btn-cerrar" onClick={() => setModalDeposito(false)}>✕</button>
+              <h3><PiggyBank size={20} style={{display: 'inline', marginRight: 8}} /> Depositar</h3>
+              <button className="btn-cerrar" onClick={() => setModalDeposito(false)}><X size={14} /></button>
             </div>
             <form className="operacion-form" onSubmit={realizarDeposito}>
               <div className="form-group">
@@ -516,13 +536,13 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
         })}>
           <div className="modal-content" onClick={handleModalContentClick}>
             <div className="modal-header">
-              <h3>📤 Transferir</h3>
+              <h3><Send size={20} style={{display: 'inline', marginRight: 8}} /> Transferir</h3>
               <button className="btn-cerrar" onClick={() => {
                 setModalTransferencia(false);
                 setDestinatario(null);
                 setCodigoDestino('');
                 setErrorDestino('');
-              }}>✕</button>
+              }}><X size={14} /></button>
             </div>
             <form className="operacion-form" onSubmit={realizarTransferencia}>
               <div className="form-group">
