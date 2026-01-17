@@ -187,21 +187,11 @@ function App() {
   const downloadPDF = () => {
     const element = facturaRef.current;
     const opt = {
-      margin: [5, 5, 5, 5],
+      margin: 0,
       filename: `Factura_${data.factura.numero.replace(/-/g, '_')}.pdf`,
-      image: { type: 'jpeg', quality: 0.99 },
-      html2canvas: {
-        scale: 3,
-        useCORS: true,
-        letterRendering: true,
-        logging: false,
-      },
-      jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait',
-        compress: false,
-      },
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     };
     html2pdf().set(opt).from(element).save();
   };
@@ -239,6 +229,30 @@ function App() {
           </button>
         </div>
       </header>
+
+      <style>
+        {`
+          .border-exact {
+            border: 1px solid #000;
+          }
+          .border-t-exact {
+            border-top: 1px solid #000;
+          }
+          .border-b-exact {
+            border-bottom: 1px solid #000;
+          }
+          table.exact-table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          table.exact-table th,
+          table.exact-table td {
+            border: 1px solid #000;
+            padding: 3px 5px;
+            font-size: 10px;
+          }
+        `}
+      </style>
 
       <div className="flex flex-col lg:flex-row gap-4 p-4">
         {/* FORMULARIO - Lado Izquierdo */}
@@ -648,459 +662,210 @@ function App() {
             👁️ Vista Previa de Factura
           </h2>
 
-          {/* Factura */}
+          {/* Factura - ESTRUCTURA EXACTA DE PRUEBA.HTML */}
           <div
             ref={facturaRef}
-            className="bg-white shadow-xl mx-auto"
+            className="bg-white mx-auto text-[11px] leading-tight"
             style={{
               width: '210mm',
               minHeight: '297mm',
               padding: '12mm',
-              fontFamily: 'Arial, sans-serif',
-              fontSize: '10pt',
-              lineHeight: '1.35',
+              boxSizing: 'border-box',
+              position: 'relative',
+              fontFamily: 'Arial, Helvetica, sans-serif',
               color: '#000',
+              backgroundColor: 'white',
             }}
           >
-            {/* ENCABEZADO */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-              {/* Lado Izquierdo - Logo y datos empresa */}
-              <div style={{ width: '50%' }}>
-                {/* Logo circular */}
-                <div
-                  style={{
-                    marginBottom: '10px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                >
+            <div className="flex gap-5 mb-5 items-stretch h-[330px]">
+              <div className="w-[50%] flex flex-col">
+                <div className="h-36 flex items-center justify-center mb-2">
                   {logo ? (
                     <img
                       src={logo}
                       alt="Logo empresa"
-                      style={{
-                        width: '120px',
-                        height: '120px',
-                        objectFit: 'contain',
-                        border: '3px solid #2c4a6b',
-                        borderRadius: '50%',
-                        padding: '8px',
-                        backgroundColor: 'white',
-                      }}
+                      className="w-36 h-36 object-contain rounded-full border-[2px]"
+                      style={{ borderColor: '#1e2a4a' }}
                     />
                   ) : (
-                    <div
-                      style={{
-                        width: '120px',
-                        height: '120px',
-                        borderRadius: '50%',
-                        border: '3px solid #2c4a6b',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'white',
-                      }}
-                    >
-                      <div style={{ textAlign: 'center' }}>
-                        <div
-                          style={{
-                            fontSize: '9pt',
-                            fontWeight: 'bold',
-                            color: '#2c4a6b',
-                          }}
-                        >
-                          PICANTERIA
-                        </div>
-                        <div
-                          style={{
-                            fontSize: '36pt',
-                            fontWeight: 'bold',
-                            color: '#2c4a6b',
-                            lineHeight: '0.9',
-                          }}
-                        >
-                          M
-                        </div>
-                        <div
-                          style={{
-                            fontSize: '9pt',
-                            fontWeight: 'bold',
-                            color: '#2c4a6b',
-                          }}
-                        >
-                          D' MARCELO
-                        </div>
-                      </div>
+                    <div className="relative w-36 h-36 border-[2px] border-[#1e2a4a] rounded-full flex flex-col items-center justify-center text-[#1e2a4a]">
+                      <span className="absolute top-3 text-[9px] font-bold tracking-[0.2em] uppercase transform -translate-y-1">
+                        P I C A N T E R I A
+                      </span>
+                      <span className="text-[70px] font-serif font-bold leading-none mt-2">
+                        M
+                      </span>
+                      <span className="absolute bottom-10 text-3xl">⚓</span>
+                      <span className="absolute bottom-3 text-[9px] font-bold tracking-[0.2em] uppercase">
+                        D ' M A R C E L O
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <div
-                  style={{
-                    border: '2px solid #000',
-                    padding: '8px 10px',
-                    borderRadius: '6px',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: '11pt',
-                      marginBottom: '4px',
-                    }}
-                  >
+                <div className="border-exact rounded-2xl p-5 flex-grow flex flex-col justify-center">
+                  <h2 className="text-[13px] font-bold mb-1">
                     {data.emisor.razonSocial}
-                  </div>
-                  <div style={{ fontSize: '10pt', marginBottom: '4px' }}>
+                  </h2>
+                  <p className="font-bold text-[10px] mb-4 text-gray-700">
                     {data.emisor.nombre}
-                  </div>
-                  <div style={{ fontSize: '9pt', marginBottom: '3px' }}>
-                    <span style={{ fontWeight: '600' }}>DIRECCIÓN: </span>
-                    <span>{data.emisor.direccion}</span>
-                  </div>
-                  <div style={{ fontSize: '9pt', marginBottom: '3px' }}>
-                    <span style={{ fontWeight: '600' }}>DIR. SUCURSAL: </span>
-                    <span>{data.emisor.dirSucursal}</span>
-                  </div>
-                  <div style={{ fontSize: '9pt' }}>
-                    <span style={{ fontWeight: '600' }}>
-                      OBLIGADO A LLEVAR CONTABILIDAD:{' '}
-                    </span>
-                    <span>{data.emisor.obligadoContabilidad}</span>
+                  </p>
+
+                  <div className="text-[10px] space-y-2">
+                    <div className="flex">
+                      <span className="font-bold w-[75px] shrink-0">
+                        DIRECCIÓN:
+                      </span>
+                      <span>{data.emisor.direccion}</span>
+                    </div>
+                    <div className="flex">
+                      <span className="font-bold w-[90px] shrink-0 whitespace-nowrap">
+                        DIR. SUCURSAL:
+                      </span>
+                      <span>{data.emisor.dirSucursal}</span>
+                    </div>
+                    <div className="flex mt-2">
+                      <span className="font-bold w-[200px] shrink-0 whitespace-nowrap">
+                        OBLIGADO A LLEVAR CONTABILIDAD:
+                      </span>
+                      <span>{data.emisor.obligadoContabilidad}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Lado Derecho - Datos factura */}
-              <div style={{ width: '50%' }}>
-                <div
-                  style={{
-                    border: '2px solid #000',
-                    padding: '10px',
-                    borderRadius: '6px',
-                    fontSize: '9pt',
-                  }}
-                >
-                  <div style={{ marginBottom: '5px' }}>
-                    <span style={{ fontWeight: '600' }}>R.U.C.: </span>
-                    <span>{data.emisor.ruc}</span>
+              <div className="w-[50%]">
+                <div className="border-exact rounded-2xl p-5 h-full text-[10px] flex flex-col relative bg-white">
+                  <div className="grid grid-cols-[30px_1fr] gap-y-1 mb-2 items-baseline">
+                    <span className="font-bold text-[13px]">R.U.C.:</span>
+                    <span className="font-bold text-[13px] pl-4">
+                      {data.emisor.ruc}
+                    </span>
                   </div>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      fontSize: '18pt',
-                      fontWeight: 'bold',
-                      margin: '8px 0',
-                      letterSpacing: '5px',
-                    }}
-                  >
-                    F A C T U R A
+
+                  <div className="mb-2">
+                    <h2 className="text-[16px] font-bold tracking-widest text-black">
+                      F A C T U R A
+                    </h2>
                   </div>
-                  <div style={{ marginBottom: '5px' }}>
-                    <span style={{ fontWeight: '600' }}>No: </span>
-                    <span style={{ fontWeight: 'bold', color: '#dc2626' }}>
+
+                  <div className="grid grid-cols-[30px_1fr] gap-y-1 mb-4 items-baseline">
+                    <span className="font-bold text-[12px]">No:</span>
+                    <span className="font-mono text-red-600 text-[12px] tracking-widest pl-4">
                       {data.factura.numero}
                     </span>
                   </div>
-                  <div style={{ marginBottom: '3px', fontWeight: '600' }}>
-                    NÚMERO DE AUTORIZACIÓN:
+
+                  <div className="mb-2">
+                    <p className="font-bold mb-1">NÚMERO DE AUTORIZACIÓN:</p>
+                    <p className="text-[10px] text-gray-600 leading-none break-all">
+                      {data.factura.autorizacion}
+                    </p>
                   </div>
-                  <div
-                    style={{
-                      fontFamily: 'Courier New, monospace',
-                      fontSize: '7.5pt',
-                      marginBottom: '8px',
-                      wordBreak: 'break-all',
-                      lineHeight: '1.2',
-                    }}
-                  >
-                    {data.factura.autorizacion}
+
+                  <div className="mb-2">
+                    <p className="font-bold mb-1">
+                      FECHA Y HORA DE AUTORIZACIÓN:
+                    </p>
+                    <p>
+                      {data.factura.fecha} {data.factura.hora}
+                    </p>
                   </div>
-                  <div style={{ marginBottom: '3px', fontWeight: '600' }}>
-                    FECHA Y HORA DE AUTORIZACIÓN:
+
+                  <div className="mb-5">
+                    <p>
+                      <span className="font-bold">AMBIENTE:</span>{' '}
+                      {data.factura.ambiente}
+                    </p>
+                    <p>
+                      <span className="font-bold">EMISION:</span>{' '}
+                      {data.factura.emision}
+                    </p>
                   </div>
-                  <div style={{ marginBottom: '8px', fontSize: '9pt' }}>
-                    {data.factura.fecha.split('-').reverse().join('-')}{' '}
-                    {data.factura.hora}
-                  </div>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: '10px',
-                      marginBottom: '8px',
-                      fontSize: '9pt',
-                    }}
-                  >
-                    <div>
-                      <span style={{ fontWeight: '600' }}>AMBIENTE: </span>
-                      <span>{data.factura.ambiente}</span>
+
+                  <div className="w-full">
+                    <p className="font-bold mb-1">CLAVE DE ACCESO:</p>
+
+                    <div className="w-full h-[45px] mb-1 overflow-hidden">
+                      <svg
+                        className="w-full h-full"
+                        preserveAspectRatio="none"
+                        viewBox="0 0 100 10"
+                      >
+                        <path
+                          d="M0,0 h2 v10 h-2 M4,0 h1 v10 h-1 M7,0 h3 v10 h-3 M12,0 h1 v10 h-1 M15,0 h2 v10 h-2 M19,0 h2 v10 h-2 M23,0 h1 v10 h-1 M26,0 h3 v10 h-3 M32,0 h1 v10 h-1 M35,0 h2 v10 h-2 M39,0 h2 v10 h-2 M44,0 h1 v10 h-1 M47,0 h3 v10 h-3 M52,0 h1 v10 h-1 M55,0 h2 v10 h-2 M59,0 h2 v10 h-2 M64,0 h1 v10 h-1 M67,0 h3 v10 h-3 M72,0 h1 v10 h-1 M75,0 h2 v10 h-2 M79,0 h2 v10 h-2 M84,0 h1 v10 h-1 M87,0 h3 v10 h-3 M92,0 h1 v10 h-1 M95,0 h2 v10 h-2 M99,0 h1 v10 h-1"
+                          fill="black"
+                        />
+                      </svg>
                     </div>
-                    <div>
-                      <span style={{ fontWeight: '600' }}>EMISION: </span>
-                      <span>{data.factura.emision}</span>
+
+                    <div className="w-full text-center">
+                      <p className="text-[9px] font-bold tracking-[1px] leading-none whitespace-nowrap">
+                        {data.factura.claveAcceso}
+                      </p>
                     </div>
-                  </div>
-                  <div style={{ marginBottom: '3px', fontWeight: '600' }}>
-                    CLAVE DE ACCESO:
-                  </div>
-                  {/* Código de barras simulado */}
-                  <div
-                    style={{
-                      backgroundColor: '#000',
-                      height: '40px',
-                      marginBottom: '3px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                      padding: '0 2px',
-                    }}
-                  >
-                    {data.factura.claveAcceso.split('').map((char, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          height: '32px',
-                          width: parseInt(char) % 2 === 0 ? '2px' : '3px',
-                          backgroundColor: 'white',
-                          flex: '0 0 auto',
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'Courier New, monospace',
-                      fontSize: '6.5pt',
-                      textAlign: 'center',
-                      wordBreak: 'break-all',
-                      lineHeight: '1.1',
-                    }}
-                  >
-                    {data.factura.claveAcceso}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* INFO CLIENTE */}
-            <div
-              style={{
-                border: '2px solid #000',
-                padding: '8px 10px',
-                marginBottom: '12px',
-                borderRadius: '6px',
-                fontSize: '9pt',
-              }}
-            >
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '2fr 1fr 1fr',
-                  gap: '10px',
-                  marginBottom: '6px',
-                }}
-              >
-                <div>
-                  <span style={{ fontWeight: '600' }}>RAZON SOCIAL: </span>
-                  <span>{data.cliente.razonSocial}</span>
+            <div className="border-exact rounded-2xl px-5 py-3 mb-5 text-[10px]">
+              <div className="flex items-center w-full">
+                <div className="space-y-1 w-[45%]">
+                  <div className="flex">
+                    <span className="font-bold w-[90px]">RAZON SOCIAL:</span>
+                    <span className="uppercase">
+                      {data.cliente.razonSocial}
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-bold w-[90px]">RUC / CI:</span>
+                    <span>{data.cliente.ruc}</span>
+                  </div>
+                  <div className="flex">
+                    <span className="font-bold w-[90px]">DIRECCION:</span>
+                    <span>{data.cliente.direccion}</span>
+                  </div>
                 </div>
-                <div>
-                  <span style={{ fontWeight: '600' }}>RUC / CI: </span>
-                  <span>{data.cliente.ruc}</span>
-                </div>
-                <div>
-                  <span style={{ fontWeight: '600' }}>FECHA DE EMISION: </span>
+
+                <div className="w-[25%] text-center">
+                  <span className="font-bold mr-1">FECHA DE EMISION:</span>
                   <span>
                     {data.factura.fecha.split('-').reverse().join('/')}
                   </span>
                 </div>
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '2fr 1fr',
-                  gap: '10px',
-                }}
-              >
-                <div>
-                  <span style={{ fontWeight: '600' }}>DIRECCION : </span>
-                  <span>{data.cliente.direccion}</span>
-                </div>
-                <div>
-                  <span style={{ fontWeight: '600' }}>GUIA DE REMISION: </span>
+
+                <div className="w-[30%] text-right">
+                  <span className="font-bold mr-2">GUIA DE REMISION:</span>
                   <span>{data.cliente.guiaRemision}</span>
                 </div>
               </div>
             </div>
 
-            {/* TABLA DE ITEMS */}
-            <table
-              style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                marginBottom: '12px',
-                fontSize: '9pt',
-              }}
-            >
+            <table className="exact-table mb-5">
               <thead>
-                <tr style={{ backgroundColor: 'white' }}>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '30px',
-                    }}
-                  >
-                    No.
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '60px',
-                    }}
-                  >
-                    CODIGO
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                    }}
-                  >
-                    DESCRIPCION
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '70px',
-                    }}
-                  >
-                    CANTIDAD
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '70px',
-                    }}
-                  >
-                    PRECIO U.
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '50px',
-                    }}
-                  >
-                    DESC.
-                  </th>
-                  <th
-                    style={{
-                      border: '2px solid #000',
-                      padding: '6px 8px',
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
-                      fontWeight: '600',
-                      width: '70px',
-                    }}
-                  >
-                    TOTAL
-                  </th>
+                <tr>
+                  <th className="w-10 text-center font-bold">No.</th>
+                  <th className="w-16 text-center font-bold">CODIGO</th>
+                  <th className="text-left font-bold pl-2">DESCRIPCION</th>
+                  <th className="w-20 text-right font-bold">CANTIDAD</th>
+                  <th className="w-20 text-right font-bold">PRECIO U.</th>
+                  <th className="w-16 text-right font-bold">DESC.</th>
+                  <th className="w-20 text-right font-bold">TOTAL</th>
                 </tr>
               </thead>
               <tbody>
                 {data.items.map((item, index) => (
                   <tr key={item.id}>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      {index + 1}
-                    </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      {item.codigo}
-                    </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      {item.descripcion}
-                    </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      {item.cantidad}
-                    </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
+                    <td className="text-center">{index + 1}</td>
+                    <td className="text-center">{item.codigo}</td>
+                    <td className="pl-2">{item.descripcion}</td>
+                    <td className="text-center">{item.cantidad}</td>
+                    <td className="text-right">
                       {formatNumber(item.precioUnitario)}
                     </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
-                      {item.descuento}
-                    </td>
-                    <td
-                      style={{
-                        border: '1px solid #000',
-                        padding: '6px 8px',
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
-                      }}
-                    >
+                    <td className="text-right">{item.descuento}</td>
+                    <td className="text-right">
                       {formatNumber(
                         item.cantidad * item.precioUnitario - item.descuento,
                       )}
@@ -1110,403 +875,114 @@ function App() {
               </tbody>
             </table>
 
-            {/* PIE DE PÁGINA */}
-            <div style={{ display: 'flex', gap: '12px', fontSize: '9pt' }}>
-              {/* Columna Izquierda - Info Adicional y Forma de Pago */}
-              <div style={{ width: '58%' }}>
-                {/* Información Adicional */}
-                <div
-                  style={{
-                    border: '2px solid #000',
-                    padding: '8px 10px',
-                    marginBottom: '8px',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: '600',
-                      marginBottom: '5px',
-                      fontSize: '9pt',
-                    }}
-                  >
+            <div className="flex gap-5 items-start text-[10px]">
+              <div className="w-[60%] flex flex-col gap-4">
+                <div className="border-exact">
+                  <div className="border-b-exact px-2 py-1 font-bold bg-white">
                     INFORMACIÓN ADICIONAL
                   </div>
-                  <div style={{ fontSize: '9pt' }}>
-                    <div style={{ marginBottom: '3px' }}>
-                      <span style={{ fontWeight: '600' }}>CORREO: </span>
+                  <div className="p-2 space-y-1">
+                    <div className="flex">
+                      <span className="font-bold w-[70px]">CORREO:</span>
                       <span>{data.cliente.correo}</span>
                     </div>
-                    <div>
-                      <span style={{ fontWeight: '600' }}>TELEFONO: </span>
+                    <div className="flex">
+                      <span className="font-bold w-[70px]">TELÉFONO:</span>
                       <span>{data.cliente.telefono}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Forma de Pago */}
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    fontSize: '9pt',
-                  }}
-                >
+                <table className="exact-table">
                   <thead>
-                    <tr style={{ backgroundColor: 'white' }}>
-                      <th
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                          fontWeight: '600',
-                          width: '40px',
-                        }}
-                      >
-                        COD
-                      </th>
-                      <th
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                          fontWeight: '600',
-                        }}
-                      >
-                        FORMA DE PAGO
-                      </th>
-                      <th
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                          fontWeight: '600',
-                          width: '60px',
-                        }}
-                      >
-                        VALOR
-                      </th>
-                      <th
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                          fontWeight: '600',
-                          width: '60px',
-                        }}
-                      >
-                        PLAZO
-                      </th>
+                    <tr>
+                      <th className="text-left w-10">COD</th>
+                      <th className="text-center">FORMA DE PAGO</th>
+                      <th className="text-center w-16">VALOR</th>
+                      <th className="text-center w-12">PLAZO</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="text-center font-bold">
                         {data.formaPago.codigo}
                       </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        {data.formaPago.descripcion}
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td>{data.formaPago.descripcion}</td>
+                      <td className="text-right">
                         {formatNumber(totales.valorTotal)}
                       </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'center',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        {data.formaPago.plazo}
-                      </td>
+                      <td>{data.formaPago.plazo}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              {/* Columna Derecha - Totales */}
-              <div style={{ width: '42%' }}>
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    fontSize: '9pt',
-                  }}
-                >
+              <div className="w-[40%]">
+                <table className="exact-table">
                   <tbody>
                     <tr>
-                      <td
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SUBTOTAL 15%
-                      </td>
-                      <td
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SUBTOTAL 15%</td>
+                      <td className="text-right">
                         {formatNumber(totales.subtotal15)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SUBTOTAL 0%
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SUBTOTAL 0%</td>
+                      <td className="text-right">
                         {formatNumber(totales.subtotal0)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SUBTOTAL NO OBJETO DE IVA
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SUBTOTAL NO OBJETO DE IVA</td>
+                      <td className="text-right">
                         {formatNumber(totales.subtotalNoObjetoIva)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SUBTOTAL EXENTO DE IVA
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SUBTOTAL EXENTO DE IVA</td>
+                      <td className="text-right">
                         {formatNumber(totales.subtotalExentoIva)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SUBTOTAL SIN IMPUESTOS
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SUBTOTAL SIN IMPUESTOS</td>
+                      <td className="text-right">
                         {formatNumber(totales.subtotalSinImpuestos)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        TOTAL DESCUENTO
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">TOTAL DESCUENTO</td>
+                      <td className="text-right">
                         {formatNumber(totales.totalDescuento)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        SERVICIO
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">SERVICIO</td>
+                      <td className="text-right">
                         {formatNumber(totales.servicio)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        ICE
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">ICE</td>
+                      <td className="text-right">
                         {formatNumber(totales.ice)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: '600',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        IVA 15%
-                      </td>
-                      <td
-                        style={{
-                          border: '1px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                        }}
-                      >
+                      <td className="font-bold">IVA 15%</td>
+                      <td className="text-right">
                         {formatNumber(totales.iva15)}
                       </td>
                     </tr>
                     <tr>
-                      <td
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          fontWeight: 'bold',
-                          textAlign: 'left',
-                          verticalAlign: 'middle',
-                        }}
-                      >
-                        VALOR TOTAL
-                      </td>
-                      <td
-                        style={{
-                          border: '2px solid #000',
-                          padding: '6px 8px',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                          fontWeight: 'bold',
-                        }}
-                      >
+                      <td className="font-bold text-[12px]">VALOR TOTAL</td>
+                      <td className="text-right font-bold text-[12px]">
                         {formatNumber(totales.valorTotal)}
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
-
-            {/* Footer */}
-            <div
-              style={{
-                textAlign: 'center',
-                fontSize: '8pt',
-                color: '#666',
-                marginTop: '20px',
-                paddingTop: '15px',
-                borderTop: '1px solid #ccc',
-              }}
-            >
-              Página 1 de 1
             </div>
           </div>
         </div>
