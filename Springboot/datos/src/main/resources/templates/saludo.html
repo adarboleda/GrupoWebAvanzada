@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Información del Usuario</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>¡Hola <span th:text="${usuario.nombre}"></span>!</h1>
+
+    <div style="margin: 20px 0">
+      <h2>Información de Edad:</h2>
+      <p>
+        <strong>Fecha de Nacimiento:</strong>
+        <span th:text="${usuario.fechaNacimiento}"></span>
+      </p>
+      <hr />
+      <p>
+        <strong>Edad en años:</strong>
+        <span th:text="${usuario.edadEnAnios}"></span> años
+      </p>
+      <p>
+        <strong>Edad en meses:</strong>
+        <span th:text="${usuario.edadEnMeses}"></span> meses
+      </p>
+      <p>
+        <strong>Edad en días:</strong>
+        <span th:text="${usuario.edadEnDias}"></span> días
+      </p>
+      <hr />
+      <p>
+        <strong>Edad detallada:</strong>
+        <span th:text="${usuario.edadDetallada}"></span>
+      </p>
+    </div>
+
+    <a href="/">Ir a la pagina de inicio</a>
+  </body>
+</html>
