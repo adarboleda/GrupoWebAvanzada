@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import html2pdf from 'html2pdf.js';
 
 // Datos iniciales
@@ -66,18 +66,31 @@ const initialData = {
 function App() {
   const [data, setData] = useState(initialData);
   const [logo, setLogo] = useState(null);
-  const [totales, setTotales] = useState({
-    subtotal15: 0,
-    subtotal0: 0,
-    subtotalNoObjetoIva: 0,
-    subtotalExentoIva: 0,
-    subtotalSinImpuestos: 0,
-    totalDescuento: 0,
-    servicio: 0,
-    ice: 0,
-    iva15: 0,
-    valorTotal: 0,
-  });
+  const totales = useMemo(() => {
+    const subtotalSinImpuestos = data.items.reduce((acc, item) => {
+      return acc + (item.cantidad * item.precioUnitario - item.descuento);
+    }, 0);
+
+    const totalDescuento = data.items.reduce(
+      (acc, item) => acc + item.descuento,
+      0,
+    );
+    const iva15 = subtotalSinImpuestos * 0.15;
+    const valorTotal = subtotalSinImpuestos + iva15;
+
+    return {
+      subtotal15: subtotalSinImpuestos,
+      subtotal0: 0,
+      subtotalNoObjetoIva: 0,
+      subtotalExentoIva: 0,
+      subtotalSinImpuestos: subtotalSinImpuestos,
+      totalDescuento: totalDescuento,
+      servicio: 0,
+      ice: 0,
+      iva15: iva15,
+      valorTotal: valorTotal,
+    };
+  }, [data.items]);
 
   const facturaRef = useRef(null);
 
@@ -93,41 +106,7 @@ function App() {
     }
   };
 
-  // Calcular totales automáticamente
-  useEffect(() => {
-    const subtotalSinImpuestos = data.items.reduce((acc, item) => {
-      return acc + (item.cantidad * item.precioUnitario - item.descuento);
-    }, 0);
-
-    const totalDescuento = data.items.reduce(
-      (acc, item) => acc + item.descuento,
-      0,
-    );
-    const iva15 = subtotalSinImpuestos * 0.15;
-    const valorTotal = subtotalSinImpuestos + iva15;
-
-    setTotales({
-      subtotal15: subtotalSinImpuestos,
-      subtotal0: 0,
-      subtotalNoObjetoIva: 0,
-      subtotalExentoIva: 0,
-      subtotalSinImpuestos: subtotalSinImpuestos,
-      totalDescuento: totalDescuento,
-      servicio: 0,
-      ice: 0,
-      iva15: iva15,
-      valorTotal: valorTotal,
-    });
-
-    // Actualizar valor en forma de pago
-    setData((prev) => ({
-      ...prev,
-      formaPago: {
-        ...prev.formaPago,
-        valor: valorTotal,
-      },
-    }));
-  }, [data.items]);
+  // Totales calculados mediante useMemo (ver declaración arriba)
 
   // Funciones para actualizar datos
   const updateEmisor = (field, value) => {
