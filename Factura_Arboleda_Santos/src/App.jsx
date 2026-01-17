@@ -265,89 +265,81 @@ function App() {
     }
 
     // BLOQUE DE DATOS DEL EMISOR
-    const emisorBoxY = yPos + logoHeight;
+    const emisorBoxY = yPos + logoHeight + 2;
     doc.setTextColor(0, 0, 0);
     drawBox(col1X, emisorBoxY, col1Width, emisorBoxHeight, 4);
 
-    let currentY = emisorBoxY + 7;
+    let currentY = emisorBoxY + 8;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(data.emisor.razonSocial, col1X + 5, currentY, {
       maxWidth: col1Width - 10,
     });
 
-    currentY += 5;
+    currentY += 6;
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
+    doc.setFont('helvetica', 'bold');
     doc.text(data.emisor.nombre, col1X + 5, currentY);
 
-    currentY += 8;
+    currentY += 6;
     doc.setFontSize(8);
     doc.setTextColor(0, 0, 0);
+    // Columna fija para etiquetas (similar a w-[75px] del HTML)
+    const labelWidth = 23;
     doc.setFont('helvetica', 'bold');
     doc.text('DIRECCIÓN:', col1X + 5, currentY);
     doc.setFont('helvetica', 'normal');
-    const dirX = col1X + 5 + doc.getTextWidth('DIRECCIÓN:') + 2;
-    doc.text(data.emisor.direccion, dirX, currentY, {
-      maxWidth: col1Width - dirX + col1X - 5,
-    });
-
-    currentY += 5;
-    doc.setFont('helvetica', 'bold');
-    doc.text('DIR. SUCURSAL:', col1X + 5, currentY);
-    doc.setFont('helvetica', 'normal');
-    const sucX = col1X + 5 + doc.getTextWidth('DIR. SUCURSAL:') + 2;
-    doc.text(data.emisor.dirSucursal, sucX, currentY, {
-      maxWidth: col1Width - sucX + col1X - 5,
+    doc.text(data.emisor.direccion, col1X + 5 + labelWidth, currentY, {
+      maxWidth: col1Width - labelWidth - 10,
     });
 
     currentY += 8;
     doc.setFont('helvetica', 'bold');
+    doc.text('DIR. SUCURSAL:', col1X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(data.emisor.dirSucursal, col1X + 5 + labelWidth + 5, currentY, {
+      maxWidth: col1Width - labelWidth - 15,
+    });
+
+    currentY += 10;
+    doc.setFont('helvetica', 'bold');
     doc.text('OBLIGADO A LLEVAR CONTABILIDAD:', col1X + 5, currentY);
     doc.setFont('helvetica', 'normal');
-    const oblX =
-      col1X + 5 + doc.getTextWidth('OBLIGADO A LLEVAR CONTABILIDAD:') + 2;
-    doc.text(data.emisor.obligadoContabilidad, oblX, currentY);
+    // El valor va en una nueva posición fija
+    doc.text(data.emisor.obligadoContabilidad, col1X + 5 + 58, currentY);
 
     // ===== COLUMNA DERECHA =====
     drawBox(col2X, yPos, col2Width, headerHeight, 4);
 
-    currentY = yPos + 7;
+    currentY = yPos + 8;
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
     doc.text('R.U.C.:', col2X + 5, currentY);
-    doc.text(
-      data.emisor.ruc,
-      col2X + 5 + doc.getTextWidth('R.U.C.:') + 5,
-      currentY,
-    );
+    doc.text(data.emisor.ruc, col2X + 25, currentY);
 
-    currentY += 10;
+    currentY += 7;
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     let txt = 'F A C T U R A';
-    doc.text(txt, col2X + (col2Width - doc.getTextWidth(txt)) / 2, currentY);
+    doc.text(txt, col2X + 5, currentY);
 
-    currentY += 10;
+    currentY += 7;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('No:', col2X + 5, currentY);
     doc.setTextColor(220, 38, 38);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      data.factura.numero,
-      col2X + 5 + doc.getTextWidth('No:') + 5,
-      currentY,
-    );
+    doc.text(data.factura.numero, col2X + 20, currentY);
 
-    currentY += 8;
+    currentY += 7;
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
     doc.text('NÚMERO DE AUTORIZACIÓN:', col2X + 5, currentY);
 
-    currentY += 4;
+    currentY += 5;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
     doc.setTextColor(100, 100, 100);
@@ -361,7 +353,7 @@ function App() {
     doc.setFont('helvetica', 'bold');
     doc.text('FECHA Y HORA DE AUTORIZACIÓN:', col2X + 5, currentY);
 
-    currentY += 4;
+    currentY += 5;
     doc.setFont('helvetica', 'normal');
     doc.text(`${data.factura.fecha} ${data.factura.hora}`, col2X + 5, currentY);
 
@@ -369,28 +361,20 @@ function App() {
     doc.setFont('helvetica', 'bold');
     doc.text('AMBIENTE:', col2X + 5, currentY);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      data.factura.ambiente,
-      col2X + 5 + doc.getTextWidth('AMBIENTE:') + 2,
-      currentY,
-    );
+    doc.text(data.factura.ambiente, col2X + 25, currentY);
 
-    currentY += 4;
+    currentY += 5;
     doc.setFont('helvetica', 'bold');
     doc.text('EMISION:', col2X + 5, currentY);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      data.factura.emision,
-      col2X + 5 + doc.getTextWidth('EMISION:') + 2,
-      currentY,
-    );
+    doc.text(data.factura.emision, col2X + 22, currentY);
 
     currentY += 7;
     doc.setFont('helvetica', 'bold');
     doc.text('CLAVE DE ACCESO:', col2X + 5, currentY);
 
     // Código de barras
-    currentY += 3;
+    currentY += 4;
     const barcodeWidth = col2Width - 10;
     const barcodeHeight = 12;
     doc.setFillColor(0, 0, 0);
