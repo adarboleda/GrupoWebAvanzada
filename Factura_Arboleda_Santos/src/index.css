@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm;
+  }
+
+  .label-field {
+    @apply block text-xs font-medium text-gray-700 mb-1;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-blue-500;
+  }
+}
+
+/* Estilos para la vista previa de factura */
+.factura-preview {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.factura-preview .mono {
+  font-family: 'Courier New', monospace;
+}
+
+/* Estilos para impresión/PDF */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
