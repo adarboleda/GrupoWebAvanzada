@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
-import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Datos iniciales
 const initialData = {
@@ -185,15 +186,450 @@ function App() {
 
   // Función para descargar PDF
   const downloadPDF = () => {
-    const element = facturaRef.current;
-    const opt = {
-      margin: 0,
-      filename: `Factura_${data.factura.numero.replace(/-/g, '_')}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
+    const margin = 12;
+    const contentWidth = pageWidth - 2 * margin; // 186mm
+    let yPos = margin;
+
+    // Helper para dibujar rectángulo con borde redondeado
+    const drawBox = (x, y, width, height, radius = 0) => {
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.3);
+      if (radius > 0) {
+        doc.roundedRect(x, y, width, height, radius, radius);
+      } else {
+        doc.rect(x, y, width, height);
+      }
     };
-    html2pdf().set(opt).from(element).save();
+
+    // ===== ENCABEZADO - Dos columnas 50%-50% con gap =====
+    const gap = 5;
+    const col1Width = (contentWidth - gap) / 2;
+    const col2Width = (contentWidth - gap) / 2;
+    const col1X = margin;
+    const col2X = margin + col1Width + gap;
+
+    // Altura del logo: h-36 = 144px ≈ 38mm
+    const logoHeight = 38;
+    // Altura total del header: h-[330px] ≈ 87mm
+    const headerHeight = 87;
+    // Altura del bloque emisor
+    const emisorBoxHeight = headerHeight - logoHeight - 2;
+
+    // ===== COLUMNA IZQUIERDA =====
+    // LOGO (centrado en la columna)
+    const logoSize = 19; // radio
+    const logoCenterX = col1X + col1Width / 2;
+    const logoCenterY = yPos + logoSize;
+
+    if (logo) {
+      // Si hay imagen subida, usarla
+      try {
+        doc.addImage(
+          logo,
+          'JPEG',
+          logoCenterX - logoSize,
+          yPos,
+          logoSize * 2,
+          logoSize * 2,
+        );
+      } catch (e) {
+        // Si falla, dibujar círculo por defecto
+        drawDefaultLogo();
+      }
+    } else {
+      // Logo por defecto (círculo con texto)
+      drawDefaultLogo();
+    }
+
+    function drawDefaultLogo() {
+      doc.setDrawColor(30, 42, 74);
+      doc.setLineWidth(0.5);
+      doc.circle(logoCenterX, logoCenterY, logoSize);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 42, 74);
+
+      doc.setFontSize(6);
+      let txt = 'P I C A N T E R I A';
+      doc.text(txt, logoCenterX - doc.getTextWidth(txt) / 2, logoCenterY - 12);
+
+      doc.setFontSize(36);
+      txt = 'M';
+      doc.text(txt, logoCenterX - doc.getTextWidth(txt) / 2, logoCenterY + 6);
+
+      doc.setFontSize(6);
+      txt = "D ' M A R C E L O";
+      doc.text(txt, logoCenterX - doc.getTextWidth(txt) / 2, logoCenterY + 14);
+    }
+
+    // BLOQUE DE DATOS DEL EMISOR
+    const emisorBoxY = yPos + logoHeight;
+    doc.setTextColor(0, 0, 0);
+    drawBox(col1X, emisorBoxY, col1Width, emisorBoxHeight, 4);
+
+    let currentY = emisorBoxY + 7;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(data.emisor.razonSocial, col1X + 5, currentY, {
+      maxWidth: col1Width - 10,
+    });
+
+    currentY += 5;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(data.emisor.nombre, col1X + 5, currentY);
+
+    currentY += 8;
+    doc.setFontSize(8);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DIRECCIÓN:', col1X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    const dirX = col1X + 5 + doc.getTextWidth('DIRECCIÓN:') + 2;
+    doc.text(data.emisor.direccion, dirX, currentY, {
+      maxWidth: col1Width - dirX + col1X - 5,
+    });
+
+    currentY += 5;
+    doc.setFont('helvetica', 'bold');
+    doc.text('DIR. SUCURSAL:', col1X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    const sucX = col1X + 5 + doc.getTextWidth('DIR. SUCURSAL:') + 2;
+    doc.text(data.emisor.dirSucursal, sucX, currentY, {
+      maxWidth: col1Width - sucX + col1X - 5,
+    });
+
+    currentY += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.text('OBLIGADO A LLEVAR CONTABILIDAD:', col1X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    const oblX =
+      col1X + 5 + doc.getTextWidth('OBLIGADO A LLEVAR CONTABILIDAD:') + 2;
+    doc.text(data.emisor.obligadoContabilidad, oblX, currentY);
+
+    // ===== COLUMNA DERECHA =====
+    drawBox(col2X, yPos, col2Width, headerHeight, 4);
+
+    currentY = yPos + 7;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text('R.U.C.:', col2X + 5, currentY);
+    doc.text(
+      data.emisor.ruc,
+      col2X + 5 + doc.getTextWidth('R.U.C.:') + 5,
+      currentY,
+    );
+
+    currentY += 10;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    let txt = 'F A C T U R A';
+    doc.text(txt, col2X + (col2Width - doc.getTextWidth(txt)) / 2, currentY);
+
+    currentY += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('No:', col2X + 5, currentY);
+    doc.setTextColor(220, 38, 38);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.factura.numero,
+      col2X + 5 + doc.getTextWidth('No:') + 5,
+      currentY,
+    );
+
+    currentY += 8;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('NÚMERO DE AUTORIZACIÓN:', col2X + 5, currentY);
+
+    currentY += 4;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 100, 100);
+    doc.text(data.factura.autorizacion, col2X + 5, currentY, {
+      maxWidth: col2Width - 10,
+    });
+
+    currentY += 7;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('FECHA Y HORA DE AUTORIZACIÓN:', col2X + 5, currentY);
+
+    currentY += 4;
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${data.factura.fecha} ${data.factura.hora}`, col2X + 5, currentY);
+
+    currentY += 7;
+    doc.setFont('helvetica', 'bold');
+    doc.text('AMBIENTE:', col2X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.factura.ambiente,
+      col2X + 5 + doc.getTextWidth('AMBIENTE:') + 2,
+      currentY,
+    );
+
+    currentY += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text('EMISION:', col2X + 5, currentY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.factura.emision,
+      col2X + 5 + doc.getTextWidth('EMISION:') + 2,
+      currentY,
+    );
+
+    currentY += 7;
+    doc.setFont('helvetica', 'bold');
+    doc.text('CLAVE DE ACCESO:', col2X + 5, currentY);
+
+    // Código de barras
+    currentY += 3;
+    const barcodeWidth = col2Width - 10;
+    const barcodeHeight = 12;
+    doc.setFillColor(0, 0, 0);
+    doc.rect(col2X + 5, currentY, barcodeWidth, barcodeHeight, 'F');
+    doc.setFillColor(255, 255, 255);
+    for (let i = 0; i < data.factura.claveAcceso.length; i++) {
+      const char = parseInt(data.factura.claveAcceso[i]) || 0;
+      const barWidth = char % 2 === 0 ? 0.5 : 0.8;
+      const xBar =
+        col2X + 5 + (i * barcodeWidth) / data.factura.claveAcceso.length;
+      doc.rect(xBar, currentY + 2, barWidth, barcodeHeight - 4, 'F');
+    }
+
+    currentY += barcodeHeight + 3;
+    doc.setFontSize(6);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    txt = data.factura.claveAcceso;
+    doc.text(txt, col2X + (col2Width - doc.getTextWidth(txt)) / 2, currentY);
+
+    // ===== SECCIÓN: DATOS DEL CLIENTE =====
+    yPos = yPos + headerHeight + 5;
+    drawBox(margin, yPos, contentWidth, 16, 4);
+
+    doc.setFontSize(8);
+    doc.setTextColor(0, 0, 0);
+
+    // Columna izquierda (45%)
+    let clientY = yPos + 5;
+    doc.setFont('helvetica', 'bold');
+    doc.text('RAZON SOCIAL:', margin + 5, clientY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.razonSocial.toUpperCase(),
+      margin + 5 + doc.getTextWidth('RAZON SOCIAL:') + 2,
+      clientY,
+    );
+
+    clientY += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text('RUC / CI:', margin + 5, clientY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.ruc,
+      margin + 5 + doc.getTextWidth('RUC / CI:') + 2,
+      clientY,
+    );
+
+    clientY += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.text('DIRECCION:', margin + 5, clientY);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.direccion,
+      margin + 5 + doc.getTextWidth('DIRECCION:') + 2,
+      clientY,
+    );
+
+    // Centro (25%)
+    const centerX = margin + contentWidth * 0.45;
+    doc.setFont('helvetica', 'bold');
+    doc.text('FECHA DE EMISION:', centerX, yPos + 9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.factura.fecha.split('-').reverse().join('/'),
+      centerX + doc.getTextWidth('FECHA DE EMISION:') + 2,
+      yPos + 9,
+    );
+
+    // Derecha (30%)
+    const rightX = margin + contentWidth * 0.72;
+    doc.setFont('helvetica', 'bold');
+    doc.text('GUIA DE REMISION:', rightX, yPos + 9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.guiaRemision || '',
+      rightX + doc.getTextWidth('GUIA DE REMISION:') + 2,
+      yPos + 9,
+    );
+
+    // SECCIÓN 3: TABLA DE ITEMS
+    yPos += 22;
+    const itemsTableData = data.items.map((item, index) => [
+      (index + 1).toString(),
+      item.codigo,
+      item.descripcion,
+      item.cantidad.toString(),
+      formatNumber(item.precioUnitario),
+      item.descuento.toString(),
+      formatNumber(item.cantidad * item.precioUnitario - item.descuento),
+    ]);
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [
+        [
+          'No.',
+          'CODIGO',
+          'DESCRIPCION',
+          'CANTIDAD',
+          'PRECIO U.',
+          'DESC.',
+          'TOTAL',
+        ],
+      ],
+      body: itemsTableData,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 1.5,
+        lineColor: [0, 0, 0],
+        lineWidth: 0.3,
+      },
+      headStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        halign: 'center',
+      },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 10 },
+        1: { halign: 'center', cellWidth: 16 },
+        2: { halign: 'left', cellWidth: 'auto' },
+        3: { halign: 'center', cellWidth: 20 },
+        4: { halign: 'right', cellWidth: 20 },
+        5: { halign: 'right', cellWidth: 16 },
+        6: { halign: 'right', cellWidth: 20 },
+      },
+      margin: { left: margin, right: margin },
+    });
+
+    yPos = doc.lastAutoTable.finalY + 5;
+
+    // SECCIÓN 4: FOOTER (Info Adicional + Totales) - 60% izquierda, 40% derecha
+    const footerLeftWidth = contentWidth * 0.6;
+    const footerRightX = margin + footerLeftWidth + 5;
+    const footerStartY = yPos;
+
+    // Info Adicional
+    drawBox(margin, yPos, footerLeftWidth, 18, 0);
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.3);
+    doc.line(margin, yPos + 6, margin + footerLeftWidth, yPos + 6);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INFORMACIÓN ADICIONAL', margin + 2, yPos + 4);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('CORREO:', margin + 2, yPos + 11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.correo,
+      margin + 2 + doc.getTextWidth('CORREO:') + 2,
+      yPos + 11,
+    );
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('TELÉFONO:', margin + 2, yPos + 16);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      data.cliente.telefono,
+      margin + 2 + doc.getTextWidth('TELÉFONO:') + 2,
+      yPos + 16,
+    );
+
+    // Forma de Pago (debajo de info adicional)
+    yPos += 22;
+    autoTable(doc, {
+      startY: yPos,
+      head: [['COD', 'FORMA DE PAGO', 'VALOR', 'PLAZO']],
+      body: [
+        [
+          data.formaPago.codigo,
+          data.formaPago.descripcion,
+          formatNumber(totales.valorTotal),
+          data.formaPago.plazo || '',
+        ],
+      ],
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 1.5,
+        lineColor: [0, 0, 0],
+        lineWidth: 0.3,
+      },
+      headStyles: {
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        halign: 'center',
+      },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 12 },
+        1: { halign: 'left', cellWidth: 'auto' },
+        2: { halign: 'right', cellWidth: 18 },
+        3: { halign: 'center', cellWidth: 14 },
+      },
+      margin: { left: margin, right: margin + contentWidth * 0.4 + 5 },
+    });
+
+    // Tabla de Totales (lado derecho, alineada al inicio del footer)
+    const totalesData = [
+      ['SUBTOTAL 15%', formatNumber(totales.subtotal15)],
+      ['SUBTOTAL 0%', formatNumber(totales.subtotal0)],
+      ['SUBTOTAL NO OBJETO DE IVA', formatNumber(totales.subtotalNoObjetoIva)],
+      ['SUBTOTAL EXENTO DE IVA', formatNumber(totales.subtotalExentoIva)],
+      ['SUBTOTAL SIN IMPUESTOS', formatNumber(totales.subtotalSinImpuestos)],
+      ['TOTAL DESCUENTO', formatNumber(totales.totalDescuento)],
+      ['SERVICIO', formatNumber(totales.servicio)],
+      ['ICE', formatNumber(totales.ice)],
+      ['IVA 15%', formatNumber(totales.iva15)],
+      ['VALOR TOTAL', formatNumber(totales.valorTotal)],
+    ];
+
+    autoTable(doc, {
+      startY: footerStartY,
+      body: totalesData,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 1.5,
+        lineColor: [0, 0, 0],
+        lineWidth: 0.3,
+      },
+      columnStyles: {
+        0: { halign: 'left', fontStyle: 'bold' },
+        1: { halign: 'right', cellWidth: 22 },
+      },
+      margin: { left: footerRightX, right: margin },
+      didParseCell: function (data) {
+        if (data.row.index === 9) {
+          data.cell.styles.fontSize = 10;
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+    });
+
+    // Guardar PDF
+    doc.save(`Factura_${data.factura.numero.replace(/-/g, '_')}.pdf`);
   };
 
   // Formatear número
