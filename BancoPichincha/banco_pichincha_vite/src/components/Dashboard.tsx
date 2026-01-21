@@ -260,19 +260,11 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" fill="#FFD100" rx="15" />
-              <rect
-                x="60"
-                y="0"
-                width="40"
-                height="40"
-                fill="#00377B"
-                rx="0 15 0 0"
-              />
-            </svg>
+            <img src="/Banco-Pichincha.png" alt="Banco Pichincha" />
           </div>
-          <div className="sidebar-title">Banco Pichincha</div>
+          <div className="sidebar-title">
+            Banco <br /> Pichincha
+          </div>
         </div>
 
         <nav className="sidebar-nav">
@@ -503,17 +495,7 @@ function Dashboard({ cliente, onLogout, onClienteUpdate }: DashboardProps) {
         <header className="mobile-header">
           <div className="header-left">
             <div className="logo">
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="#FFD100" rx="15" />
-                <rect
-                  x="60"
-                  y="0"
-                  width="40"
-                  height="40"
-                  fill="#00377B"
-                  rx="0 15 0 0"
-                />
-              </svg>
+              <img src="/Banco-Pichincha.png" alt="Banco Pichincha" />
             </div>
             <h1>Banco Pichincha</h1>
           </div>

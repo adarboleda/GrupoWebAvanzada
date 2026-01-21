@@ -152,17 +152,7 @@ const Login = ({ onLogin }: LoginProps) => {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100" height="100" fill="#FFD100" rx="15" />
-              <rect
-                x="60"
-                y="0"
-                width="40"
-                height="40"
-                fill="#00377B"
-                rx="0 15 0 0"
-              />
-            </svg>
+            <img src="/Banco-Pichincha.png" alt="Banco Pichincha" />
           </div>
           <h1>Banco Pichincha</h1>
           <p>Bienvenido a tu Banca Web</p>
