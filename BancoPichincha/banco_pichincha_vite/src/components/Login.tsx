@@ -11,11 +11,11 @@ interface LoginProps {
 const Login = ({ onLogin }: LoginProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  
+
   // Campos de login
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
-  
+
   // Campos de registro
   const [nombre, setNombre] = useState('');
   const [cedula, setCedula] = useState('');
@@ -56,7 +56,7 @@ const Login = ({ onLogin }: LoginProps) => {
     // Solo permitir números
     const soloNumeros = value.replace(/\D/g, '').substring(0, 10);
     setCedula(soloNumeros);
-    
+
     if (soloNumeros.length === 10) {
       if (!validarCedulaEcuatoriana(soloNumeros)) {
         setErrorCedula('Cédula ecuatoriana no válida');
@@ -88,7 +88,7 @@ const Login = ({ onLogin }: LoginProps) => {
 
   const handleRegistro = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     // Validar cédula
     if (!validarCedulaEcuatoriana(cedula)) {
       alert('La cédula ecuatoriana no es válida');
@@ -151,19 +151,31 @@ const Login = ({ onLogin }: LoginProps) => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <span className="login-logo">d!</span>
-          <h1>Deuna</h1>
-          <p>Billetera Digital</p>
+          <div className="login-logo">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="#FFD100" rx="15" />
+              <rect
+                x="60"
+                y="0"
+                width="40"
+                height="40"
+                fill="#00377B"
+                rx="0 15 0 0"
+              />
+            </svg>
+          </div>
+          <h1>Banco Pichincha</h1>
+          <p>Bienvenido a tu Banca Web</p>
         </div>
 
         <div className="login-tabs">
-          <button 
+          <button
             className={`tab ${isLogin ? 'active' : ''}`}
             onClick={() => setIsLogin(true)}
           >
             Iniciar Sesión
           </button>
-          <button 
+          <button
             className={`tab ${!isLogin ? 'active' : ''}`}
             onClick={() => setIsLogin(false)}
           >
@@ -220,7 +232,9 @@ const Login = ({ onLogin }: LoginProps) => {
                 required
                 className={errorCedula ? 'input-error' : ''}
               />
-              {errorCedula && <span className="error-message">{errorCedula}</span>}
+              {errorCedula && (
+                <span className="error-message">{errorCedula}</span>
+              )}
             </div>
             <div className="form-group">
               <label>Email *</label>
@@ -246,7 +260,11 @@ const Login = ({ onLogin }: LoginProps) => {
               <input
                 type="text"
                 value={nuevoUsuario}
-                onChange={(e) => setNuevoUsuario(e.target.value.toLowerCase().replace(/\s/g, ''))}
+                onChange={(e) =>
+                  setNuevoUsuario(
+                    e.target.value.toLowerCase().replace(/\s/g, ''),
+                  )
+                }
                 placeholder="Ej: juanperez"
                 minLength={4}
                 required
@@ -273,14 +291,21 @@ const Login = ({ onLogin }: LoginProps) => {
                 required
               />
             </div>
-            <button type="submit" className="btn-login btn-registro" disabled={loading || !!errorCedula}>
+            <button
+              type="submit"
+              className="btn-login btn-registro"
+              disabled={loading || !!errorCedula}
+            >
               {loading ? 'Registrando...' : 'Crear Cuenta'}
             </button>
           </form>
         )}
 
         <div className="login-footer">
-          <p><Lightbulb size={16} /> Abre múltiples ventanas del navegador para simular diferentes usuarios</p>
+          <p>
+            <Lightbulb size={16} /> Abre múltiples ventanas del navegador para
+            simular diferentes usuarios
+          </p>
         </div>
       </div>
     </div>
