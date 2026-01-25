@@ -5,8 +5,28 @@ public class PolizaDTO {
     private Double costoTotal;
 
     // Constructor
+
+    public PolizaDTO() {
+    }
+
     public PolizaDTO(String propietario, Double costoTotal) {
         this.propietario = propietario;
+        this.costoTotal = costoTotal;
+    }
+
+    public String getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(String propietario) {
+        this.propietario = propietario;
+    }
+
+    public Double getCostoTotal() {
+        return costoTotal;
+    }
+
+    public void setCostoTotal(Double costoTotal) {
         this.costoTotal = costoTotal;
     }
 }

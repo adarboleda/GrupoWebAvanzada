@@ -18,6 +18,11 @@ public class Automovil {
     public Automovil() {
     }
 
+    public Automovil(double valor, String modelo) {
+        this.valor = valor;
+        this.modelo = modelo;
+    }
+
     public Automovil(Long id, String modelo, double valor) {
         this.id = id;
         this.modelo = modelo;

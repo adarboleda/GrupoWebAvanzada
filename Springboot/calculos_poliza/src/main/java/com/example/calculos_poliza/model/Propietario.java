@@ -14,6 +14,12 @@ public class Propietario {
     public Propietario() {
     }
 
+    public Propietario(String nombre, int edad, int numeroAccidentes) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.numeroAccidentes = numeroAccidentes;
+    }
+
     public Propietario(Long id, String nombre, int edad, int numeroAccidentes) {
         this.id = id;
         this.nombre = nombre;
