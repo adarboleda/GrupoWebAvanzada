@@ -31,16 +31,22 @@ function Vehiculos() {
     modelo: '',
     año: new Date().getFullYear(),
     tipo: '',
-    capacidad_kg: 0,
-    capacidad_m3: 0,
+    capacidad_carga: 0,
+    unidad_capacidad: 'kg',
     estado: 'disponible',
   });
 
   const tiposVehiculo = [
     { label: 'Camión', value: 'camion' },
     { label: 'Camioneta', value: 'camioneta' },
-    { label: 'Furgoneta', value: 'furgoneta' },
+    { label: 'Van', value: 'van' },
     { label: 'Motocicleta', value: 'motocicleta' },
+  ];
+
+  const unidadesCapacidad = [
+    { label: 'Kilogramos', value: 'kg' },
+    { label: 'Toneladas', value: 'toneladas' },
+    { label: 'Metros cúbicos', value: 'm3' },
   ];
 
   const estadosVehiculo = [
@@ -87,8 +93,8 @@ function Vehiculos() {
       modelo: vehiculo.modelo,
       año: vehiculo.año,
       tipo: vehiculo.tipo,
-      capacidad_kg: vehiculo.capacidad_kg,
-      capacidad_m3: vehiculo.capacidad_m3,
+      capacidad_carga: vehiculo.capacidad_carga,
+      unidad_capacidad: vehiculo.unidad_capacidad || 'kg',
       estado: vehiculo.estado,
     });
     setEditMode(true);
@@ -102,8 +108,8 @@ function Vehiculos() {
       modelo: '',
       año: new Date().getFullYear(),
       tipo: '',
-      capacidad_kg: 0,
-      capacidad_m3: 0,
+      capacidad_carga: 0,
+      unidad_capacidad: 'kg',
       estado: 'disponible',
     });
   };
@@ -211,17 +217,12 @@ function Vehiculos() {
   };
 
   const capacidadTemplate = (rowData) => {
-    return (
-      <div>
-        <div>{rowData.capacidad_kg} kg</div>
-        <div
-          className="text-sm"
-          style={{ color: 'var(--color-text-secondary)' }}
-        >
-          {rowData.capacidad_m3} m³
-        </div>
-      </div>
-    );
+    const unidadLabel = {
+      kg: 'kg',
+      toneladas: 'ton',
+      m3: 'm³',
+    };
+    return `${rowData.capacidad_carga} ${unidadLabel[rowData.unidad_capacidad] || rowData.unidad_capacidad}`;
   };
 
   const accionesTemplate = (rowData) => {
@@ -492,12 +493,12 @@ function Vehiculos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Capacidad (kg)
+              Capacidad de Carga
             </label>
             <InputNumber
-              value={formData.capacidad_kg}
+              value={formData.capacidad_carga}
               onValueChange={(e) =>
-                setFormData({ ...formData, capacidad_kg: e.value })
+                setFormData({ ...formData, capacidad_carga: e.value })
               }
               className="w-full"
               min={0}
@@ -509,16 +510,16 @@ function Vehiculos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Capacidad (m³)
+              Unidad de Capacidad
             </label>
-            <InputNumber
-              value={formData.capacidad_m3}
-              onValueChange={(e) =>
-                setFormData({ ...formData, capacidad_m3: e.value })
+            <Dropdown
+              value={formData.unidad_capacidad}
+              onChange={(e) =>
+                setFormData({ ...formData, unidad_capacidad: e.value })
               }
+              options={unidadesCapacidad}
+              placeholder="Seleccione"
               className="w-full"
-              min={0}
-              maxFractionDigits={2}
             />
           </div>
         </div>

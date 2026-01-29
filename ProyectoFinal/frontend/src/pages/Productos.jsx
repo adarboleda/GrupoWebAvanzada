@@ -31,10 +31,9 @@ function Productos() {
     nombre: '',
     descripcion: '',
     categoria: '',
-    precio_compra: 0,
-    precio_venta: 0,
+    precio: 0,
     stock_minimo: 0,
-    bodega_principal: null,
+    bodega: null,
   });
 
   const categorias = [
@@ -89,10 +88,9 @@ function Productos() {
       nombre: producto.nombre,
       descripcion: producto.descripcion || '',
       categoria: producto.categoria,
-      precio_compra: producto.precio_compra,
-      precio_venta: producto.precio_venta,
+      precio: producto.precio,
       stock_minimo: producto.stock_minimo,
-      bodega_principal: producto.bodega_principal?._id || null,
+      bodega: producto.bodega?._id || null,
     });
     setEditMode(true);
     setShowDialog(true);
@@ -104,10 +102,9 @@ function Productos() {
       nombre: '',
       descripcion: '',
       categoria: '',
-      precio_compra: 0,
-      precio_venta: 0,
+      precio: 0,
       stock_minimo: 0,
-      bodega_principal: null,
+      bodega: null,
     });
   };
 
@@ -229,7 +226,7 @@ function Productos() {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
       currency: 'COP',
-    }).format(rowData.precio_venta);
+    }).format(rowData.precio || 0);
   };
 
   const activoTemplate = (rowData) => {
@@ -382,7 +379,7 @@ function Productos() {
             style={{ minWidth: '100px' }}
           />
           <Column
-            field="precio_venta"
+            field="precio"
             header="Precio"
             body={precioTemplate}
             sortable
@@ -482,31 +479,12 @@ function Productos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Precio Compra
+              Precio
             </label>
             <InputNumber
-              value={formData.precio_compra}
+              value={formData.precio}
               onValueChange={(e) =>
-                setFormData({ ...formData, precio_compra: e.value })
-              }
-              mode="currency"
-              currency="COP"
-              locale="es-CO"
-              className="w-full"
-            />
-          </div>
-
-          <div className="col-span-1">
-            <label
-              className="block mb-2 font-semibold"
-              style={{ color: 'var(--color-secondary)' }}
-            >
-              Precio Venta
-            </label>
-            <InputNumber
-              value={formData.precio_venta}
-              onValueChange={(e) =>
-                setFormData({ ...formData, precio_venta: e.value })
+                setFormData({ ...formData, precio: e.value })
               }
               mode="currency"
               currency="COP"
@@ -537,13 +515,11 @@ function Productos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Bodega Principal
+              Bodega
             </label>
             <Dropdown
-              value={formData.bodega_principal}
-              onChange={(e) =>
-                setFormData({ ...formData, bodega_principal: e.value })
-              }
+              value={formData.bodega}
+              onChange={(e) => setFormData({ ...formData, bodega: e.value })}
               options={bodegas.map((b) => ({ label: b.nombre, value: b._id }))}
               placeholder="Seleccione"
               className="w-full"

@@ -7,7 +7,7 @@ function MainLayout() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
 
   return (
-    <div className="min-h-screen flex flex-column">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Navbar superior */}
       <Navbar onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} />
 
@@ -16,10 +16,7 @@ function MainLayout() {
         {sidebarVisible && <Sidebar />}
 
         {/* Contenido principal */}
-        <main
-          className="flex-1 p-4"
-          style={{ backgroundColor: 'var(--color-background)' }}
-        >
+        <main className="flex-1 p-6 overflow-auto bg-gray-100">
           <Outlet />
         </main>
       </div>

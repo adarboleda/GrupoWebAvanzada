@@ -228,13 +228,13 @@ function Rutas() {
             fecha_programada: formData.fecha_programada,
             vehiculo: formData.vehiculo._id,
             conductor: formData.conductor._id,
-            productos: productosSeleccionados.map((p) => ({
+            lista_productos: productosSeleccionados.map((p) => ({
               producto: p._id,
               cantidad: p.cantidadRuta || 1,
             })),
             observaciones: formData.observaciones,
-            distancia_estimada: formData.distancia_estimada,
-            tiempo_estimado: formData.tiempo_estimado,
+            distancia_km: formData.distancia_estimada,
+            tiempo_estimado_horas: formData.tiempo_estimado,
           };
 
           const response = await api.post('/rutas', rutaData);

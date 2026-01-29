@@ -32,13 +32,26 @@ function Movimientos() {
     producto: null,
     bodega: null,
     cantidad: 0,
-    referencia: '',
+    motivoMovimiento: '',
+    documentoReferencia: '',
     observaciones: '',
   });
 
   const tiposMovimiento = [
     { label: 'Entrada', value: 'entrada' },
     { label: 'Salida', value: 'salida' },
+    { label: 'Transferencia', value: 'transferencia' },
+  ];
+
+  const motivosMovimiento = [
+    { label: 'Compra', value: 'compra' },
+    { label: 'Devolución', value: 'devolucion' },
+    { label: 'Ajuste de inventario', value: 'ajuste_inventario' },
+    { label: 'Venta', value: 'venta' },
+    { label: 'Daño', value: 'daño' },
+    { label: 'Vencimiento', value: 'vencimiento' },
+    { label: 'Transferencia entre bodegas', value: 'transferencia_bodegas' },
+    { label: 'Otro', value: 'otro' },
   ];
 
   useEffect(() => {
@@ -86,7 +99,8 @@ function Movimientos() {
       producto: null,
       bodega: null,
       cantidad: 0,
-      referencia: '',
+      motivoMovimiento: '',
+      documentoReferencia: '',
       observaciones: '',
     });
   };
@@ -95,13 +109,14 @@ function Movimientos() {
     if (
       !formData.tipo ||
       !formData.producto ||
-      !formData.bodega ||
-      !formData.cantidad
+      !formData.cantidad ||
+      !formData.motivoMovimiento
     ) {
       toast.current?.show({
         severity: 'warn',
         summary: 'Validación',
-        detail: 'Complete los campos requeridos',
+        detail:
+          'Complete los campos requeridos (tipo, producto, cantidad, motivo)',
         life: 3000,
       });
       return;
@@ -300,7 +315,13 @@ function Movimientos() {
             style={{ minWidth: '100px' }}
           />
           <Column
-            field="referencia"
+            field="motivoMovimiento"
+            header="Motivo"
+            sortable
+            style={{ minWidth: '150px' }}
+          />
+          <Column
+            field="documentoReferencia"
             header="Referencia"
             sortable
             style={{ minWidth: '150px' }}
@@ -344,7 +365,25 @@ function Movimientos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Bodega *
+              Motivo *
+            </label>
+            <Dropdown
+              value={formData.motivoMovimiento}
+              onChange={(e) =>
+                setFormData({ ...formData, motivoMovimiento: e.value })
+              }
+              options={motivosMovimiento}
+              placeholder="Seleccione"
+              className="w-full"
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              Bodega
             </label>
             <Dropdown
               value={formData.bodega}
@@ -397,12 +436,15 @@ function Movimientos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Referencia
+              Documento de Referencia
             </label>
             <InputText
-              value={formData.referencia}
+              value={formData.documentoReferencia}
               onChange={(e) =>
-                setFormData({ ...formData, referencia: e.target.value })
+                setFormData({
+                  ...formData,
+                  documentoReferencia: e.target.value,
+                })
               }
               className="w-full"
               placeholder="Ej: FACTURA-001"

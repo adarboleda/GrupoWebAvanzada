@@ -29,7 +29,9 @@ const seedDatabase = async () => {
     // ========== CREAR USUARIOS ==========
     console.log('👥 Creando usuarios...');
 
-    const usuarios = await Usuario.insertMany([
+    // IMPORTANTE: Usar create() en lugar de insertMany() para que se ejecute
+    // el middleware pre-save que hashea las contraseñas
+    const usuariosData = [
       {
         nombre: 'Administrador Principal',
         email: 'admin@logistica.com',
@@ -65,7 +67,14 @@ const seedDatabase = async () => {
         rol: 'operador',
         telefono: '3005553333',
       },
-    ]);
+    ];
+
+    // Crear usuarios uno por uno para ejecutar el middleware de hash
+    const usuarios = [];
+    for (const userData of usuariosData) {
+      const usuario = await Usuario.create(userData);
+      usuarios.push(usuario);
+    }
 
     console.log(`✅ ${usuarios.length} usuarios creados\n`);
 
@@ -128,7 +137,9 @@ const seedDatabase = async () => {
     // ========== CREAR PRODUCTOS ==========
     console.log('📦 Creando productos...');
 
-    const productos = await Producto.insertMany([
+    // IMPORTANTE: Usar create() en lugar de insertMany() para ejecutar
+    // el middleware pre-save que valida el stock
+    const productosData = [
       {
         nombre: 'Laptop Dell Inspiron 15',
         codigo: 'ELEC-001',
@@ -195,7 +206,14 @@ const seedDatabase = async () => {
         precio: 25000,
         bodega: bodegas[0]._id,
       },
-    ]);
+    ];
+
+    // Crear productos uno por uno para ejecutar el middleware de validación
+    const productos = [];
+    for (const productoData of productosData) {
+      const producto = await Producto.create(productoData);
+      productos.push(producto);
+    }
 
     console.log(`✅ ${productos.length} productos creados\n`);
 
@@ -204,7 +222,9 @@ const seedDatabase = async () => {
 
     const conductores = usuarios.filter((u) => u.rol === 'conductor');
 
-    const vehiculos = await Vehiculo.insertMany([
+    // IMPORTANTE: Usar create() en lugar de insertMany() para ejecutar
+    // el middleware pre-save que valida conductores asignados
+    const vehiculosData = [
       {
         placa: 'ABC123',
         marca: 'Chevrolet',
@@ -273,7 +293,14 @@ const seedDatabase = async () => {
           },
         },
       },
-    ]);
+    ];
+
+    // Crear vehículos uno por uno para ejecutar el middleware de validación
+    const vehiculos = [];
+    for (const vehiculoData of vehiculosData) {
+      const vehiculo = await Vehiculo.create(vehiculoData);
+      vehiculos.push(vehiculo);
+    }
 
     console.log(`✅ ${vehiculos.length} vehículos creados\n`);
 

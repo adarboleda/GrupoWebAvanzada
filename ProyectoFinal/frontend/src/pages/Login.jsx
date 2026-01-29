@@ -1,11 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Card } from 'primereact/card';
-import { InputText } from 'primereact/inputtext';
-import { Password } from 'primereact/password';
-import { Button } from 'primereact/button';
-import { Message } from 'primereact/message';
-import { Divider } from 'primereact/divider';
-import { classNames } from 'primereact/utils';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../context/authStore';
 import { authService } from '../services';
@@ -15,6 +8,7 @@ function Login() {
     email: '',
     password: '',
   });
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showCredentials, setShowCredentials] = useState(false);
@@ -51,26 +45,18 @@ function Login() {
       );
 
       if (response.success) {
-        // Guardar token y usuario en el store
         login(response.data.usuario, response.data.token);
-
-        // Redirigir al dashboard
         navigate('/dashboard', { replace: true });
       } else {
         setError(response.message || 'Error al iniciar sesión');
       }
     } catch (err) {
       console.error('Error en login:', err);
-
-      // Manejo de errores mejorado
       if (err.response) {
-        // Error de respuesta del servidor
         setError(err.response.data?.message || 'Credenciales incorrectas');
       } else if (err.request) {
-        // Error de red
         setError('No se pudo conectar con el servidor. Verifique su conexión.');
       } else {
-        // Otro tipo de error
         setError('Error al iniciar sesión. Intente nuevamente.');
       }
     } finally {
@@ -84,178 +70,155 @@ function Login() {
   };
 
   return (
-    <div className="flex align-items-center justify-content-center min-h-screen">
-      <Card className="w-full md:w-30rem shadow-5">
-        {/* Header del Card */}
-        <div className="text-center mb-4">
-          <i className="pi pi-box text-6xl text-primary mb-3"></i>
-          <h1 className="text-3xl font-bold text-primary mb-2">
-            Plataforma Logística
-          </h1>
-          <p className="text-500">Ingresa tus credenciales para continuar</p>
-        </div>
+    <section className="bg-gray-50 min-h-screen">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen">
+        {/* Logo */}
+        <a
+          href="#"
+          className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+        >
+          <i className="pi pi-box mr-2 text-3xl text-primary-600"></i>
+          Plataforma Logística
+        </a>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="flex flex-column gap-4">
-          {/* Mensaje de error */}
-          {error && (
-            <Message
-              severity="error"
-              text={error}
-              className="w-full"
-              icon="pi pi-times-circle"
-            />
-          )}
+        {/* Card */}
+        <div className="w-full bg-white rounded-lg shadow border border-gray-200 sm:max-w-md">
+          <div className="p-6 space-y-4 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+              Inicia sesión en tu cuenta
+            </h1>
 
-          {/* Campo Email */}
-          <div className="flex flex-column gap-2">
-            <label htmlFor="email" className="font-semibold">
-              <i className="pi pi-envelope mr-2"></i>
-              Correo Electrónico
-            </label>
-            <InputText
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="usuario@ejemplo.com"
-              className={classNames({ 'p-invalid': error })}
-              required
-              autoFocus
-              autoComplete="email"
-            />
-          </div>
-
-          {/* Campo Password */}
-          <div className="flex flex-column gap-2">
-            <label htmlFor="password" className="font-semibold">
-              <i className="pi pi-lock mr-2"></i>
-              Contraseña
-            </label>
-            <Password
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Ingrese su contraseña"
-              className={classNames('w-full', { 'p-invalid': error })}
-              inputClassName="w-full"
-              feedback={false}
-              toggleMask
-              required
-              autoComplete="current-password"
-            />
-          </div>
-
-          {/* Botón de login */}
-          <Button
-            type="submit"
-            label={loading ? 'Ingresando...' : 'Iniciar Sesión'}
-            icon="pi pi-sign-in"
-            loading={loading}
-            className="w-full mt-2"
-            size="large"
-          />
-
-          {/* Divider */}
-          <Divider align="center">
-            <span className="text-sm text-500">
-              o usa credenciales de prueba
-            </span>
-          </Divider>
-
-          {/* Toggle para mostrar credenciales */}
-          <Button
-            type="button"
-            label={
-              showCredentials
-                ? 'Ocultar credenciales'
-                : 'Ver credenciales de prueba'
-            }
-            icon={showCredentials ? 'pi pi-eye-slash' : 'pi pi-eye'}
-            onClick={() => setShowCredentials(!showCredentials)}
-            className="p-button-text p-button-sm"
-          />
-
-          {/* Credenciales de prueba */}
-          {showCredentials && (
-            <div className="surface-100 p-3 border-round">
-              <div className="flex flex-column gap-2">
-                <div className="flex justify-content-between align-items-center">
-                  <div>
-                    <strong className="text-sm">Admin</strong>
-                    <p className="text-xs text-500 mt-1 mb-0">
-                      admin@logistica.com / admin123
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    icon="pi pi-arrow-right"
-                    className="p-button-rounded p-button-sm"
-                    onClick={() =>
-                      fillCredentials('admin@logistica.com', 'admin123')
-                    }
-                    tooltip="Usar estas credenciales"
-                  />
-                </div>
-
-                <Divider className="my-2" />
-
-                <div className="flex justify-content-between align-items-center">
-                  <div>
-                    <strong className="text-sm">Operador</strong>
-                    <p className="text-xs text-500 mt-1 mb-0">
-                      operador@logistica.com / operador123
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    icon="pi pi-arrow-right"
-                    className="p-button-rounded p-button-sm"
-                    onClick={() =>
-                      fillCredentials('operador@logistica.com', 'operador123')
-                    }
-                    tooltip="Usar estas credenciales"
-                  />
-                </div>
-
-                <Divider className="my-2" />
-
-                <div className="flex justify-content-between align-items-center">
-                  <div>
-                    <strong className="text-sm">Coordinador</strong>
-                    <p className="text-xs text-500 mt-1 mb-0">
-                      coordinador@logistica.com / coordinador123
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    icon="pi pi-arrow-right"
-                    className="p-button-rounded p-button-sm"
-                    onClick={() =>
-                      fillCredentials(
-                        'coordinador@logistica.com',
-                        'coordinador123',
-                      )
-                    }
-                    tooltip="Usar estas credenciales"
-                  />
-                </div>
+            {/* Mensaje de error */}
+            {error && (
+              <div className="p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200">
+                <span className="font-medium">Error!</span> {error}
               </div>
-            </div>
-          )}
-        </form>
+            )}
 
-        {/* Footer */}
-        <div className="text-center mt-4 pt-3 border-top-1 surface-border">
-          <p className="text-xs text-500">
-            <i className="pi pi-info-circle mr-1"></i>
-            Asegúrate de que el backend esté ejecutándose en el puerto 5000
-          </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Tu correo electrónico
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
+                  placeholder="nombre@empresa.com"
+                  required
+                  autoFocus
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
+                  required
+                />
+              </div>
+
+              {/* Remember me y Ver credenciales */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="ml-2 text-sm text-gray-500"
+                  >
+                    Recuérdame
+                  </label>
+                </div>
+                <a
+                  onClick={() => setShowCredentials(!showCredentials)}
+                  className="text-sm font-medium text-primary-600 hover:underline cursor-pointer"
+                >
+                  Ver credenciales
+                </a>
+              </div>
+
+              {/* Botón */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+              </button>
+
+              {/* Credenciales de prueba */}
+              {showCredentials && (
+                <div className="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 border border-blue-200">
+                  <p className="font-medium mb-3">Credenciales de prueba:</p>
+                  <div className="space-y-2">
+                    <div
+                      onClick={() =>
+                        fillCredentials('admin@logistica.com', 'admin123')
+                      }
+                      className="p-2 bg-white rounded cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                    >
+                      <p className="font-medium text-gray-900">👤 Admin</p>
+                      <p className="text-gray-600 text-xs">
+                        admin@logistica.com / admin123
+                      </p>
+                    </div>
+                    <div
+                      onClick={() =>
+                        fillCredentials('coordinador@logistica.com', 'coord123')
+                      }
+                      className="p-2 bg-white rounded cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                    >
+                      <p className="font-medium text-gray-900">
+                        👤 Coordinador
+                      </p>
+                      <p className="text-gray-600 text-xs">
+                        coordinador@logistica.com / coord123
+                      </p>
+                    </div>
+                    <div
+                      onClick={() =>
+                        fillCredentials('operador@logistica.com', 'oper123')
+                      }
+                      className="p-2 bg-white rounded cursor-pointer hover:bg-gray-50 transition-colors border border-gray-200"
+                    >
+                      <p className="font-medium text-gray-900">👤 Operador</p>
+                      <p className="text-gray-600 text-xs">
+                        operador@logistica.com / oper123
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </form>
+          </div>
         </div>
-      </Card>
-    </div>
+      </div>
+    </section>
   );
 }
 

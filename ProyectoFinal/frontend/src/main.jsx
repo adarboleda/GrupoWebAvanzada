@@ -3,11 +3,10 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';
 
-// Importar estilos de PrimeReact
-import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Tema
-import 'primereact/resources/primereact.min.css'; // Core CSS
-import 'primeicons/primeicons.css'; // Iconos
-import 'primeflex/primeflex.css'; // Utilidades CSS
+// PrimeReact styles (needed for DataTable, Dialog, etc.)
+import 'primereact/resources/themes/lara-light-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

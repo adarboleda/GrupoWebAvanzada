@@ -1,173 +1,162 @@
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
 import { useAuthStore } from '../context/authStore';
 
 function Dashboard() {
   const { user } = useAuthStore();
 
   const stats = [
-    { label: 'Productos', value: '0', icon: 'pi-box', color: '#6D8196' },
+    { label: 'Productos', value: '0', icon: 'pi-box', color: 'bg-blue-500' },
     {
       label: 'Movimientos Hoy',
       value: '0',
       icon: 'pi-arrow-right-arrow-left',
-      color: '#4A4A4A',
+      color: 'bg-green-500',
     },
     {
       label: 'Stock Bajo',
       value: '0',
       icon: 'pi-exclamation-triangle',
-      color: '#6D8196',
+      color: 'bg-yellow-500',
     },
-    { label: 'Bodegas', value: '0', icon: 'pi-building', color: '#4A4A4A' },
+    {
+      label: 'Bodegas',
+      value: '0',
+      icon: 'pi-building',
+      color: 'bg-purple-500',
+    },
   ];
 
   return (
-    <div className="flex flex-column gap-4">
-      <div className="flex justify-content-between align-items-center">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
-          <p className="text-500">Bienvenido, {user?.nombre}</p>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-1">Bienvenido, {user?.nombre}</p>
       </div>
 
       {/* Estadísticas */}
-      <div className="grid">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="col-12 md:col-6 lg:col-3">
-            <Card className="shadow-2">
-              <div className="flex justify-content-between align-items-center">
-                <div>
-                  <div className="text-500 mb-2">{stat.label}</div>
-                  <div className="text-4xl font-bold">{stat.value}</div>
-                </div>
-                <i
-                  className={`pi ${stat.icon} text-4xl`}
-                  style={{ color: stat.color }}
-                ></i>
+          <div
+            key={index}
+            className="bg-white rounded-lg shadow p-6 border border-gray-200"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  {stat.label}
+                </p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">
+                  {stat.value}
+                </p>
               </div>
-            </Card>
+              <div className={`${stat.color} rounded-full p-3 text-white`}>
+                <i className={`pi ${stat.icon} text-2xl`}></i>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Módulos Implementados */}
-      <Card title="✅ Sistema Completamente Implementado" className="shadow-2">
-        <p className="mb-3">Todos los módulos del sistema están operativos:</p>
+      <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          ✅ Sistema Completamente Implementado
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Todos los módulos del sistema están operativos:
+        </p>
 
-        <div className="grid">
-          <div className="col-12 md:col-6">
-            <h3
-              className="text-lg font-semibold mb-2"
-              style={{ color: 'var(--color-primary)' }}
-            >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Módulo 1 */}
+          <div>
+            <h3 className="text-lg font-semibold text-primary-600 mb-3">
               Módulo 1: Usuarios y Autenticación
             </h3>
-            <ul className="list-disc pl-4">
-              <li>✅ Registro de personal (4 roles)</li>
-              <li>✅ Login con JWT</li>
-              <li>✅ Gestión de perfil</li>
-              <li>✅ Control de roles y permisos</li>
+            <ul className="space-y-2 text-gray-700">
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Registro de personal
+                (4 roles)
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Login con JWT
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Gestión de perfil
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Control de roles y
+                permisos
+              </li>
             </ul>
           </div>
 
-          <div className="col-12 md:col-6">
-            <h3
-              className="text-lg font-semibold mb-2"
-              style={{ color: 'var(--color-primary)' }}
-            >
+          {/* Módulo 2 */}
+          <div>
+            <h3 className="text-lg font-semibold text-primary-600 mb-3">
               Módulo 2: Inventario y Bodegas
             </h3>
-            <ul className="list-disc pl-4">
-              <li>✅ CRUD de Bodegas</li>
-              <li>✅ CRUD de Productos</li>
-              <li>✅ Movimientos (entrada/salida)</li>
-              <li>✅ Transferencias entre bodegas</li>
+            <ul className="space-y-2 text-gray-700">
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> CRUD de Bodegas
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> CRUD de Productos
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Movimientos
+                (entrada/salida)
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Transferencias entre
+                bodegas
+              </li>
             </ul>
           </div>
 
-          <div className="col-12 md:col-6">
-            <h3
-              className="text-lg font-semibold mb-2"
-              style={{ color: 'var(--color-primary)' }}
-            >
+          {/* Módulo 3 */}
+          <div>
+            <h3 className="text-lg font-semibold text-primary-600 mb-3">
               Módulo 3: Rutas y Transporte
             </h3>
-            <ul className="list-disc pl-4">
-              <li>✅ CRUD de Vehículos</li>
-              <li>✅ Asignación de conductores</li>
-              <li>✅ Creación de rutas</li>
-              <li>✅ Control de estados</li>
+            <ul className="space-y-2 text-gray-700">
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> CRUD de Vehículos
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Asignación de
+                conductores
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Creación de rutas
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Control de estados
+              </li>
             </ul>
           </div>
 
-          <div className="col-12 md:col-6">
-            <h3
-              className="text-lg font-semibold mb-2"
-              style={{ color: 'var(--color-primary)' }}
-            >
+          {/* Módulo 4 */}
+          <div>
+            <h3 className="text-lg font-semibold text-primary-600 mb-3">
               Módulo 4: Entregas y Seguimiento
             </h3>
-            <ul className="list-disc pl-4">
-              <li>✅ Registro de entregas</li>
-              <li>✅ Estados de entrega</li>
-              <li>✅ Tracking GPS simulado</li>
-              <li>✅ Historial de entregas</li>
+            <ul className="space-y-2 text-gray-700">
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Registro de entregas
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Estados de entrega
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Tracking GPS simulado
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-green-500">✓</span> Historial de entregas
+              </li>
             </ul>
           </div>
         </div>
-
-        <div
-          className="mt-4 p-3"
-          style={{
-            backgroundColor: 'var(--color-accent)',
-            borderRadius: '8px',
-            border: '1px solid var(--color-border)',
-          }}
-        >
-          <p
-            className="font-semibold mb-2"
-            style={{ color: 'var(--color-secondary)' }}
-          >
-            🎨 Diseño actualizado con paleta oficial:
-          </p>
-          <div className="flex gap-2 align-items-center">
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#6D8196',
-                borderRadius: '4px',
-              }}
-            ></div>
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#4A4A4A',
-                borderRadius: '4px',
-              }}
-            ></div>
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#FFFFE3',
-                border: '1px solid #CBCBCB',
-                borderRadius: '4px',
-              }}
-            ></div>
-            <div
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#CBCBCB',
-                borderRadius: '4px',
-              }}
-            ></div>
-          </div>
-        </div>
-      </Card>
+      </div>
     </div>
   );
 }

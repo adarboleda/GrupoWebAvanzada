@@ -24,13 +24,13 @@ function Bodegas() {
   });
 
   const [formData, setFormData] = useState({
-    codigo: '',
     nombre: '',
-    direccion: '',
+    calle: '',
     ciudad: '',
-    capacidad_m3: 0,
-    telefono: '',
-    responsable: '',
+    estado: '',
+    codigoPostal: '',
+    capacidadMaxima: 0,
+    descripcion: '',
   });
 
   useEffect(() => {
@@ -65,13 +65,13 @@ function Bodegas() {
   const abrirDialogoEditar = (bodega) => {
     setFormData({
       _id: bodega._id,
-      codigo: bodega.codigo,
       nombre: bodega.nombre,
-      direccion: bodega.direccion,
-      ciudad: bodega.ciudad,
-      capacidad_m3: bodega.capacidad_m3,
-      telefono: bodega.telefono || '',
-      responsable: bodega.responsable || '',
+      calle: bodega.direccion?.calle || '',
+      ciudad: bodega.direccion?.ciudad || '',
+      estado: bodega.direccion?.estado || '',
+      codigoPostal: bodega.direccion?.codigoPostal || '',
+      capacidadMaxima: bodega.capacidadMaxima || 0,
+      descripcion: bodega.descripcion || '',
     });
     setEditMode(true);
     setShowDialog(true);
@@ -79,22 +79,28 @@ function Bodegas() {
 
   const resetFormulario = () => {
     setFormData({
-      codigo: '',
       nombre: '',
-      direccion: '',
+      calle: '',
       ciudad: '',
-      capacidad_m3: 0,
-      telefono: '',
-      responsable: '',
+      estado: '',
+      codigoPostal: '',
+      capacidadMaxima: 0,
+      descripcion: '',
     });
   };
 
   const handleSubmit = async () => {
-    if (!formData.codigo || !formData.nombre || !formData.direccion) {
+    if (
+      !formData.nombre ||
+      !formData.calle ||
+      !formData.ciudad ||
+      !formData.estado
+    ) {
       toast.current?.show({
         severity: 'warn',
         summary: 'Validación',
-        detail: 'Complete los campos requeridos',
+        detail:
+          'Complete los campos requeridos (nombre, calle, ciudad, estado)',
         life: 3000,
       });
       return;
@@ -102,11 +108,24 @@ function Bodegas() {
 
     setLoading(true);
     try {
+      // Formatear datos según el modelo del backend
+      const dataToSend = {
+        nombre: formData.nombre,
+        direccion: {
+          calle: formData.calle,
+          ciudad: formData.ciudad,
+          estado: formData.estado,
+          codigoPostal: formData.codigoPostal,
+        },
+        capacidadMaxima: formData.capacidadMaxima,
+        descripcion: formData.descripcion,
+      };
+
       let response;
       if (editMode) {
-        response = await bodegaService.actualizar(formData._id, formData);
+        response = await bodegaService.actualizar(formData._id, dataToSend);
       } else {
-        response = await bodegaService.crear(formData);
+        response = await bodegaService.crear(dataToSend);
       }
 
       if (response.success) {
@@ -169,14 +188,15 @@ function Bodegas() {
 
   const toggleActivo = async (bodega) => {
     try {
+      const nuevoEstado = bodega.estado === 'activa' ? 'inactiva' : 'activa';
       const response = await bodegaService.actualizar(bodega._id, {
-        activo: !bodega.activo,
+        estado: nuevoEstado,
       });
       if (response.success) {
         toast.current?.show({
           severity: 'success',
           summary: 'Éxito',
-          detail: `Bodega ${bodega.activo ? 'desactivada' : 'activada'}`,
+          detail: `Bodega ${nuevoEstado === 'activa' ? 'activada' : 'desactivada'}`,
           life: 3000,
         });
         cargarBodegas();
@@ -192,17 +212,19 @@ function Bodegas() {
   };
 
   // Templates
-  const activoTemplate = (rowData) => {
+  const estadoTemplate = (rowData) => {
     return (
       <Tag
-        value={rowData.activo ? 'Activa' : 'Inactiva'}
-        severity={rowData.activo ? 'success' : 'danger'}
+        value={rowData.estado === 'activa' ? 'Activa' : 'Inactiva'}
+        severity={rowData.estado === 'activa' ? 'success' : 'danger'}
       />
     );
   };
 
   const capacidadTemplate = (rowData) => {
-    return `${rowData.capacidad_m3} m³`;
+    return rowData.capacidadMaxima
+      ? `${rowData.capacidadMaxima.toLocaleString('es-CO')} unidades`
+      : 'N/A';
   };
 
   const accionesTemplate = (rowData) => {
@@ -217,12 +239,12 @@ function Bodegas() {
           tooltip="Editar"
         />
         <Button
-          icon={rowData.activo ? 'pi pi-ban' : 'pi pi-check'}
+          icon={rowData.estado === 'activa' ? 'pi pi-ban' : 'pi pi-check'}
           rounded
           outlined
           severity="warning"
           onClick={() => toggleActivo(rowData)}
-          tooltip={rowData.activo ? 'Desactivar' : 'Activar'}
+          tooltip={rowData.estado === 'activa' ? 'Desactivar' : 'Activar'}
         />
         <Button
           icon="pi pi-trash"
@@ -313,17 +335,16 @@ function Bodegas() {
           rows={10}
           rowsPerPageOptions={[5, 10, 25, 50]}
           filters={filters}
-          globalFilterFields={['codigo', 'nombre', 'ciudad', 'responsable']}
+          globalFilterFields={[
+            'nombre',
+            'direccion.ciudad',
+            'direccion.calle',
+            'descripcion',
+          ]}
           emptyMessage="No se encontraron bodegas"
           stripedRows
           style={{ border: '1px solid var(--color-border)' }}
         >
-          <Column
-            field="codigo"
-            header="Código"
-            sortable
-            style={{ minWidth: '100px' }}
-          />
           <Column
             field="nombre"
             header="Nombre"
@@ -331,34 +352,34 @@ function Bodegas() {
             style={{ minWidth: '200px' }}
           />
           <Column
-            field="ciudad"
+            field="direccion.ciudad"
             header="Ciudad"
             sortable
             style={{ minWidth: '150px' }}
           />
           <Column
-            field="direccion"
+            field="direccion.calle"
             header="Dirección"
             sortable
             style={{ minWidth: '250px' }}
           />
           <Column
-            field="capacidad_m3"
+            field="capacidadMaxima"
             header="Capacidad"
             body={capacidadTemplate}
             sortable
             style={{ minWidth: '120px' }}
           />
           <Column
-            field="responsable"
-            header="Responsable"
+            field="descripcion"
+            header="Descripción"
             sortable
-            style={{ minWidth: '150px' }}
+            style={{ minWidth: '200px' }}
           />
           <Column
-            field="activo"
+            field="estado"
             header="Estado"
-            body={activoTemplate}
+            body={estadoTemplate}
             sortable
             style={{ minWidth: '100px' }}
           />
@@ -379,39 +400,6 @@ function Bodegas() {
         footer={dialogFooter}
       >
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-1">
-            <label
-              className="block mb-2 font-semibold"
-              style={{ color: 'var(--color-secondary)' }}
-            >
-              Código *
-            </label>
-            <InputText
-              value={formData.codigo}
-              onChange={(e) =>
-                setFormData({ ...formData, codigo: e.target.value })
-              }
-              className="w-full"
-              disabled={editMode}
-            />
-          </div>
-
-          <div className="col-span-1">
-            <label
-              className="block mb-2 font-semibold"
-              style={{ color: 'var(--color-secondary)' }}
-            >
-              Ciudad *
-            </label>
-            <InputText
-              value={formData.ciudad}
-              onChange={(e) =>
-                setFormData({ ...formData, ciudad: e.target.value })
-              }
-              className="w-full"
-            />
-          </div>
-
           <div className="col-span-2">
             <label
               className="block mb-2 font-semibold"
@@ -433,14 +421,15 @@ function Bodegas() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Dirección *
+              Calle / Dirección *
             </label>
             <InputText
-              value={formData.direccion}
+              value={formData.calle}
               onChange={(e) =>
-                setFormData({ ...formData, direccion: e.target.value })
+                setFormData({ ...formData, calle: e.target.value })
               }
               className="w-full"
+              placeholder="Ej: Calle 100 #15-20"
             />
           </div>
 
@@ -449,34 +438,71 @@ function Bodegas() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Capacidad (m³)
+              Ciudad *
+            </label>
+            <InputText
+              value={formData.ciudad}
+              onChange={(e) =>
+                setFormData({ ...formData, ciudad: e.target.value })
+              }
+              className="w-full"
+              placeholder="Ej: Bogotá"
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              Estado/Departamento *
+            </label>
+            <InputText
+              value={formData.estado}
+              onChange={(e) =>
+                setFormData({ ...formData, estado: e.target.value })
+              }
+              className="w-full"
+              placeholder="Ej: Cundinamarca"
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              Código Postal
+            </label>
+            <InputText
+              value={formData.codigoPostal}
+              onChange={(e) =>
+                setFormData({ ...formData, codigoPostal: e.target.value })
+              }
+              className="w-full"
+              placeholder="5 dígitos"
+              maxLength={5}
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              Capacidad Máxima
             </label>
             <InputText
               type="number"
-              value={formData.capacidad_m3}
+              value={formData.capacidadMaxima}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  capacidad_m3: parseFloat(e.target.value) || 0,
+                  capacidadMaxima: parseInt(e.target.value) || 0,
                 })
               }
               className="w-full"
-            />
-          </div>
-
-          <div className="col-span-1">
-            <label
-              className="block mb-2 font-semibold"
-              style={{ color: 'var(--color-secondary)' }}
-            >
-              Teléfono
-            </label>
-            <InputText
-              value={formData.telefono}
-              onChange={(e) =>
-                setFormData({ ...formData, telefono: e.target.value })
-              }
-              className="w-full"
+              placeholder="Unidades"
             />
           </div>
 
@@ -485,14 +511,15 @@ function Bodegas() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Responsable
+              Descripción
             </label>
             <InputText
-              value={formData.responsable}
+              value={formData.descripcion}
               onChange={(e) =>
-                setFormData({ ...formData, responsable: e.target.value })
+                setFormData({ ...formData, descripcion: e.target.value })
               }
               className="w-full"
+              placeholder="Descripción de la bodega"
             />
           </div>
         </div>
