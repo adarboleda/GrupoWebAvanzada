@@ -70,19 +70,19 @@ function Login() {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen">
+    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md px-6 py-8">
         {/* Logo */}
         <a
           href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
+          className="flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900"
         >
           <i className="pi pi-box mr-2 text-3xl text-primary-600"></i>
           Plataforma Logística
         </a>
 
         {/* Card */}
-        <div className="w-full bg-white rounded-lg shadow border border-gray-200 sm:max-w-md">
+        <div className="w-full bg-white rounded-lg shadow border border-gray-200">
           <div className="p-6 space-y-4 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Inicia sesión en tu cuenta

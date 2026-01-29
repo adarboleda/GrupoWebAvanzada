@@ -271,8 +271,20 @@ function Bodegas() {
 
   const rightToolbarTemplate = () => {
     return (
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
+      <span
+        className="p-input-icon-left"
+        style={{ position: 'relative', display: 'inline-block' }}
+      >
+        <i
+          className="pi pi-search"
+          style={{
+            position: 'absolute',
+            left: '12px',
+            top: '65%',
+            transform: 'translateY(-50%)',
+            color: '#6b7280',
+          }}
+        />
         <InputText
           value={globalFilter}
           onChange={(e) => {
@@ -285,7 +297,7 @@ function Bodegas() {
             });
           }}
           placeholder="Buscar bodegas..."
-          style={{ width: '300px' }}
+          style={{ width: '300px', paddingLeft: '36px' }}
         />
       </span>
     );
