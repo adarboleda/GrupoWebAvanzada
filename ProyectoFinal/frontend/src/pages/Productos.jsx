@@ -33,16 +33,27 @@ function Productos() {
     categoria: '',
     precio: 0,
     stock_minimo: 0,
+    unidadMedida: 'unidad',
+    imagen: '',
     bodega: null,
   });
 
   const categorias = [
-    { label: 'Alimentos', value: 'alimentos' },
-    { label: 'Bebidas', value: 'bebidas' },
-    { label: 'Limpieza', value: 'limpieza' },
-    { label: 'Electrónica', value: 'electronica' },
-    { label: 'Oficina', value: 'oficina' },
-    { label: 'Otros', value: 'otros' },
+    { label: 'Electrónica', value: 'Electrónica' },
+    { label: 'Alimentos', value: 'Alimentos' },
+    { label: 'Textil', value: 'Textil' },
+    { label: 'Farmacéutico', value: 'Farmacéutico' },
+    { label: 'Industrial', value: 'Industrial' },
+    { label: 'Otro', value: 'Otro' },
+  ];
+
+  const unidadesMedida = [
+    { label: 'Unidad', value: 'unidad' },
+    { label: 'Kilogramo', value: 'kg' },
+    { label: 'Litro', value: 'litro' },
+    { label: 'Metro', value: 'metro' },
+    { label: 'Caja', value: 'caja' },
+    { label: 'Pallet', value: 'pallet' },
   ];
 
   useEffect(() => {
@@ -90,6 +101,8 @@ function Productos() {
       categoria: producto.categoria,
       precio: producto.precio,
       stock_minimo: producto.stock_minimo,
+      unidadMedida: producto.unidadMedida || 'unidad',
+      imagen: producto.imagen || '',
       bodega: producto.bodega?._id || null,
     });
     setEditMode(true);
@@ -104,6 +117,8 @@ function Productos() {
       categoria: '',
       precio: 0,
       stock_minimo: 0,
+      unidadMedida: 'unidad',
+      imagen: '',
       bodega: null,
     });
   };
@@ -211,11 +226,24 @@ function Productos() {
   };
 
   // Templates para columnas
+  const imagenTemplate = (rowData) => {
+    return (
+      <img
+        src={rowData.imagen || 'https://via.placeholder.com/50'}
+        alt={rowData.nombre}
+        className="w-12 h-12 object-cover rounded"
+        onError={(e) => {
+          e.target.src = 'https://via.placeholder.com/50';
+        }}
+      />
+    );
+  };
+
   const stockTemplate = (rowData) => {
     const isLow = rowData.stock_actual <= rowData.stock_minimo;
     return (
       <Tag
-        value={rowData.stock_actual}
+        value={`${rowData.stock_actual} ${rowData.unidadMedida || 'unidad'}`}
         severity={isLow ? 'danger' : 'success'}
         icon={isLow ? 'pi pi-exclamation-triangle' : 'pi pi-check'}
       />
@@ -366,6 +394,11 @@ function Productos() {
           style={{ border: '1px solid var(--color-border)' }}
         >
           <Column
+            header="Imagen"
+            body={imagenTemplate}
+            style={{ minWidth: '80px' }}
+          />
+          <Column
             field="codigo"
             header="Código"
             sortable
@@ -388,7 +421,7 @@ function Productos() {
             header="Stock"
             body={stockTemplate}
             sortable
-            style={{ minWidth: '100px' }}
+            style={{ minWidth: '130px' }}
           />
           <Column
             field="precio"
@@ -527,7 +560,25 @@ function Productos() {
               className="block mb-2 font-semibold"
               style={{ color: 'var(--color-secondary)' }}
             >
-              Bodega
+              Unidad de Medida
+            </label>
+            <Dropdown
+              value={formData.unidadMedida}
+              onChange={(e) =>
+                setFormData({ ...formData, unidadMedida: e.value })
+              }
+              options={unidadesMedida}
+              placeholder="Seleccione"
+              className="w-full"
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              Bodega *
             </label>
             <Dropdown
               value={formData.bodega}
@@ -535,6 +586,23 @@ function Productos() {
               options={bodegas.map((b) => ({ label: b.nombre, value: b._id }))}
               placeholder="Seleccione"
               className="w-full"
+            />
+          </div>
+
+          <div className="col-span-2">
+            <label
+              className="block mb-2 font-semibold"
+              style={{ color: 'var(--color-secondary)' }}
+            >
+              URL de Imagen
+            </label>
+            <InputText
+              value={formData.imagen}
+              onChange={(e) =>
+                setFormData({ ...formData, imagen: e.target.value })
+              }
+              className="w-full"
+              placeholder="https://ejemplo.com/imagen.jpg"
             />
           </div>
         </div>

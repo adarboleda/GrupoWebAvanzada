@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useAuthStore } from '../context/authStore';
 import { useNavigate } from 'react-router-dom';
 
-function Navbar({ onToggleSidebar }) {
+function Navbar({ onToggleSidebar, onOpenProfile }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -40,27 +42,53 @@ function Navbar({ onToggleSidebar }) {
               </span>
             </button>
 
-            {/* User Info */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-600 text-white font-semibold">
-                {user?.nombre?.charAt(0).toUpperCase()}
-              </div>
-              <div className="hidden md:block">
-                <p className="text-sm font-semibold text-gray-900">
-                  {user?.nombre}
-                </p>
-                <p className="text-xs text-gray-500 capitalize">{user?.rol}</p>
-              </div>
-            </div>
+            {/* User Info with Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-3 p-1 rounded-lg hover:bg-gray-100 focus:outline-none"
+              >
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-600 text-white font-semibold">
+                  {user?.nombre?.charAt(0).toUpperCase()}
+                </div>
+                <div className="hidden md:block text-left">
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user?.nombre}
+                  </p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {user?.rol}
+                  </p>
+                </div>
+                <i className="pi pi-chevron-down text-gray-500 text-sm hidden md:block"></i>
+              </button>
 
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className="p-2 text-red-600 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-200"
-              title="Cerrar Sesión"
-            >
-              <i className="pi pi-sign-out text-xl"></i>
-            </button>
+              {/* Dropdown Menu */}
+              {showUserMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onOpenProfile && onOpenProfile();
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+                  >
+                    <i className="pi pi-user"></i>
+                    Mi Perfil
+                  </button>
+                  <hr className="my-1 border-gray-200" />
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      handleLogout();
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  >
+                    <i className="pi pi-sign-out"></i>
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

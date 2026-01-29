@@ -313,14 +313,220 @@ function Rutas() {
     return rowData.bodega?.nombre || 'N/A';
   };
 
+  // Estado para la lista de rutas
+  const [rutas, setRutas] = useState([]);
+  const [loadingRutas, setLoadingRutas] = useState(false);
+  const [showTrackingDialog, setShowTrackingDialog] = useState(false);
+  const [rutaSeleccionada, setRutaSeleccionada] = useState(null);
+  const [trackingData, setTrackingData] = useState([]);
+
+  // Cargar lista de rutas
+  const cargarRutas = async () => {
+    setLoadingRutas(true);
+    try {
+      const response = await api.get('/rutas?limit=50');
+      if (response.data.success) {
+        setRutas(response.data.data.rutas);
+      }
+    } catch (error) {
+      console.error('Error cargando rutas:', error);
+    } finally {
+      setLoadingRutas(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarRutas();
+  }, []);
+
+  // Templates para la tabla de rutas
+  const estadoRutaTemplate = (rowData) => {
+    const estados = {
+      planificada: { label: 'Planificada', severity: 'info' },
+      en_transito: { label: 'En Tránsito', severity: 'warning' },
+      completada: { label: 'Completada', severity: 'success' },
+      cancelada: { label: 'Cancelada', severity: 'danger' },
+    };
+    const estado = estados[rowData.estado] || {
+      label: rowData.estado,
+      severity: 'info',
+    };
+    return <Tag value={estado.label} severity={estado.severity} />;
+  };
+
+  const fechaTemplate = (rowData) => {
+    if (!rowData.fecha_programada) return 'N/A';
+    return new Date(rowData.fecha_programada).toLocaleString('es-CO', {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    });
+  };
+
+  const conductorRutaTemplate = (rowData) => {
+    return rowData.conductor?.nombre || 'Sin asignar';
+  };
+
+  const vehiculoRutaTemplate = (rowData) => {
+    if (!rowData.vehiculo) return 'N/A';
+    return `${rowData.vehiculo.placa} - ${rowData.vehiculo.marca}`;
+  };
+
+  const accionesRutaTemplate = (rowData) => {
+    return (
+      <div className="flex gap-2">
+        {rowData.estado === 'planificada' && (
+          <Button
+            icon="pi pi-play"
+            rounded
+            outlined
+            severity="success"
+            tooltip="Iniciar Ruta"
+            onClick={() => iniciarRutaHandler(rowData)}
+          />
+        )}
+        {rowData.estado === 'en_transito' && (
+          <>
+            <Button
+              icon="pi pi-map-marker"
+              rounded
+              outlined
+              severity="info"
+              tooltip="Ver Tracking"
+              onClick={() => verTracking(rowData)}
+            />
+            <Button
+              icon="pi pi-check-circle"
+              rounded
+              outlined
+              severity="success"
+              tooltip="Completar Ruta"
+              onClick={() => completarRutaHandler(rowData)}
+            />
+          </>
+        )}
+        {rowData.estado !== 'completada' && rowData.estado !== 'cancelada' && (
+          <Button
+            icon="pi pi-times"
+            rounded
+            outlined
+            severity="danger"
+            tooltip="Cancelar Ruta"
+            onClick={() => cancelarRutaHandler(rowData)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const iniciarRutaHandler = async (ruta) => {
+    try {
+      const response = await api.post(`/rutas/${ruta._id}/iniciar`);
+      if (response.data.success) {
+        toast.current?.show({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Ruta iniciada correctamente',
+          life: 3000,
+        });
+        cargarRutas();
+      }
+    } catch (error) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: error.response?.data?.message || 'No se pudo iniciar la ruta',
+        life: 3000,
+      });
+    }
+  };
+
+  const completarRutaHandler = async (ruta) => {
+    confirmDialog({
+      message: '¿Está seguro de completar esta ruta?',
+      header: 'Confirmar',
+      icon: 'pi pi-check-circle',
+      accept: async () => {
+        try {
+          const response = await api.patch(`/rutas/${ruta._id}/estado`, {
+            estado: 'completada',
+          });
+          if (response.data.success) {
+            toast.current?.show({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Ruta completada correctamente',
+              life: 3000,
+            });
+            cargarRutas();
+          }
+        } catch (error) {
+          toast.current?.show({
+            severity: 'error',
+            summary: 'Error',
+            detail:
+              error.response?.data?.message || 'No se pudo completar la ruta',
+            life: 3000,
+          });
+        }
+      },
+    });
+  };
+
+  const cancelarRutaHandler = async (ruta) => {
+    confirmDialog({
+      message: '¿Está seguro de cancelar esta ruta?',
+      header: 'Confirmar Cancelación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: async () => {
+        try {
+          const response = await api.patch(`/rutas/${ruta._id}/estado`, {
+            estado: 'cancelada',
+            motivo_cancelacion: 'Cancelada por el usuario',
+          });
+          if (response.data.success) {
+            toast.current?.show({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Ruta cancelada',
+              life: 3000,
+            });
+            cargarRutas();
+          }
+        } catch (error) {
+          toast.current?.show({
+            severity: 'error',
+            summary: 'Error',
+            detail:
+              error.response?.data?.message || 'No se pudo cancelar la ruta',
+            life: 3000,
+          });
+        }
+      },
+    });
+  };
+
+  const verTracking = async (ruta) => {
+    setRutaSeleccionada(ruta);
+    try {
+      const response = await api.get(`/rutas/${ruta._id}/tracking`);
+      if (response.data.success) {
+        setTrackingData(response.data.data.tracking || []);
+      }
+    } catch (error) {
+      console.error('Error obteniendo tracking:', error);
+      setTrackingData([]);
+    }
+    setShowTrackingDialog(true);
+  };
+
   return (
     <div className="p-4">
       <Toast ref={toast} />
       <ConfirmDialog />
 
       <Card
-        title="Gestión de Rutas"
-        className="shadow-lg"
+        title="Gestión de Rutas y Entregas"
+        className="shadow-lg mb-4"
         style={{ backgroundColor: 'var(--color-surface)' }}
       >
         <Toolbar
@@ -332,6 +538,14 @@ function Rutas() {
               onClick={abrirDialogoCrear}
             />
           )}
+          right={() => (
+            <Button
+              icon="pi pi-refresh"
+              outlined
+              onClick={cargarRutas}
+              tooltip="Actualizar"
+            />
+          )}
           className="mb-4"
           style={{
             backgroundColor: 'var(--color-accent)',
@@ -339,35 +553,112 @@ function Rutas() {
           }}
         />
 
-        <div
-          className="text-center py-6"
-          style={{
-            backgroundColor: 'var(--color-accent)',
-            borderRadius: '8px',
-            border: '1px solid var(--color-border)',
-          }}
+        <DataTable
+          value={rutas}
+          loading={loadingRutas}
+          paginator
+          rows={10}
+          rowsPerPageOptions={[5, 10, 25]}
+          emptyMessage="No hay rutas registradas"
+          stripedRows
+          style={{ border: '1px solid var(--color-border)' }}
         >
-          <i
-            className="pi pi-map mb-3"
-            style={{ fontSize: '4rem', color: 'var(--color-primary)' }}
-          ></i>
-          <h3
-            className="mb-2"
-            style={{ fontSize: '1.5rem', color: 'var(--color-secondary)' }}
-          >
-            Lista de Rutas
-          </h3>
-          <p className="mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-            La vista de lista de rutas se implementará próximamente
-          </p>
-          <Button
-            label="Crear Primera Ruta"
-            icon="pi pi-plus"
-            onClick={abrirDialogoCrear}
-            outlined
+          <Column
+            field="numeroRuta"
+            header="# Ruta"
+            sortable
+            style={{ minWidth: '120px' }}
           />
-        </div>
+          <Column
+            field="origen.nombre"
+            header="Origen"
+            sortable
+            style={{ minWidth: '150px' }}
+          />
+          <Column
+            field="destino.nombre"
+            header="Destino"
+            sortable
+            style={{ minWidth: '150px' }}
+          />
+          <Column
+            header="Fecha Programada"
+            body={fechaTemplate}
+            sortable
+            style={{ minWidth: '160px' }}
+          />
+          <Column
+            header="Conductor"
+            body={conductorRutaTemplate}
+            style={{ minWidth: '150px' }}
+          />
+          <Column
+            header="Vehículo"
+            body={vehiculoRutaTemplate}
+            style={{ minWidth: '150px' }}
+          />
+          <Column
+            header="Estado"
+            body={estadoRutaTemplate}
+            sortable
+            style={{ minWidth: '120px' }}
+          />
+          <Column
+            header="Acciones"
+            body={accionesRutaTemplate}
+            style={{ minWidth: '180px' }}
+          />
+        </DataTable>
       </Card>
+
+      {/* Dialog de Tracking */}
+      <Dialog
+        header={`Tracking - Ruta ${rutaSeleccionada?.numeroRuta || ''}`}
+        visible={showTrackingDialog}
+        style={{ width: '600px' }}
+        onHide={() => setShowTrackingDialog(false)}
+        modal
+      >
+        {trackingData.length > 0 ? (
+          <div className="space-y-3">
+            {trackingData.map((punto, index) => (
+              <div
+                key={index}
+                className="p-3 border rounded"
+                style={{ backgroundColor: 'var(--color-accent)' }}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <Tag value={`Punto ${index + 1}`} severity="info" />
+                  <span className="text-sm text-gray-500">
+                    {new Date(punto.fecha).toLocaleString('es-CO')}
+                  </span>
+                </div>
+                <p className="text-sm">
+                  <strong>Ubicación:</strong> {punto.latitud.toFixed(6)},{' '}
+                  {punto.longitud.toFixed(6)}
+                </p>
+                {punto.velocidad > 0 && (
+                  <p className="text-sm">
+                    <strong>Velocidad:</strong> {punto.velocidad} km/h
+                  </p>
+                )}
+                {punto.observacion && (
+                  <p className="text-sm">
+                    <strong>Obs:</strong> {punto.observacion}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <i className="pi pi-map-marker text-4xl text-gray-400 mb-3"></i>
+            <p className="text-gray-500">
+              No hay datos de tracking disponibles
+            </p>
+          </div>
+        )}
+      </Dialog>
 
       {/* Dialog para crear ruta */}
       <Dialog
