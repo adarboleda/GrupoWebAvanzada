@@ -3,8 +3,10 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './config/mongo.js';
+import sequelize from './config/database.js';
+import { syncDatabase } from './models/index.js';
 import clienteRoutes from './routes/cliente.routes.js';
+import reportesRoutes from './routes/reportes.routes.js';
 
 // Obtener la ruta del directorio actual (compatibilidad con ES Modules)
 const __filename = fileURLToPath(import.meta.url);
@@ -22,19 +24,26 @@ app.use(cors());
 
 // Rutas
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 // Función para iniciar el servidor
 async function startServer() {
   try {
-    // Conectar a la base de datos primero
-    await connectDB();
+    // Conectar a la base de datos MySQL
+    await sequelize.authenticate();
+    console.log('✅ Conexión a MySQL establecida correctamente');
 
-    // Iniciar el servidor solo después de conectar a MongoDB
+    // Sincronizar modelos con la base de datos
+    await syncDatabase(false); // false = no eliminar tablas existentes
+
+    // Iniciar el servidor solo después de conectar a MySQL
     app.listen(PORT, () => {
-      console.log(`Servidor Banco Peluche escuchando en http://localhost:${PORT}`);
+      console.log(
+        `🚀 Servidor Banco Pichincha escuchando en http://localhost:${PORT}`,
+      );
     });
   } catch (error) {
-    console.error('Error al iniciar el servidor:', error);
+    console.error('❌ Error al iniciar el servidor:', error);
     process.exit(1);
   }
 }

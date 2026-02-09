@@ -1,77 +1,118 @@
-import mongoose from 'mongoose';
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../config/database.js';
 
-const transaccionSchema = new mongoose.Schema(
+// Crear clase Transaccion
+class Transaccion extends Model {}
+
+// Definir el modelo Transaccion
+Transaccion.init(
   {
-    // Tipo de transacción
-    tipo: {
-      type: String,
-      enum: ['DEPOSITO', 'TRANSFERENCIA_ENVIADA', 'TRANSFERENCIA_RECIBIDA'],
-      required: true,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    // Monto de la transacción
+    tipoTransaccion: {
+      type: DataTypes.ENUM('RECARGA', 'TRANSFERENCIA', 'RETIRO', 'PAGO'),
+      allowNull: false,
+    },
+    origenId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clientes',
+        key: 'id',
+      },
+      comment: 'Cliente que realiza la transacción',
+    },
+    destinoId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'clientes',
+        key: 'id',
+      },
+      comment: 'Cliente que recibe la transacción',
+    },
+    cuentaOrigenId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'cuentas',
+        key: 'id',
+      },
+      comment: 'Cuenta origen de la transacción',
+    },
+    cuentaDestinoId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'cuentas',
+        key: 'id',
+      },
+      comment: 'Cuenta destino de la transacción',
+    },
     monto: {
-      type: Number,
-      required: [true, 'El monto es requerido'],
-      min: [0.01, 'El monto mínimo es $0.01'],
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: false,
+      validate: {
+        min: {
+          args: [0.01],
+          msg: 'El monto debe ser mayor a 0',
+        },
+      },
     },
-    // Descripción opcional
-    descripcion: {
-      type: String,
-      trim: true,
-      default: '',
+    comision: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
-    // Cliente que realiza la transacción
-    clienteOrigen: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Cliente',
-      required: true,
+    montoTotal: {
+      type: DataTypes.DECIMAL(15, 2),
+      allowNull: false,
+      comment: 'Monto + comisión',
     },
-    // Cliente destino (solo para transferencias)
-    clienteDestino: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Cliente',
-    },
-    // Código DEUNA usado en la transferencia
-    codigoDeuna: {
-      type: String,
-    },
-    // Saldo después de la transacción
-    saldoResultante: {
-      type: Number,
-      required: true,
-    },
-    // Estado de la transacción
     estado: {
-      type: String,
-      enum: ['COMPLETADA', 'PENDIENTE', 'FALLIDA'],
-      default: 'COMPLETADA',
+      type: DataTypes.ENUM('PENDIENTE', 'CONFIRMADA', 'FALLIDA', 'REVERSADA'),
+      allowNull: false,
+      defaultValue: 'PENDIENTE',
     },
-    // Código de referencia único
+    descripcion: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
     referencia: {
-      type: String,
+      type: DataTypes.STRING(100),
+      allowNull: true,
       unique: true,
+      comment: 'Referencia única de la transacción',
+    },
+    codigoQR: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'Código QR para el pago',
+    },
+    fechaExpiracion: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: 'Fecha de expiración para solicitudes de cobro',
+    },
+    // Auditoría
+    ipOrigen: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+    },
+    navegador: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
   },
   {
+    sequelize,
+    modelName: 'Transaccion',
+    tableName: 'transacciones',
     timestamps: true,
-  }
+  },
 );
-
-// Generar referencia única antes de guardar
-transaccionSchema.pre('save', function(next) {
-  if (!this.referencia) {
-    const timestamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    this.referencia = `TXN-${timestamp}-${random}`;
-  }
-  next();
-});
-
-// Índices para búsquedas rápidas
-transaccionSchema.index({ clienteOrigen: 1, createdAt: -1 });
-transaccionSchema.index({ clienteDestino: 1, createdAt: -1 });
-transaccionSchema.index({ referencia: 1 });
-
-const Transaccion = mongoose.model('Transaccion', transaccionSchema);
 
 export default Transaccion;

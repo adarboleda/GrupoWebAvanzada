@@ -23,6 +23,22 @@ router.delete('/:id', ClienteController.eliminar);
 // Operaciones DEUNA
 router.post('/:id/depositar', ClienteController.depositar);
 router.post('/:id/transferir', ClienteController.transferir);
+
+// Nuevos servicios DEUNA
+router.post('/:id/recarga', ClienteController.recarga); // SERVICIO RECARGA
+router.post('/:id/transferir-deuna', ClienteController.transferirDeuna); // SERVICIO TRANSFERIR
+
+// Servicios QR / Solicitud de Cobro
+router.post('/:id/generar-qr', ClienteController.generarQR); // Generar solicitud de cobro
+router.post('/:id/pagar-qr', ClienteController.pagarQR); // Pagar solicitud de cobro
+router.get('/:id/solicitudes-cobro', ClienteController.obtenerSolicitudesCobro); // Ver solicitudes pendientes
+
+// Reversión de transacciones
+router.post(
+  '/transacciones/:transaccionId/reversar',
+  ClienteController.reversarTransaccion,
+);
+
 router.get('/:id/transacciones', ClienteController.obtenerTransacciones);
 router.post('/:id/regenerar-codigo', ClienteController.regenerarCodigo);
 

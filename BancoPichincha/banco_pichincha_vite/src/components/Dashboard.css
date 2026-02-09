@@ -1250,3 +1250,710 @@
     margin-bottom: 15px;
   }
 }
+
+/* ============================================
+   ESTILOS ADICIONALES PARA QR Y COBRO
+   ============================================ */
+
+/* Selector de cuenta */
+.selector-cuenta-desktop {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.selector-cuenta-desktop h4 {
+  margin: 0 0 15px 0;
+  color: var(--deuna-text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cuentas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.cuenta-item {
+  background: var(--deuna-gray);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cuenta-item:hover {
+  background: var(--deuna-gray-dark);
+}
+
+.cuenta-item.activa {
+  border-color: var(--deuna-purple);
+  background: rgba(0, 55, 123, 0.05);
+}
+
+.cuenta-tipo {
+  font-size: 12px;
+  color: var(--deuna-text-light);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.cuenta-numero {
+  font-size: 14px;
+  color: var(--deuna-text);
+  margin: 4px 0;
+}
+
+.cuenta-saldo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--deuna-purple);
+}
+
+/* Mensaje de éxito */
+.mensaje-exito {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: rgba(0, 200, 83, 0.1);
+  border: 1px solid var(--deuna-green);
+  border-radius: 12px;
+  margin-top: 20px;
+  color: #00a046;
+}
+
+.mensaje-exito svg {
+  flex-shrink: 0;
+}
+
+.mensaje-exito span {
+  flex: 1;
+  font-size: 14px;
+}
+
+.mensaje-exito button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #00a046;
+  padding: 4px;
+}
+
+/* Estilos QR */
+.qr-resultado {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.qr-resultado p {
+  margin: 10px 0;
+  color: var(--deuna-text-light);
+}
+
+.qr-code-display {
+  background: var(--deuna-gray);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+  word-break: break-all;
+}
+
+.qr-code-display code {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--deuna-text);
+}
+
+.qr-nota {
+  font-size: 12px;
+  color: var(--deuna-text-light);
+  margin-top: 15px;
+}
+
+.btn-qr {
+  background: var(--deuna-purple) !important;
+}
+
+.btn-pagar-qr {
+  background: var(--deuna-green) !important;
+}
+
+.btn-nuevo-qr {
+  background: var(--deuna-gray) !important;
+  color: var(--deuna-text) !important;
+  margin-top: 15px;
+}
+
+/* Input QR */
+.input-qr {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid var(--deuna-gray-dark);
+  border-radius: 12px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: none;
+  transition: border-color 0.2s;
+}
+
+.input-qr:focus {
+  outline: none;
+  border-color: var(--deuna-purple);
+}
+
+/* Select cuenta */
+.select-cuenta {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid var(--deuna-gray-dark);
+  border-radius: 12px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.select-cuenta:focus {
+  outline: none;
+  border-color: var(--deuna-purple);
+}
+
+/* Acciones desktop grid adjustments */
+@media (min-width: 1024px) {
+  .acciones-desktop {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   SECCIÓN MI CUENTA
+   ============================================ */
+
+.mi-cuenta-header {
+  margin-bottom: 25px;
+}
+
+.mi-cuenta-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  color: var(--deuna-purple);
+  margin: 0 0 8px 0;
+}
+
+.mi-cuenta-header p {
+  color: var(--deuna-text-light);
+  font-size: 14px;
+  margin: 0;
+}
+
+.mi-cuenta-seccion {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--deuna-gray-dark);
+}
+
+.seccion-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  color: var(--deuna-text);
+  margin: 0;
+}
+
+.seccion-header .badge {
+  background: var(--deuna-purple);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: var(--deuna-text-light);
+  text-align: center;
+}
+
+.empty-state svg {
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Cuentas Lista */
+.cuentas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cuenta-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--deuna-gray);
+  border-radius: 12px;
+  border: 1px solid var(--deuna-gray-dark);
+  transition: all 0.2s ease;
+}
+
+.cuenta-card:hover {
+  border-color: var(--deuna-purple);
+  background: rgba(0, 55, 123, 0.02);
+}
+
+.cuenta-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--deuna-purple);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cuenta-info {
+  flex: 1;
+}
+
+.cuenta-tipo-badge {
+  display: inline-block;
+  background: var(--deuna-purple-light);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.cuenta-numero-full {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--deuna-text);
+  margin-bottom: 5px;
+  font-family: monospace;
+}
+
+.cuenta-detalles {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: var(--deuna-text-light);
+}
+
+.cuenta-saldo-grande {
+  text-align: right;
+}
+
+.cuenta-saldo-grande .saldo-label {
+  font-size: 11px;
+  color: var(--deuna-text-light);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.cuenta-saldo-grande .saldo-valor {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--deuna-green);
+}
+
+/* Tarjetas Lista */
+.tarjetas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.tarjeta-card {
+  background: linear-gradient(
+    135deg,
+    var(--deuna-purple) 0%,
+    var(--deuna-purple-dark) 100%
+  );
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.tarjeta-card.credito {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.tarjeta-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -30%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.tarjeta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tarjeta-marca {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.tarjeta-tipo-badge {
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.tarjeta-tipo-badge.credito {
+  background: var(--deuna-yellow);
+  color: var(--deuna-text);
+}
+
+.tarjeta-numero {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  margin: 20px 0;
+  text-align: center;
+  font-family: monospace;
+}
+
+.tarjeta-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 12px;
+}
+
+.tarjeta-footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tarjeta-footer .label {
+  font-size: 10px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.tarjeta-footer .value {
+  font-weight: 600;
+}
+
+/* Vinculaciones Lista */
+.vinculaciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vinculacion-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: var(--deuna-gray);
+  border-radius: 12px;
+  border: 1px solid var(--deuna-gray-dark);
+  transition: all 0.2s ease;
+}
+
+.vinculacion-card.principal {
+  border-color: var(--deuna-green);
+  background: rgba(0, 200, 83, 0.05);
+}
+
+.vinculacion-card:hover {
+  border-color: var(--deuna-purple);
+}
+
+.vinculacion-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--deuna-purple-light);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vinculacion-info {
+  flex: 1;
+}
+
+.vinculacion-principal-badge {
+  display: inline-block;
+  background: var(--deuna-green);
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.vinculacion-alias {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--deuna-text);
+  margin-bottom: 3px;
+}
+
+.vinculacion-detalles {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--deuna-text-light);
+}
+
+.vinculacion-estado {
+  flex-shrink: 0;
+}
+
+.estado-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.estado-badge.activo {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--deuna-green);
+}
+
+.estado-badge.inactivo {
+  background: rgba(255, 82, 82, 0.15);
+  color: var(--deuna-red);
+}
+
+/* Responsive Mi Cuenta */
+@media (max-width: 768px) {
+  .cuenta-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .cuenta-detalles {
+    justify-content: center;
+  }
+
+  .cuenta-saldo-grande {
+    text-align: center;
+  }
+
+  .tarjetas-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .vinculacion-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .vinculacion-detalles {
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   MODAL COMPROBANTE
+   ============================================ */
+.comprobante-modal {
+  max-width: 420px;
+  padding: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: white;
+}
+
+.comprobante-header {
+  background: linear-gradient(135deg, var(--deuna-green), #00a844);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.comprobante-icon-wrapper {
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+}
+
+.comprobante-icon-wrapper svg {
+  color: white;
+}
+
+.comprobante-header h2 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.comprobante-tipo {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.comprobante-monto-principal {
+  background: var(--deuna-gray);
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--deuna-gray-dark);
+}
+
+.comprobante-monto-principal .label {
+  display: block;
+  font-size: 12px;
+  color: var(--deuna-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.comprobante-monto-principal .monto {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--deuna-purple);
+}
+
+.comprobante-detalles {
+  padding: 20px;
+}
+
+.comprobante-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.comprobante-row .label {
+  font-size: 13px;
+  color: var(--deuna-text-light);
+}
+
+.comprobante-row .value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--deuna-text);
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+}
+
+.comprobante-row .value.codigo {
+  font-family: monospace;
+  background: var(--deuna-gray);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.comprobante-row .value.comision {
+  color: var(--deuna-red);
+}
+
+.comprobante-row.total {
+  border-top: 2px solid var(--deuna-purple);
+  margin-top: 5px;
+  padding-top: 15px;
+}
+
+.comprobante-row.total .label,
+.comprobante-row.total .value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--deuna-purple);
+}
+
+.comprobante-divider {
+  height: 1px;
+  background: var(--deuna-gray-dark);
+  margin: 5px 0;
+}
+
+.comprobante-acciones {
+  padding: 15px 20px 25px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-comprobante {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cerrar-comprobante {
+  background: var(--deuna-purple);
+  color: white;
+}
+
+.btn-cerrar-comprobante:hover {
+  background: var(--deuna-purple-dark);
+}

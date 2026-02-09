@@ -73,16 +73,16 @@ class ClienteController {
       });
     } catch (err) {
       console.error('Error crear cliente:', err);
-      
+
       // Error de validación de Mongoose (incluye cédula inválida)
       if (err.name === 'ValidationError') {
-        const mensajes = Object.values(err.errors).map(e => e.message);
+        const mensajes = Object.values(err.errors).map((e) => e.message);
         return res.status(400).json({
           ok: false,
           msg: mensajes.join('. '),
         });
       }
-      
+
       if (err.code === 11000) {
         // Determinar qué campo está duplicado
         const campo = Object.keys(err.keyPattern)[0];
@@ -164,7 +164,7 @@ class ClienteController {
       res.json({
         ok: true,
         data: {
-          _id: cliente._id,
+          id: cliente.id,
           nombre: cliente.nombre,
           usuario: cliente.usuario,
           codigoDeuna: cliente.codigoDeuna,
@@ -237,7 +237,97 @@ class ClienteController {
     }
   }
 
-  // Depositar saldo
+  // SERVICIO RECARGA - Recargar saldo vía Deuna
+  static async recarga(req, res) {
+    try {
+      const { id } = req.params; // ID del cliente
+      const { cuentaId, monto, descripcion } = req.body;
+
+      if (!cuentaId) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El ID de la cuenta es requerido',
+        });
+      }
+
+      if (!monto || monto <= 0) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El monto debe ser mayor a 0',
+        });
+      }
+
+      const resultado = await clienteService.recargaSaldo(
+        Number(id),
+        Number(cuentaId),
+        Number(monto),
+        descripcion,
+      );
+
+      res.json({
+        ok: true,
+        data: resultado,
+        msg: resultado.mensaje,
+      });
+    } catch (err) {
+      console.error('Error recarga:', err);
+      res.status(400).json({
+        ok: false,
+        msg: err.message || 'Error al realizar recarga',
+      });
+    }
+  }
+
+  // SERVICIO TRANSFERIR - Transferencia inmediata vía Deuna
+  static async transferirDeuna(req, res) {
+    try {
+      const { id } = req.params; // ID del cliente origen
+      const { codigoDestino, cuentaOrigenId, monto, descripcion } = req.body;
+
+      if (!codigoDestino) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El código DEUNA de destino es requerido',
+        });
+      }
+
+      if (!cuentaOrigenId) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El ID de la cuenta origen es requerido',
+        });
+      }
+
+      if (!monto || monto <= 0) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El monto debe ser mayor a 0',
+        });
+      }
+
+      const resultado = await clienteService.transferirDeuna({
+        clienteOrigenId: Number(id),
+        codigoDestino,
+        cuentaOrigenId: Number(cuentaOrigenId),
+        monto: Number(monto),
+        descripcion,
+      });
+
+      res.json({
+        ok: true,
+        data: resultado,
+        msg: resultado.mensaje,
+      });
+    } catch (err) {
+      console.error('Error transferir Deuna:', err);
+      res.status(400).json({
+        ok: false,
+        msg: err.message || 'Error al realizar transferencia',
+      });
+    }
+  }
+
+  // Depositar saldo (método legacy - mantener para compatibilidad)
   static async depositar(req, res) {
     try {
       const { id } = req.params;
@@ -250,7 +340,21 @@ class ClienteController {
         });
       }
 
-      const resultado = await clienteService.depositarSaldo(id, Number(monto), descripcion);
+      // Obtener primera cuenta del cliente
+      const cliente = await clienteService.obtenerClientePorId(id);
+      if (!cliente || !cliente.cuentas || cliente.cuentas.length === 0) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Cliente no tiene cuentas activas',
+        });
+      }
+
+      const resultado = await clienteService.recargaSaldo(
+        Number(id),
+        cliente.cuentas[0].id,
+        Number(monto),
+        descripcion || 'Depósito de saldo',
+      );
 
       res.json({
         ok: true,
@@ -266,7 +370,7 @@ class ClienteController {
     }
   }
 
-  // Transferir por código DEUNA
+  // Transferir por código DEUNA (método legacy - redirigir a transferirDeuna)
   static async transferir(req, res) {
     try {
       const { id } = req.params; // ID del cliente origen
@@ -286,12 +390,22 @@ class ClienteController {
         });
       }
 
-      const resultado = await clienteService.transferirPorCodigo(
-        id,
+      // Obtener primera cuenta del cliente
+      const cliente = await clienteService.obtenerClientePorId(id);
+      if (!cliente || !cliente.cuentas || cliente.cuentas.length === 0) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'Cliente no tiene cuentas activas',
+        });
+      }
+
+      const resultado = await clienteService.transferirDeuna({
+        clienteOrigenId: Number(id),
         codigoDestino,
-        Number(monto),
-        descripcion
-      );
+        cuentaOrigenId: cliente.cuentas[0].id,
+        monto: Number(monto),
+        descripcion,
+      });
 
       res.json({
         ok: true,
@@ -313,7 +427,10 @@ class ClienteController {
       const { id } = req.params;
       const { limite } = req.query;
 
-      const transacciones = await clienteService.obtenerTransacciones(id, Number(limite) || 50);
+      const transacciones = await clienteService.obtenerTransacciones(
+        id,
+        Number(limite) || 50,
+      );
 
       res.json({
         ok: true,
@@ -362,6 +479,145 @@ class ClienteController {
       res.status(500).json({
         ok: false,
         msg: 'Error interno al obtener estadísticas',
+      });
+    }
+  }
+
+  // SERVICIO GENERAR SOLICITUD DE COBRO (QR)
+  static async generarQR(req, res) {
+    try {
+      const { id } = req.params; // ID del cliente que genera el QR
+      const { cuentaId, monto, descripcion, minutosExpiracion } = req.body;
+
+      if (!cuentaId) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El ID de la cuenta es requerido',
+        });
+      }
+
+      if (!monto || monto <= 0) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El monto debe ser mayor a 0',
+        });
+      }
+
+      const resultado = await clienteService.generarSolicitudCobro({
+        clienteId: Number(id),
+        cuentaId: Number(cuentaId),
+        monto: Number(monto),
+        descripcion,
+        minutosExpiracion: minutosExpiracion || 30,
+      });
+
+      res.json({
+        ok: true,
+        data: resultado,
+        msg: resultado.mensaje,
+      });
+    } catch (err) {
+      console.error('Error generar QR:', err);
+      res.status(400).json({
+        ok: false,
+        msg: err.message || 'Error al generar solicitud de cobro',
+      });
+    }
+  }
+
+  // SERVICIO PAGAR SOLICITUD DE COBRO (QR)
+  static async pagarQR(req, res) {
+    try {
+      const { id } = req.params; // ID del cliente que paga
+      const { cuentaOrigenId, codigoQR } = req.body;
+
+      if (!codigoQR) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El código QR es requerido',
+        });
+      }
+
+      if (!cuentaOrigenId) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El ID de la cuenta origen es requerido',
+        });
+      }
+
+      // Capturar datos de auditoría
+      const ipOrigen =
+        req.ip ||
+        req.headers['x-forwarded-for'] ||
+        req.connection?.remoteAddress ||
+        null;
+      const navegador = req.headers['user-agent'] || null;
+
+      const resultado = await clienteService.pagarSolicitudCobro({
+        clienteOrigenId: Number(id),
+        cuentaOrigenId: Number(cuentaOrigenId),
+        codigoQR,
+        ipOrigen,
+        navegador,
+      });
+
+      res.json({
+        ok: true,
+        data: resultado,
+        msg: resultado.mensaje,
+      });
+    } catch (err) {
+      console.error('Error pagar QR:', err);
+      res.status(400).json({
+        ok: false,
+        msg: err.message || 'Error al procesar pago',
+      });
+    }
+  }
+
+  // SERVICIO REVERSAR TRANSACCIÓN
+  static async reversarTransaccion(req, res) {
+    try {
+      const { transaccionId } = req.params;
+      const { motivo } = req.body;
+
+      const resultado = await clienteService.reversarTransaccion(
+        Number(transaccionId),
+        motivo,
+      );
+
+      res.json({
+        ok: true,
+        data: resultado,
+        msg: resultado.mensaje,
+      });
+    } catch (err) {
+      console.error('Error reversar transacción:', err);
+      res.status(400).json({
+        ok: false,
+        msg: err.message || 'Error al reversar transacción',
+      });
+    }
+  }
+
+  // OBTENER SOLICITUDES DE COBRO PENDIENTES
+  static async obtenerSolicitudesCobro(req, res) {
+    try {
+      const { id } = req.params;
+
+      const solicitudes = await clienteService.obtenerSolicitudesCobro(
+        Number(id),
+      );
+
+      res.json({
+        ok: true,
+        data: solicitudes,
+      });
+    } catch (err) {
+      console.error('Error obtener solicitudes de cobro:', err);
+      res.status(500).json({
+        ok: false,
+        msg: 'Error interno al obtener solicitudes de cobro',
       });
     }
   }

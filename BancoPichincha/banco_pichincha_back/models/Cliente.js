@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../config/database.js';
 import crypto from 'crypto';
 
 // Función para generar código único tipo DEUNA (8 caracteres alfanuméricos)
@@ -20,7 +21,7 @@ function validarCedulaEcuatoriana(cedula) {
 
   // Obtener código de provincia (primeros 2 dígitos)
   const provincia = parseInt(cedula.substring(0, 2), 10);
-  
+
   // Verificar que la provincia sea válida (01-24 o 30 para extranjeros)
   if (provincia < 1 || (provincia > 24 && provincia !== 30)) {
     return false;
@@ -50,80 +51,110 @@ function validarCedulaEcuatoriana(cedula) {
   return digitoVerificadorCalculado === digitoVerificador;
 }
 
-const clienteSchema = new mongoose.Schema(
+// Crear clase Cliente
+class Cliente extends Model {
+  // Método para regenerar código DEUNA
+  async regenerarCodigo() {
+    this.codigoDeuna = generarCodigoDeuna();
+    await this.save();
+    return this;
+  }
+
+  // Método para verificar contraseña
+  verificarPassword(password) {
+    return this.password === password;
+  }
+}
+
+// Definir el modelo Cliente
+Cliente.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     nombre: {
-      type: String,
-      required: [true, 'El nombre del cliente es requerido'],
-      trim: true,
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'El nombre del cliente es requerido',
+        },
+      },
     },
     cedula: {
-      type: String,
-      required: [true, 'La cédula es requerida'],
-      unique: true,
-      trim: true,
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      unique: {
+        msg: 'La cédula ya está registrada',
+      },
       validate: {
-        validator: validarCedulaEcuatoriana,
-        message: 'La cédula ecuatoriana no es válida'
-      }
+        isValidCedula(value) {
+          if (!validarCedulaEcuatoriana(value)) {
+            throw new Error('La cédula ecuatoriana no es válida');
+          }
+        },
+      },
     },
     email: {
-      type: String,
-      required: [true, 'El email es requerido'],
-      unique: true,
-      trim: true,
-      lowercase: true,
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: {
+        msg: 'El email ya está registrado',
+      },
+      validate: {
+        isEmail: {
+          msg: 'Debe ser un email válido',
+        },
+      },
     },
     telefono: {
-      type: String,
-      trim: true,
+      type: DataTypes.STRING(20),
+      allowNull: true,
     },
     // Credenciales de acceso
     usuario: {
-      type: String,
-      required: [true, 'El usuario es requerido'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-      minlength: [4, 'El usuario debe tener al menos 4 caracteres'],
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      unique: {
+        msg: 'El usuario ya existe, elige otro',
+      },
+      validate: {
+        len: {
+          args: [4, 50],
+          msg: 'El usuario debe tener al menos 4 caracteres',
+        },
+      },
     },
     password: {
-      type: String,
-      required: [true, 'La contraseña es requerida'],
-      minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      validate: {
+        len: {
+          args: [6, 100],
+          msg: 'La contraseña debe tener al menos 6 caracteres',
+        },
+      },
     },
-    // Código único DEUNA para recibir transferencias (se regenera en cada login)
+    // Código único DEUNA para recibir transferencias
     codigoDeuna: {
-      type: String,
+      type: DataTypes.STRING(8),
       unique: true,
-      default: generarCodigoDeuna,
-    },
-    // Saldo disponible
-    saldo: {
-      type: Number,
-      default: 0,
-      min: [0, 'El saldo no puede ser negativo'],
+      defaultValue: () => generarCodigoDeuna(),
     },
     // Estado de la cuenta
     activo: {
-      type: Boolean,
-      default: true,
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
   },
   {
-    timestamps: true,
-  }
+    sequelize,
+    modelName: 'Cliente',
+    tableName: 'clientes',
+    timestamps: true, // createdAt y updatedAt
+  },
 );
 
-// Método para regenerar código DEUNA
-clienteSchema.methods.regenerarCodigo = function() {
-  this.codigoDeuna = generarCodigoDeuna();
-  return this.save();
-};
-
-// Método para verificar contraseña
-clienteSchema.methods.verificarPassword = function(password) {
-  return this.password === password;
-};
-
-export default mongoose.model('Cliente', clienteSchema);
+export default Cliente;

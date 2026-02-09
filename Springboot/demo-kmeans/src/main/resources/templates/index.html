@@ -1,0 +1,83 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>K-Means desde R</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h2>Agrupamiento de Clientes con K-means</h2>
+
+    <canvas id="clusterChart" width="700" height="400"></canvas>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+
+      const puntos = /*[[${puntos}]]*/ [];
+      const centroides = /*[[${centroides}]]*/ [];
+
+      console.log('PUNTOS:', puntos);
+      console.log('CENTROIDES:', centroides);
+
+      const colores = {
+        1: 'red',
+        2: 'green',
+        3: 'blue',
+      };
+
+      // ===== AGRUPAR PUNTOS =====
+      const grupos = {};
+
+      puntos.forEach((p) => {
+        if (!grupos[p.grupo]) {
+          grupos[p.grupo] = [];
+        }
+        grupos[p.grupo].push({
+          x: p.edad_norm,
+          y: p.compras_norm,
+        });
+      });
+
+      // ===== DATASETS CLIENTES =====
+      const datasetsClientes = Object.keys(grupos).map((g) => ({
+        label: 'Grupo ' + g,
+        data: grupos[g],
+        backgroundColor: colores[g],
+        pointRadius: 6,
+      }));
+
+      // ===== DATASETS CENTROIDES =====
+      const datasetsCentroides = centroides.map((c) => ({
+        label: 'Centroide Grupo ' + c.grupo,
+        data: [
+          {
+            x: c.edad_norm,
+            y: c.compras_norm,
+          },
+        ],
+        backgroundColor: colores[c.grupo],
+        pointStyle: 'rectRot',
+        pointRadius: 14,
+      }));
+
+      new Chart(document.getElementById('clusterChart'), {
+        type: 'scatter',
+        data: {
+          datasets: [...datasetsClientes, ...datasetsCentroides],
+        },
+        options: {
+          scales: {
+            x: {
+              title: { display: true, text: 'Edad (Normalizada)' },
+            },
+            y: {
+              title: { display: true, text: 'Compras (Normalizada)' },
+            },
+          },
+        },
+      });
+
+      /*]]>*/
+    </script>
+  </body>
+</html>
